@@ -1,3 +1,5 @@
+﻿" Settings for C# Linux kernel style.
+
 " No VI compatibility
 set nocp
 
@@ -24,7 +26,23 @@ set syntax=c
 set backspace=indent,eol,start
 
 " Set font to Courier New
-set gfn=Courier_New:h10:cANSI
+if has("gui_running")
+    if has("gui_gtk2") || has("gui_gtk3")
+        set gfn=Courier\ New\ 10
+    elseif has("gui_win32")
+        set gfn=Courier_New:h10:cDEFAULT
+    endif
+endif
+
+" Set file encoding
+set bomb
+set fileencoding=utf-8
+
+" Display special characters
+set list
+
+" Change how to display tab characters
+set listchars=tab:>-
 
 " Do not expand tabs to spaces
 set noexpandtab
@@ -34,8 +52,10 @@ set tabstop=8
 set shiftwidth=8
 set softtabstop=8
 
-" Display a line a column 80
-set colorcolumn=80
+" Change the background on columns greater than 80
+set textwidth=80
+execute "set colorcolumn=" . join(range(81,335), ',')
+highlight ColorColumn guibg=black
 
 " Map Alt-Up to move line up
 inoremap <A-Up> <ESC>:m-2<CR>:startinsert<CR>
@@ -48,4 +68,7 @@ nnoremap <A-Down> :m+<CR>==
 vnoremap <A-Down> :m '>+1<CR>gv=gv
 
 " <F5> - Remove trailing whitespace in normal mode
-nnoremap <F5> :%s/\s\+$//<CR>
+nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+
+" Remove trailing whitespace on specific files when saving
+au! BufWriteCmd *.cs, *.csproj, *.sln %s/\s\+$//e

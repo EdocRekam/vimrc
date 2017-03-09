@@ -1,4 +1,6 @@
-﻿" No VI compatibility
+﻿" Settings for C# Tripitaka
+
+" No VI compatibility
 set nocp
 
 " No start of line on many commands
@@ -66,4 +68,7 @@ nnoremap <A-Down> :m+<CR>==
 vnoremap <A-Down> :m '>+1<CR>gv=gv
 
 " <F5> - Remove trailing whitespace in normal mode
-nnoremap <F5> :%s/:\s\+$//<CR>
+nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+
+" Remove trailing whitespace on specific files when saving
+au! BufWriteCmd *.cs, *.csproj, *.sln %s/\s\+$//e
