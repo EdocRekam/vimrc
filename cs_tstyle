@@ -71,4 +71,14 @@ vnoremap <A-Down> :m '>+1<CR>gv=gv
 nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
 
 " Remove trailing whitespace on specific files when saving
-au! BufWriteCmd *.cs, *.csproj, *.sln %s/\s\+$//e
+au! BufWritePre *.cs,*.csproj,*.sln %s/\s\+$//e
+
+" Add shift-tab to detab
+inoremap <S-Tab> <C-d>
+nnoremap <S-Tab> <<
+vnoremap <S-Tab> < <CR>gv
+
+vnoremap <Tab> > <CR>gv
+
+" Sort selection via CTRL+S
+vnoremap <C-S> :'<,'>sort<CR>gv
