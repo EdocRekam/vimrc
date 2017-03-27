@@ -169,6 +169,12 @@ nnoremap <silent> <F5> :call RemoveTrailingWhitespace()<CR>
 " Remove trailing whitespace when saving CSharp files
 au! BufWritePre *.cs,*.csproj,*.sln call RemoveTrailingWhitespace()
 
+" These are CSharp files
+au! filetypedetect BufNewFile,BufRead *.Tests setf cs
+
+" These are XML files
+au! filetypedetect BufNewFile,BufRead *.props,*.targets setf xml
+
 " Remove trailing whitespace when saving C files
 au! BufWritePre *.c call RemoveTrailingWhitespace()
 
