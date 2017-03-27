@@ -69,6 +69,13 @@ function! Dos2Unix()
     :w
 endfunction
 
+function! Unix2Dos()
+   :update
+   :e ++ff=unix
+   :setlocal ff=dos
+   :w
+endfunction
+
 function! SanitizeCSharp()
     call RemoveTrailingWhitespace()
     call Dos2Unix()
