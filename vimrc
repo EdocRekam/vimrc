@@ -76,9 +76,17 @@ function! Unix2Dos()
    :w
 endfunction
 
+function! ExpandTabs()
+    :update
+    :setlocal expandtab
+    :retab
+    :w
+endfunction
+
 function! SanitizeCSharp()
     call RemoveTrailingWhitespace()
     call Dos2Unix()
+    call ExpandTabs()
 endfunction
 
 function! Set80Columns()
