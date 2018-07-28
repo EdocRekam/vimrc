@@ -1,0 +1,39 @@
+#!/bin/bash
+# This script installs or copies all the right files to the right location.
+#
+
+link()
+{
+	if [ -h "${2}" ]; then
+		LNKDST=$(readlink -f "${2}")
+		if [ "${1}" -ef "${LNKDST}" ]; then
+			echo -e Skip linking [${YELLOW}${1}${NC}] -\> [${YELLOW}${2}${NC}]
+			return
+		fi
+	fi
+
+	if [ -f "${2}" ]; then
+		BAKFNAME=${2}.bak.${RANDOM}
+		echo -e Backup file [${YELLOW}${2}${NC}] -\> [${YELLOW}${BAKFNAME}${NC}]
+		mv "${2}" "${BAKFNAME}"
+	fi
+
+	echo -e Linking [${YELLOW}${1}${NC}] -\> [${YELLOW}${2}${NC}]
+	ln -s "${1}" "${2}"
+}
+
+mkfolder()
+{
+	if [ ! -d "${1}" ]; then
+		mkdir "${1}"
+	fi
+}
+
+CWD=$(dirname "$(realpath -s $0)")
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+clear
+read -p "Press [Enter] key to install files into HOME directory at . . ."
+
+link "${CWD}/vimrc" "${HOME}/.vimrc"
+link "${CWD}/vimrc" "${HOME}/.gvimrc"
