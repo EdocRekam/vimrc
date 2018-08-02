@@ -51,6 +51,11 @@ highlight ColorColumn guibg=black
 " Always display the status line
 set laststatus=2
 
+" Turn on spell checking.
+set spell spelllang=en_us
+hi clear SpellBad
+hi SpellBad cterm=underline
+
 " *******************************************************************
 " Source code
 " *******************************************************************
