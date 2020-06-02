@@ -7,18 +7,18 @@ link()
 	if [ -h "${2}" ]; then
 		LNKDST=$(readlink -f "${2}")
 		if [ "${1}" -ef "${LNKDST}" ]; then
-			echo -e Skip linking [${YELLOW}${1}${NC}] -\> [${YELLOW}${2}${NC}]
+			printf "Skip linking [${YELLOW}${1}${NC}] -\> [${YELLOW}${2}${NC}]\n"
 			return
 		fi
 	fi
 
 	if [ -f "${2}" ]; then
 		BAKFNAME=${2}.bak.${RANDOM}
-		echo -e Backup file [${YELLOW}${2}${NC}] -\> [${YELLOW}${BAKFNAME}${NC}]
+		printf "Backup file [${YELLOW}${2}${NC}] -\> [${YELLOW}${BAKFNAME}${NC}]\n"
 		mv "${2}" "${BAKFNAME}"
 	fi
 
-	echo -e Linking [${YELLOW}${1}${NC}] -\> [${YELLOW}${2}${NC}]
+	printf "Linking [${YELLOW}${1}${NC}] -\> [${YELLOW}${2}${NC}]\n"
 	ln -s "${1}" "${2}"
 }
 
@@ -35,5 +35,14 @@ NC='\033[0m' # No Color
 clear
 read -p "Press [Enter] key to install files into HOME directory at . . ."
 
+# CONFIGURATION
 link "${CWD}/vimrc" "${HOME}/.vimrc"
 link "${CWD}/vimrc" "${HOME}/.gvimrc"
+
+# THEMES
+mkdir -p "${HOME}/.vim/colors"
+link "${CWD}/dark_plus.vim" "${HOME}/.vim/colors/dark_plus.vim"
+
+# C# SYNTAX
+mkdir -p "${HOME}/.vim/syntax"
+link "${CWD}/cs.vim" "${HOME}/.vim/syntax/cs.vim"
