@@ -12,7 +12,6 @@ hi Directory        gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg
 hi ErrorMsg         gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi FoldColumn       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi Folded           gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
-hi IncSearch        gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi MatchParen       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi MoreMsg          gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi NonText          gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
@@ -22,7 +21,6 @@ hi PmenuSbar        gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg
 hi PmenuSel         gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi PmenuThumb       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi Question         gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
-hi Search           gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi SignColumn       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi StatusLineTerm   gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi StatusLineTermNC gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
@@ -60,13 +58,17 @@ hi SpellCap         gui=UNDERLINE guibg=NONE    guifg=NONE    cterm=bold ctermbg
 hi SpellLocal       gui=UNDERLINE guibg=NONE    guifg=NONE    cterm=bold ctermbg=0  ctermfg=NONE
 hi SpellRare        gui=UNDERLINE guibg=NONE    guifg=NONE    cterm=bold ctermbg=0  ctermfg=NONE
 
-hi Cursor           gui=NONE      guibg=#264f78 guifg=NONE cterm=NONE ctermbg=0  ctermfg=7
-hi lCursor          gui=NONE      guibg=#264f78 guifg=NONE cterm=NONE ctermbg=0  ctermfg=7
+hi Cursor           gui=NONE      guibg=#264f78 guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
+hi lCursor          gui=NONE      guibg=#264f78 guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 
-hi CursorColumn     gui=NONE      guibg=#264f78 guifg=NONE    cterm=standout ctermbg=7  ctermfg=7
-hi CursorLine       gui=NONE      guibg=#264f78 guifg=NONE    cterm=NONE ctermbg=4  ctermfg=4
-hi Visual           gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD ctermbg=4  ctermfg=NONE
-hi VisualNOS        gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD ctermbg=4  ctermfg=NONE
+hi cursorcolumn     gui=NONE      guibg=#264f78 guifg=NONE    cterm=STANDOUT ctermbg=7  ctermfg=7
+hi cursorline       gui=NONE      guibg=#264f78 guifg=NONE    cterm=NONE     ctermbg=4  ctermfg=4
+hi visual           gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     ctermbg=4  ctermfg=NONE
+hi visualnos        gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     ctermbg=4  ctermfg=NONE
+
+" SEARCH
+hi incsearch        gui=NONE      guibg=#515c6a guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
+hi search           gui=ITALIC    guibg=#613214 guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 
 " BLUE #569cd6
 hi Boolean          gui=NONE      guibg=#1e1e1e guifg=#569cd6 cterm=NONE ctermbg=0  ctermfg=6

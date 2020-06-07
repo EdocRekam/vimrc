@@ -136,16 +136,6 @@ endfunction
 " Key bindings
 " *******************************************************************
 
-" ALT+UP - Move line up
-inoremap <A-Up> <ESC>:m-2<CR>:startinsert<CR>
-nnoremap <A-Up> :m-2<CR>==
-vnoremap <A-Up> :m '<-2<CR>gv=gv
-
-" ALT+DOWN - Move line down
-inoremap <A-Down> <ESC>:m+<CR>:startinsert<CR>
-nnoremap <A-Down> :m+<CR>==
-vnoremap <A-Down> :m '>+1<CR>gv=gv
-
 " CTRL+TAB - Always insert real tab
 inoremap <C-Tab> <C-Q><Tab>
 nnoremap <C-Tab> i<C-Q><Tab>
@@ -158,12 +148,6 @@ inoremap <S-Tab> <C-d>
 nnoremap <S-Tab> <<
 vnoremap <S-Tab> < <CR>gv
 
-" CTRL+C - Copy
-vnoremap <C-c> "+y
-vnoremap <C-x> "+x
-inoremap <C-v> "+gP
-nnoremap <C-v> "+gP
-
 " CTRL+S - Sort block
 vnoremap <C-S> :'<,'>sort<CR>gv
 
@@ -174,28 +158,6 @@ vnoremap <silent> <F1> :call ToggleStatusLine()<CR>
 
 " F5 - Remove trailing whitespace
 nnoremap <silent> <F5> :call RemoveTrailingWhitespace()<CR>
-
-" F10 - ROTATE WINDOWS RIGHT/LEFT
-nnoremap <silent> <F10> <C-W>x
-
-" F11 - Split Window Up/Down
-nnoremap <silent> <F11> :split<CR>
-nnoremap <silent> <S-F11> :q<CR>
-
-" F12 - Split Window Vertical
-nnoremap <silent> <F12> :vsplit<CR>
-nnoremap <silent> <S-F12> :q<CR>
-
-" PAGE UP/DOWN MOVE CURSOR INSTEAD OF PAGE
-nnoremap <silent> <PAGEUP> :-45<CR>
-nnoremap <silent> <PAGEDOWN> :+45<CR>
-
-" CTRL+UP TOGGLES NERDTREE
-nnoremap <silent> <C-UP> :NERDTreeToggle<CR>
-
-" CTRL LEFT/RIGHT SIZE SPLIT
-nnoremap <silent> <C-RIGHT> 10<C-w>>
-nnoremap <silent> <C-LEFT> 10<C-w><
 
 " INCREASE/DECREASE FONT CTRL+SHIFT LEFT/RIGHT
 nnoremap <silent> <C-S-RIGHT> :call ZoomIn()<CR>
