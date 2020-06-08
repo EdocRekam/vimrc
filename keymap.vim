@@ -39,21 +39,30 @@ vnoremap <c-x> "+x
 
 " PASTE                                                 CTRL + V
 inoremap <silent><c-v> <c-r>+=
-" nnoremap <C-v> "+gP
+
+" GIT GUI                                               F7
+nnoremap <silent><F7> :silent !git gui&<cr>
+
+" GIT STATUS                                            F8
+nnoremap <silent><F8> :!git status<cr>
+
+" LAUNCH NEW INSTANCE                                   F9
+nnoremap <silent><F9> :silent !gvim&<cr>
 
 " ROTATE WINDOWS RIGHT/LEFT                             F10
 nnoremap <silent><F10> <C-W>x
 
 " SPLIT WINDOW UP/DOWN                                  F11
-nnoremap <silent><f11> :split<cr>
-nnoremap <silent><s-f11> :q<cr>
+nnoremap <silent><F11> :split<cr>
+nnoremap <silent><S-F11> :q<cr>
 
-" SPLIT WINDOW VERTICAL                                 F12
-nnoremap <silent><f12> :vsplit<cr>
-nnoremap <silent><s-f12> :q<cr>
+" SPLIT WINDOW LEFT|RIGHT                               F12
+"                UP|DOWN                                SHIFT + F12
+nnoremap <silent><F12> :vsplit<cr>
+nnoremap <silent><S-F12> :split<cr>
 
-" BLOCK VISUAL                                          Shift + Alt + Up
-"                                                       Shift + Alt + Down
+" BLOCK VISUAL                                          SHIFT + ALT + UP
+"                                                       SHIFT + ALT + DOWN
 nnoremap <silent><s-a-up> <c-v>
 nnoremap <silent><s-a-down> <c-v>
 
@@ -63,11 +72,11 @@ inoremap <silent><pagedown> <ESC><c-d>i
 
 nnoremap <F5> :so %<CR>
 
-" FIND                                                  CTRL + F3
-" FIND NEXT                                             F3
+" SHOW ALL COMMANDS                                     F1
 " RENAME SYMBOL                                         F2
+" FIND NEXT                                             F3
+" FIND                                                  CTRL + F3
 " SAVE FILE AS . . .                                    CTRL + SHIFT + S
 " SELECT ALL                                            CTRL + A
-" SHOW ALL COMMANDS                                     F1
 " TRIM TRAILING WHITESPACE
 " UNDO                                                  CTRL + Z

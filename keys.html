@@ -7,17 +7,19 @@
 				font-family: "Inconsolata";
 				background-color: #1e1e1e;
 				color: #d4d4d4;
-				width:800px;
 			}
 			th, td {
-				padding:2px 25px 2px 2px;
+				padding:2px 20px 2px 2px;
 			}
 			body table {
 				overflow: auto;
-				margin: 0px 50px 50px 0px;
+				/*      top right bottom left */
+				margin: 10px 5px 10px 5px;
 				word-break: normal;
 				word-break: keep-all;
 				float:left;
+				background-color: #232323;
+				width:450px;
 			}
 		</style>
 	</head>
@@ -25,11 +27,7 @@
 		<table>
 			<caption>Custom</caption>
 			<tr>
-				<th>Description</th>
-				<th colspan="2" >Key</th>
-			</tr>
-			<tr>
-				<td> Line Down</td>
+				<td>Move Line Down</td>
 				<td>Alt + Down</td>
 			</tr>
 			<tr>
@@ -71,6 +69,17 @@
 			</tr>
 		</table>
 		<table>
+			<caption>GIT</caption>
+			<tr>
+				<td>Gui</td>
+				<td>F7</td>
+			</tr>
+			<tr>
+				<td>Status</td>
+				<td>F8</td>
+			</tr>
+		</table>
+		<table>
 			<caption>Navigation</caption>
 			<tr>
 				<td>Top of Screen</td>
@@ -85,9 +94,29 @@
 				<td>%</td>
 				<td>Shift + 5</td>
 			</tr>
+			<tr>
+				<td>Completion</td>
+				<td>Ctrl + N</td>
+				<td>Ctrl + P</td>
+			</tr>
+			<tr>
+				<td>List Functions</td>
+				<td>F1</td>
+			</tr>
+			<tr>
+				<td>Rename Symbol</td>
+				<td>F2</td>
+			</tr>
+			<tr>
+				<td>Goto Definition</td>
+				<td>F4</td>
+			</tr>
 		</table>
 		<table>
 			<caption>Window</caption>
+			<tr>
+				<td>Launch New Instance</td>
+				<td>F9</td>
 			<tr>
 				<td>Swap Windows Left Right</td>
 				<td>F10</td>
@@ -99,6 +128,12 @@
 			<tr>
 				<td>Split Window Left/Right</td>
 				<td>F12</td>
+				<td>Shift + F12</td>
+			</tr>
+			<tr>
+				<td>New</td>
+				<td>:new</td>
+				<td>:vnew</td>
 			</tr>
 		</table>
 		<table>
@@ -148,13 +183,60 @@
 				<td>Commands</td>
 				<td>:help command-bar</td>
 			</tr>
+			<tr>
+				<td>Keystroke</td>
+				<td>:help i_CTRL-N</td>
+			</tr>
 		</table>
 		<table>
-			<caption>Buffers</caption>
+			<caption>Buffer</caption>
 			<tr>
-				<td>New</td>
-				<td>:new</td>
-				<td>:vnew</td>
+				<td>List</td>
+				<td>:ls</td>
+			</tr>
+			<tr>
+				<td>Edit</td>
+				<td>b[NR]</td>
+			</tr>
+			<tr>
+				<td>Delete</td>
+				<td>:bd</bd>
+			</tr>
+			<tr>
+				<td>Next</td>
+				<td>:bnext</td>
+				<td>:bn</td>
+			</tr>
+			<tr>
+				<td>Previous</td>
+				<td>:bprev</td>
+				<td>:bp</td>
+			</tr>
+		</table>
+		<table>
+			<caption>Search</caption>
+			<tr>
+				<td>/search_text</td>
+				<td>cgn</td>
+				<td>new_text</td>
+				<td>.</td>
+			</tr>
+			<tr>
+				<td>Previous | Next</td>
+				<td>N</td>
+				<td>n</td>
+			</tr>
+		</table>
+		<table>
+			<caption>Spellcheck</caption
+			<tr>
+				<td>Add word to user dictionary</td>
+				<td>zg</td>
+			</tr>
+			<tr>
+				<td>Next|Previous bad word</td>
+				<td>]s</td>
+				<td>[s</td>
 			</tr>
 		</table>
 	</body>

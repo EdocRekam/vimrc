@@ -16,6 +16,12 @@ set nowrap
 " FUZZY FILE GLOBS
 set path+=**
 
+" HIGHLIGHT ALL SEARCH MATCH(S)
+set hlsearch
+
+" SET SEARCH TO CASE INSENSITIVE
+set ignorecase
+
 " DISPLAY LINE NUMBERS WITH 5 CHAR GUTTER
 set number
 set numberwidth=5
