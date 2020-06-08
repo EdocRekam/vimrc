@@ -74,9 +74,5 @@ nnoremap <F5> :so %<CR>
 
 " SHOW ALL COMMANDS                                     F1
 " RENAME SYMBOL                                         F2
-" FIND NEXT                                             F3
-" FIND                                                  CTRL + F3
-" SAVE FILE AS . . .                                    CTRL + SHIFT + S
 " SELECT ALL                                            CTRL + A
 " TRIM TRAILING WHITESPACE
-" UNDO                                                  CTRL + Z
