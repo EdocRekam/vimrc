@@ -1,5 +1,5 @@
 " VISUAL STUDIO CODE DEFAULT KEYBOARD SHORTCUTS
-mapclear
+" mapclear
 
 " MOVE LINE DOWN                                        ALT + DOWN
 inoremap <A-Down> <ESC>:m+<CR>:startinsert<CR>
@@ -53,8 +53,8 @@ nnoremap <silent><F9> :silent !gvim&<cr>
 nnoremap <silent><F10> <C-W>x
 
 " SPLIT WINDOW UP/DOWN                                  F11
-nnoremap <silent><F11> :split<cr>
-nnoremap <silent><S-F11> :q<cr>
+nnoremap <silent><F11> :bnext<cr>
+nnoremap <silent><S-F11> :bprev<cr>
 
 " SPLIT WINDOW LEFT|RIGHT                               F12
 "                UP|DOWN                                SHIFT + F12

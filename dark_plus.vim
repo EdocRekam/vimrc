@@ -70,33 +70,38 @@ hi visualnos        gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     cte
 hi incsearch        gui=NONE      guibg=#515c6a guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 hi search           gui=ITALIC    guibg=#613214 guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 
-" BLUE #569cd6
+" AQUA #4EC9B0
+hi Identifier       gui=NONE      guibg=#1e1e1e guifg=#4EC9B0 cterm=NONE ctermbg=0  ctermfg=7
+
+
+" BLUE #569CD6
 hi Boolean          gui=NONE      guibg=#1e1e1e guifg=#569cd6 cterm=NONE ctermbg=0  ctermfg=6
 hi Keyword          gui=NONE      guibg=#1e1e1e guifg=#569cd6 cterm=NONE ctermbg=0  ctermfg=6
 hi StorageClass     gui=NONE      guibg=#1e1e1e guifg=#569cd6 cterm=NONE ctermbg=0  ctermfg=6
 hi Type             gui=NONE      guibg=#1e1e1e guifg=#569cd6 cterm=NONE ctermbg=0  ctermfg=6
 
-" GREEN #6a9955
+" GREEN #6A9955
 hi Comment          gui=NONE      guibg=#1e1e1e guifg=#6a9955 cterm=NONE ctermbg=0  ctermfg=2
 
-" ORANGE #ce9178
+" ORANGE #CE9178
 hi String           gui=NONE      guibg=#1e1e1e guifg=#ce9178 cterm=NONE ctermbg=0  ctermfg=3
 
-" PURPLE #c586c0
+" PURPLE #C586C0
 hi Conditional      gui=NONE      guibg=#1e1e1e guifg=#cd86c0 cterm=NONE ctermbg=0  ctermfg=5
 hi Exception        gui=NONE      guibg=#1e1e1e guifg=#cd86c0 cterm=NONE ctermbg=0  ctermfg=5
 hi Include          gui=NONE      guibg=#1e1e1e guifg=#cd86c0 cterm=NONE ctermbg=0  ctermfg=5
 hi Repeat           gui=NONE      guibg=#1e1e1e guifg=#cd86c0 cterm=NONE ctermbg=0  ctermfg=5
 hi Statement        gui=NONE      guibg=#1e1e1e guifg=#cd86c0 cterm=NONE ctermbg=0  ctermfg=5
 
-" WHITE #d4d4d4
-hi Character        gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
+" YELLOW #DCDCAA
+hi Function         gui=NONE      guibg=#1e1e1e guifg=#DCDCAA cterm=NONE ctermbg=0  ctermfg=7
+
+" WHITE #D4D4D4
+hi Character        gui=NONE      guibg=#1e1e1e guifg=#CE9178 cterm=NONE ctermbg=0  ctermfg=7
 hi Debug            gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi Define           gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi Delimiter        gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi Float            gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
-hi Function         gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
-hi Identifier       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi Ignore           gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi Label            gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi Macro            gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7

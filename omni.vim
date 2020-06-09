@@ -1,22 +1,30 @@
 " https://github.com/OmniSharp/Omnisharp-vim
 
-" Required by step 3 to pick correct URI
-let g:OmniSharp_server_stdio=1
-
-" 1. Install `omnisharp-vim`
-"         git clone git://github.com/OmniSharp/omnisharp-vim ~/.vim/pack/plugins/start/omnisharp-vim
-" 
-" 2. Turn on plugin support
-"         filetype indent plugin on
+" 1. Install OmnisSharp-Roslyn
+"         https://github.com/OmniSharp/omnisharp-roslyn/releases=
 "
-" 3. Install OmnisSharp-Roslyn
-"         :OmniSharpInstall
+" 2. Install `omnisharp-vim`
+"         git clone https://github.com/OmniSharp/omnisharp-vim ~/.vim/pack/plugins/start/omnisharp-vim
+"
+" 3. Turn on plugin support
+"         filetype indent plugin on
 "
 " 4. Manually start server
 "         OmniSharp -s /path/to/sln
 
-let g:OmniSharp_start_server = 0
 
+" OmniSharpHighlight
+
+let g:OmniSharp_server_stdio = 1
+let g:OmniSharp_start_server = 1
+let g:OmniSharp_server_path  = '/home/jon.chick/omnisharp/run'
+let g:OmniSharp_highlighting = 2
+
+
+let g:OmniSharp_highlight_groups = {
+\ 'StringLiteral': 'String',
+\ 'XmlDocCommentText': 'Comment'
+\}
 
 " function! SanitizeCSharp()
 "    call RemoveTrailingWhitespace()
