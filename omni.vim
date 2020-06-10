@@ -1,7 +1,7 @@
 " https://github.com/OmniSharp/Omnisharp-vim
 
 " 1. Install OmnisSharp-Roslyn
-"         https://github.com/OmniSharp/omnisharp-roslyn/releases=
+"         https://github.com/OmniSharp/omnisharp-roslyn/releases
 "
 " 2. Install `omnisharp-vim`
 "         git clone https://github.com/OmniSharp/omnisharp-vim ~/.vim/pack/plugins/start/omnisharp-vim
@@ -13,43 +13,54 @@
 "         OmniSharp -s /path/to/sln
 
 
-" OmniSharpHighlight
-
-let g:OmniSharp_server_stdio = 1
-let g:OmniSharp_start_server = 1
-let g:OmniSharp_server_path  = '/home/jon.chick/omnisharp/run'
-let g:OmniSharp_highlighting = 2
+" OmniSharpHighlightTypes
 
 
-let g:OmniSharp_highlight_groups = {
-\ 'StringLiteral': 'String',
-\ 'XmlDocCommentText': 'Comment'
-\}
+" TRIGGER SUGGEST                                       CTRL + SPACE
+inoremap <silent><c-space> <c-x><c-o>
 
-" function! SanitizeCSharp()
-"    call RemoveTrailingWhitespace()
-"    call Dos2Unix()
-"    call ExpandTabs()
-" endfunction
+" RENAME SYMBOL                                         F2
+nnoremap <silent><F2> :OmniSharpRename<cr>
 
-" function! SwitchToCSharp()
+" GOTO DEFINITION                                       F4
+nnoremap <silent><F4> :OmniSharpGotoDefinition<cr>
 
-    " Set tab handling
-"    setlocal expandtab
-"    setlocal tabstop=4
-"    setlocal shiftwidth=4
-"    setlocal softtabstop=4
+function! SanitizeCSharp()
+    call ExpandTabs()
+    call RemoveTrailingWhitespace()
+    call Dos2Unix()
+endfunction
 
-    " Set file encoding
-"    setlocal nobomb
-"    setlocal fileencoding=utf-8
+function! SwitchToCSharp()
+    " SET TAB HANDLING
+    setlocal expandtab
+    setlocal shiftwidth=4
+    setlocal softtabstop=4
+    setlocal tabstop=4
 
-    " Customize sanitize function
-"    nnoremap <silent> <F12> :call SanitizeCSharp()<CR>
-" endfunction
+    " SET FILE ENCODING
+    setlocal fileencoding=utf-8
+    setlocal nobomb
 
-" Remove trailing whitespace when saving CSharp files
-" au! BufWritePre *.cs,*.csproj,*.sln call RemoveTrailingWhitespace()
+    " OMNISHARP
+    let g:OmniSharp_server_path='/usr/local/bin/omnisharp'
+    let g:OmniSharp_server_stdio=1
+    let g:OmniSharp_start_server=1
+    let g:OmniSharp_highlighting=2
+    let g:OmniSharp_hightlight_types=3
+    let g:OmniSharp_timeout=5
+    let g:omnicomplete_fetch_full_documentation=1
+    set previewheight=5
+
+    let g:OmniSharp_highlight_groups={
+    \ 'StringLiteral': 'String',
+    \ 'XmlDocCommentText': 'Comment'
+    \}
+
+endfunction
+
+" REMOVE TRAILING WHITESPACE WHEN SAVING CSHARP FILES
+au! BufWritePre *.cs,*.csproj,*.sln call SanitizeCSharp()()
 
 " These are CSharp files
 " au! filetypedetect BufNewFile,BufRead *.Tests setf cs
@@ -63,26 +74,13 @@ let g:OmniSharp_highlight_groups = {
 " Remove trailing whitespace when saving C files
 " au! BufWritePre *.c call RemoveTrailingWhitespace()
 
-
-" silent! if plug#begin('~/.vim/plugged')
-" Plug 'OmniSharp/omnisharp-vim'
-" Plug 'w0rp/ale'
-" call plug#end()
-" endif
-
-" Add Support For OmniSharp (C# Development)
-let g:OmniSharp_hightlight_types=3
-
 " Set type lookup function to preview window instead of echoing it
 " let g:OmniSharp_typeLookupInPreview = 1
-
-" Timeout in seconds to wait for server response
-let g:OmniSharp_timeout = 5
 
 " Don't autoselect first omnicomplete option, show options even if there is only
 " one (so the preview documentation is accessible). Remove 'preview', 'popup'
 " and 'popuphidden' if you don't want to see any documentation whatsoever.
-" Note that neovim does not support `popuphidden` or `popup` yet: 
+" Note that neovim does not support `popuphidden` or `popup` yet:
 " https://github.com/neovim/neovim/issues/10996
 set completeopt=longest,menuone,preview,popuphidden
 
@@ -91,20 +89,8 @@ set completeopt=longest,menuone,preview,popuphidden
 " highlighted documentation.
 set completepopup=highlight:Pmenu,border:off
 
-" Fetch full documentation during omnicomplete requests. By default, only
-" Type/Method signatures are fetched. Full documentation can still be
-" fetched when you need it with the :OmniSharpDocumentation command.
-let g:omnicomplete_fetch_full_documentation = 1
-
-" Set desired preview window height for viewing documentation.
-" You might also want to look at the echodoc plugin.
-set previewheight=5
-
 " Tell ALE to use OmniSharp for linting C# files, and no other linters.
 " let g:ale_linters = { 'cs': ['OmniSharp'] }
-
-" Update semantic highlighting on BufEnter, InsertLeave and TextChanged
-let g:OmniSharp_highlight_types = 2
 
 " augroup omnisharp_commands
     " autocmd!

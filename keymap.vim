@@ -53,8 +53,8 @@ nnoremap <silent><F9> :silent !gvim&<cr>
 nnoremap <silent><F10> <C-W>x
 
 " SPLIT WINDOW UP/DOWN                                  F11
-nnoremap <silent><F11> :bnext<cr>
-nnoremap <silent><S-F11> :bprev<cr>
+nnoremap <silent><F11> :bnext!<cr>
+nnoremap <silent><S-F11> :bprev!<cr>
 
 " SPLIT WINDOW LEFT|RIGHT                               F12
 "                UP|DOWN                                SHIFT + F12
@@ -73,6 +73,3 @@ inoremap <silent><pagedown> <ESC><c-d>i
 nnoremap <F5> :so %<CR>
 
 " SHOW ALL COMMANDS                                     F1
-" RENAME SYMBOL                                         F2
-" SELECT ALL                                            CTRL + A
-" TRIM TRAILING WHITESPACE
