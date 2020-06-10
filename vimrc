@@ -154,6 +154,7 @@ endfunction
 " *******************************************************************
 " Key bindings
 " *******************************************************************
+source /data/Project/Vim\ Configuration/keymap.vim
 
 " CTRL+TAB - Always insert real tab
 inoremap <C-Tab> <C-Q><Tab>
