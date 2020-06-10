@@ -57,10 +57,12 @@ function! SwitchToCSharp()
     \ 'XmlDocCommentText': 'Comment'
     \}
 
+    OmniSharpStartServer
+    OmniSharpHighlight
 endfunction
 
 " REMOVE TRAILING WHITESPACE WHEN SAVING CSHARP FILES
-au! BufWritePre *.cs,*.csproj,*.sln call SanitizeCSharp()()
+au! BufWritePre *.cs,*.csproj,*.sln call SanitizeCSharp()
 
 " These are CSharp files
 " au! filetypedetect BufNewFile,BufRead *.Tests setf cs
