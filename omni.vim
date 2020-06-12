@@ -1,3 +1,9 @@
+" RUN ONCE
+if exists("g:e0647a20")
+    finish
+endif
+
+
 " https://github.com/OmniSharp/Omnisharp-vim
 
 " 1. Install OmnisSharp-Roslyn
@@ -13,9 +19,6 @@
 "         OmniSharp -s /path/to/sln
 
 
-" OmniSharpHighlightTypes
-
-
 " TRIGGER SUGGEST                                       CTRL + SPACE
 inoremap <silent><c-space> <c-x><c-o>
 
@@ -24,6 +27,24 @@ nnoremap <silent><F2> :OmniSharpRename<cr>
 
 " GOTO DEFINITION                                       F4
 nnoremap <silent><F4> :OmniSharpGotoDefinition<cr>
+
+" RENAME SYMBOL COMMAND
+command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
+
+" OMNISHARP
+let g:OmniSharp_server_path='/usr/local/bin/omnisharp'
+let g:OmniSharp_server_install='/usr/local/lib64/omnisharp-roslyn'
+let g:OmniSharp_highlighting=2
+let g:OmniSharp_hightlight_types=3
+let g:OmniSharp_server_stdio=1
+let g:OmniSharp_start_server = 1
+let g:OmniSharp_timeout=5
+let g:omnicomplete_fetch_full_documentation=1
+
+let g:OmniSharp_highlight_groups={
+\ 'StringLiteral': 'String',
+\ 'XmlDocCommentText': 'Comment'
+\}
 
 function! SanitizeCSharp()
     call ExpandTabs()
@@ -42,39 +63,17 @@ function! SwitchToCSharp()
     setlocal fileencoding=utf-8
     setlocal nobomb
 
-    " OMNISHARP
-    let g:OmniSharp_server_path='/usr/local/bin/omnisharp'
-    let g:OmniSharp_server_stdio=1
-    let g:OmniSharp_start_server=1
-    let g:OmniSharp_highlighting=2
-    let g:OmniSharp_hightlight_types=3
-    let g:OmniSharp_timeout=5
-    let g:omnicomplete_fetch_full_documentation=1
     set previewheight=5
 
-    let g:OmniSharp_highlight_groups={
-    \ 'StringLiteral': 'String',
-    \ 'XmlDocCommentText': 'Comment'
-    \}
-
-    OmniSharpStartServer
+    "OmniSharpStartServer
     OmniSharpHighlight
 endfunction
 
 " REMOVE TRAILING WHITESPACE WHEN SAVING CSHARP FILES
-au! BufWritePre *.cs,*.csproj,*.sln call SanitizeCSharp()
+" au! BufWritePre *.cs,*.csproj,*.sln call SanitizeCSharp()
 
 " These are CSharp files
 " au! filetypedetect BufNewFile,BufRead *.Tests setf cs
-
-" These are XML files
-" au! filetypedetect BufNewFile,BufRead *.props,*.targets setf xml
-
-" Use Audicon GmbH CSharp settings
-" au! FileType cs call SwitchToCSharp()
-
-" Remove trailing whitespace when saving C files
-" au! BufWritePre *.c call RemoveTrailingWhitespace()
 
 " Set type lookup function to preview window instead of echoing it
 " let g:OmniSharp_typeLookupInPreview = 1
@@ -131,19 +130,10 @@ set completepopup=highlight:Pmenu,border:off
 " Run code actions with text selected in visual mode to extract method
 " xnoremap <Leader><Space> :call OmniSharp#GetCodeActions('visual')<CR>
 
-" Rename with dialog
-" nnoremap <Leader>nm :OmniSharpRename<CR>
-
-" nnoremap <F2> :OmniSharpRename<CR>
-" Rename without dialog - with cursor on the symbol to rename: `:Rename newname`
-" command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
-
 " nnoremap <Leader>cf :OmniSharpCodeFormat<CR>
 
 " Start the OmniSharp server for the current solution
 " nnoremap <Leader>ss :OmniSharpStartServer<CR>
 " nnoremap <Leader>sp :OmniSharpStopServer<CR>
 
-" Enable snippet completion
-" let g:OmniSharp_want_snippet=1
-
+let g:e0647a20=1

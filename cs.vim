@@ -1,8 +1,8 @@
 " Language: C#
 
-" if exists('b:current_syntax')
-" 	finish
-" endif
+if exists('b:current_syntax')
+    finish
+endif
 
 " KEYWORDS
 " https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/

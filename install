@@ -37,7 +37,7 @@ read -p "Press [Enter] key to install files into HOME directory at . . ."
 
 # CONFIGURATION
 link "${CWD}/vimrc" "${HOME}/.vimrc"
-link "${CWD}/vimrc" "${HOME}/.gvimrc"
+link "${CWD}/gvimrc.vim" "${HOME}/.gvimrc"
 
 # THEMES
 mkdir -p "${HOME}/.vim/colors"

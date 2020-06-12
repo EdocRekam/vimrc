@@ -1,248 +1,280 @@
 <!DOCTYPE html>
 <html xmlns="xmlns="http://www.w3.org/1999/xhtml" lang xml:lang" >
-	<head>
-		<title>Vim Cheat Sheet</title>
-		<style>
-			body {
-				font-family: "Inconsolata";
-				background-color: #1e1e1e;
-				color: #d4d4d4;
-			}
-			th, td {
-				padding:2px 20px 2px 2px;
-			}
-			body table {
-				overflow: auto;
-				/*      top right bottom left */
-				margin: 10px 5px 10px 5px;
-				word-break: normal;
-				word-break: keep-all;
-				float:left;
-				background-color: #232323;
-				width:450px;
-			}
-		</style>
-	</head>
-	<body>
-		<table>
-			<caption>Custom</caption>
-			<tr>
-				<td>Move Line Down</td>
-				<td>Alt + Down</td>
-			</tr>
-			<tr>
-				<td>Move Line Up</td>
-				<td>Alt + Up</td>
-			</tr>
-			<tr>
-				<td>Resize Split</td>
-				<td>Ctrl + Left</td>
-				<td>Ctrl + Right</td>
-			</tr>
-			<tr>
-				<td>Toggle Nerdtree</td>
-				<td>Ctrl + Up</td>
-			</tr>
-			<tr>
-				<td>Save File</td>
-				<td>Ctrl + S</td>
-			</tr>
-			<tr>
-				<td>Cursor Home Select</td>
-				<td>Shift + Home</td>
-			</tr>
-			<tr>
-				<td>Cursor End Select</td>
-				<td>Shift + End</tr>
-			</tr>
-			<tr>
-				<td>Cut</td>
-				<td>Ctrl + X</td>
-			</tr>
-			<tr>
-				<td>Copy</td>
-				<td>Ctrl + C</td>
-			</tr>
-			<tr>
-				<td>Paste</td>
-				<td>Ctrl + V</td>
-			</tr>
-		</table>
-		<table>
-			<caption>GIT</caption>
-			<tr>
-				<td>Gui</td>
-				<td>F7</td>
-			</tr>
-			<tr>
-				<td>Status</td>
-				<td>F8</td>
-			</tr>
-		</table>
-		<table>
-			<caption>Navigation</caption>
-			<tr>
-				<td>Top of Screen</td>
-				<td>gg</td>
-			</tr>
-			<tr>
-				<td>Bottom Of Screen</td>
-				<td>Shift + g</td>
-			</tr>
-			<tr>
-				<td>Match Parenthesis</td>
-				<td>%</td>
-				<td>Shift + 5</td>
-			</tr>
-			<tr>
-				<td>Completion</td>
-				<td>Ctrl + N</td>
-				<td>Ctrl + P</td>
-			</tr>
-			<tr>
-				<td>List Functions</td>
-				<td>F1</td>
-			</tr>
-			<tr>
-				<td>Rename Symbol</td>
-				<td>F2</td>
-			</tr>
-			<tr>
-				<td>Goto Definition</td>
-				<td>F4</td>
-			</tr>
-		</table>
-		<table>
-			<caption>Window</caption>
-			<tr>
-				<td>Launch New Instance</td>
-				<td>F9</td>
-			<tr>
-				<td>Swap Windows Left Right</td>
-				<td>F10</td>
-			</tr>
-			<tr>
-				<td>Next|Previous Buffer</td>
-				<td>F11</td>
-				<td>Shift + F11</td>
-			</tr>
-			<tr>
-				<td>Split Window Left/Right</td>
-				<td>F12</td>
-				<td>Shift + F12</td>
-			</tr>
-			<tr>
-				<td>New</td>
-				<td>:new</td>
-				<td>:vnew</td>
-			</tr>
-		</table>
-		<table>
-			<caption>Edit</caption>
-			<tr>
-				<td>Uppercase</td>
-				<td>Visual Select + U</td>
-			</tr>
-			<tr>
-				<td>Lowercase</td>
-				<td>Visual Select + u</td>
-			</tr>
-			<tr>
-				<td>Block Select</td>
-				<td>Alt + Shift</td>
-			</tr>
-			<tr>
-				<td>Delete Text</td>
-				<td>x</td>
-				<td>DEL</td>
-			</tr>
-			<tr>
-				<td>Combine Lines</td>
-				<td>J</td>
-			</tr>
-			<tr>
-				<td>Delete Line</td>
-				<td>dd</td>
-			</tr>
-			<tr>
-				<td>Undo/Redo</td>
-				<td>u</td>
-				<td>Ctrl + r</rd>
-			</tr>
-			<tr>
-				<td>Trigger Suggest</td>
-				<td>Ctrl + Space</td>
-			</tr>
-		</table>
-		<table>
-			<caption>Help</caption>
-			<tr>
-				<td>Function List</td>
-				<td>:help function-list</td>
-			</tr>
-			<tr>
-				<td>Windowing</td>
-				<td>:help windows.txt</td>
-			</tr>
-			<tr>
-				<td>Commands</td>
-				<td>:help command-bar</td>
-			</tr>
-			<tr>
-				<td>Keystroke</td>
-				<td>:help i_CTRL-N</td>
-			</tr>
-		</table>
-		<table>
-			<caption>Buffer</caption>
-			<tr>
-				<td>List</td>
-				<td>:ls</td>
-			</tr>
-			<tr>
-				<td>Edit</td>
-				<td>b[NR]</td>
-			</tr>
-			<tr>
-				<td>Delete</td>
-				<td>:bd</bd>
-			</tr>
-			<tr>
-				<td>Next</td>
-				<td>:bnext</td>
-				<td>:bn</td>
-			</tr>
-			<tr>
-				<td>Previous</td>
-				<td>:bprev</td>
-				<td>:bp</td>
-			</tr>
-		</table>
-		<table>
-			<caption>Search</caption>
-			<tr>
-				<td>/search_text</td>
-				<td>cgn</td>
-				<td>new_text</td>
-				<td>.</td>
-			</tr>
-			<tr>
-				<td>Previous | Next</td>
-				<td>N</td>
-				<td>n</td>
-			</tr>
-		</table>
-		<table>
-			<caption>Spellcheck</caption
-			<tr>
-				<td>Add word to user dictionary</td>
-				<td>zg</td>
-			</tr>
-			<tr>
-				<td>Next|Previous bad word</td>
-				<td>]s</td>
-				<td>[s</td>
-			</tr>
-		</table>
-	</body>
+    <head>
+        <title>Vim Cheat Sheet</title>
+        <style>
+            body {
+                font-family: "Inconsolata";
+                background-color: #1e1e1e;
+                color: #d4d4d4;
+            }
+            th, td {
+                padding:2px 20px 2px 2px;
+            }
+            body table {
+                overflow: auto;
+                /*      top right bottom left */
+                margin: 10px 5px 10px 5px;
+                word-break: normal;
+                word-break: keep-all;
+                float:left;
+                background-color: #232323;
+                width:450px;
+            }
+        </style>
+    </head>
+    <body>
+        <table>
+            <caption>File</caption>
+            <tr>
+                <td>New</td>
+                <td>:new</td>
+                <td>:vnew</td>
+            </tr>
+            <tr>
+                <td>Open</td>
+                <td>:e &lt;file&gt;</td>
+                <td>:e +100 &lt;file&gt;</td>
+            </td>
+            <tr>
+                <td>Save</td>
+                <td>:w</td>
+                <td>Ctrl + S</td>
+            </tr>
+            <tr>
+                <td>Nerdtree</td>
+                <td>Ctrl + Up</td>
+            </tr>
+        </table>
+        <table>
+            <caption>Custom</caption>
+            <tr>
+                <td>Move Line Down</td>
+                <td>Alt + Down</td>
+            </tr>
+            <tr>
+                <td>Move Line Up</td>
+                <td>Alt + Up</td>
+            </tr>
+            <tr>
+                <td>Resize Split</td>
+                <td>Ctrl + Left</td>
+                <td>Ctrl + Right</td>
+            </tr>
+            <tr>
+                <td>Cursor Home Select</td>
+                <td>Shift + Home</td>
+            </tr>
+            <tr>
+                <td>Cursor End Select</td>
+                <td>Shift + End</tr>
+            </tr>
+            <tr>
+                <td>Cut</td>
+                <td>Ctrl + X</td>
+            </tr>
+            <tr>
+                <td>Copy</td>
+                <td>Ctrl + C</td>
+            </tr>
+            <tr>
+                <td>Paste</td>
+                <td>Ctrl + V</td>
+            </tr>
+            <tr>
+                <td>Set Language Mode</td>
+                <td>:setf cs</cs>
+        </table>
+        <table>
+            <caption>GIT</caption>
+            <tr>
+                <td>Gui</td>
+                <td>F7</td>
+            </tr>
+            <tr>
+                <td>Status</td>
+                <td>F8</td>
+            </tr>
+        </table>
+        <table>
+            <caption>Navigation</caption>
+            <tr>
+                <td>Find In Files</td>
+                <td>:Find &lt;text&gt;</td>
+                <td>:grep 'text' *</td>
+            </tr>
+            <tr>
+                <td>Top of Screen</td>
+                <td>gg</td>
+            </tr>
+            <tr>
+                <td>Bottom Of Screen</td>
+                <td>Shift + g</td>
+            </tr>
+            <tr>
+                <td>Match Parenthesis</td>
+                <td>%</td>
+                <td>Shift + 5</td>
+            </tr>
+            <tr>
+                <td>Completion</td>
+                <td>Ctrl + N</td>
+                <td>Ctrl + P</td>
+            </tr>
+            <tr>
+                <td>List Functions</td>
+                <td>F1</td>
+            </tr>
+            <tr>
+                <td>Rename Symbol</td>
+                <td>F2</td>
+            </tr>
+            <tr>
+                <td>Goto Definition</td>
+                <td>F4</td>
+            </tr>
+        </table>
+        <table>
+            <caption>Window</caption>
+            <tr>
+                <td>Launch New Instance</td>
+                <td>F9</td>
+            <tr>
+                <td>Swap Windows Left Right</td>
+                <td>F10</td>
+            </tr>
+            <tr>
+                <td>Next|Previous Buffer</td>
+                <td>F11</td>
+                <td>Shift + F11</td>
+            </tr>
+            <tr>
+                <td>Split Window Left/Right</td>
+                <td>F12</td>
+                <td>Shift + F12</td>
+            </tr>
+        </table>
+        <table>
+            <caption>Edit</caption>
+            <tr>
+                <td>Uppercase</td>
+                <td>Visual Select + U</td>
+            </tr>
+            <tr>
+                <td>Lowercase</td>
+                <td>Visual Select + u</td>
+            </tr>
+            <tr>
+                <td>Block Select</td>
+                <td>Alt + Shift</td>
+            </tr>
+            <tr>
+                <td>Delete Text</td>
+                <td>x</td>
+                <td>DEL</td>
+            </tr>
+            <tr>
+                <td>Combine Lines</td>
+                <td>J</td>
+            </tr>
+            <tr>
+                <td>Delete Line</td>
+                <td>dd</td>
+            </tr>
+            <tr>
+                <td>Undo/Redo</td>
+                <td>u</td>
+                <td>Ctrl + r</rd>
+            </tr>
+            <tr>
+                <td>Trigger Suggest</td>
+                <td>Ctrl + Space</td>
+            </tr>
+            <tr>
+                <td>Indent</td>
+                <td>Tab</td>
+                <td>&gt;&gt;</td>
+            </tr>
+            <tr>
+                <td>Outdent</td>
+                <td>Shift + Tab</td>
+                <td>&lt;&lt;</td>
+            </tr>
+        </table>
+        <table>
+            <caption>Help</caption>
+            <tr>
+                <td>Function List</td>
+                <td>:help function-list</td>
+            </tr>
+            <tr>
+                <td>Windowing</td>
+                <td>:help windows.txt</td>
+            </tr>
+            <tr>
+                <td>Commands</td>
+                <td>:help command-bar</td>
+            </tr>
+            <tr>
+                <td>Keystroke</td>
+                <td>:help i_CTRL-N</td>
+            </tr>
+        </table>
+        <table>
+            <caption>Buffer</caption>
+            <tr>
+                <td>List</td>
+                <td>:ls</td>
+            </tr>
+            <tr>
+                <td>Edit</td>
+                <td>b[NR]</td>
+            </tr>
+            <tr>
+                <td>Delete</td>
+                <td>:bd</bd>
+            </tr>
+            <tr>
+                <td>Next</td>
+                <td>:bnext</td>
+                <td>:bn</td>
+            </tr>
+            <tr>
+                <td>Previous</td>
+                <td>:bprev</td>
+                <td>:bp</td>
+            </tr>
+        </table>
+        <table>
+            <caption>Search</caption>
+            <tr>
+                <td>/search_text</td>
+                <td>cgn</td>
+                <td>new_text</td>
+                <td>.</td>
+            </tr>
+            <tr>
+                <td>Previous | Next</td>
+                <td>N</td>
+                <td>n</td>
+            </tr>
+            <tr>
+                <td>Find In Files</td>
+                <td>:Find &lt;text&gt;</td>
+                <td>:grep 'text' *</td>
+            </tr>
+        </table>
+        <table>
+            <caption>Spellcheck</caption
+            <tr>
+                <td>Add word to user dictionary</td>
+                <td>zg</td>
+            </tr>
+            <tr>
+                <td>Next|Previous bad word</td>
+                <td>]s</td>
+                <td>[s</td>
+            </tr>
+        </table>
+    </body>
 </html>

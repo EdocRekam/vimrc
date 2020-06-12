@@ -23,6 +23,9 @@ nnoremap <silent><C-UP> :NERDTreeToggle<CR>
 inoremap <silent><C-s> <ESC>:w<CR>i
 nnoremap <silent><C-s> :w<CR>
 
+" SORT BLOCK                                            CTRL + S
+vnoremap <silent><C-s> :'<,'>sort<CR>gv
+
 " CURSOR HOME SELECT                                    SHIFT + HOME
 inoremap <silent><S-Home> <ESC>v<HOME>
 nnoremap <silent><S-Home> <ESC>v<HOME>
@@ -38,7 +41,15 @@ vnoremap <c-c> "+y
 vnoremap <c-x> "+x
 
 " PASTE                                                 CTRL + V
-inoremap <silent><c-v> <c-r>+=
+inoremap <silent><c-v> <c-r>+
+
+" SHOW ALL COMMANDS                                     F1
+inoremap <silent> <F1> :call ToggleStatusLine()<CR>
+nnoremap <silent> <F1> :call ToggleStatusLine()<CR>
+vnoremap <silent> <F1> :call ToggleStatusLine()<CR>
+
+" SOURCE CURRENT FILE                                   F5
+nnoremap <F5> :so %<CR>
 
 " GIT GUI                                               F7
 nnoremap <silent><F7> :silent !git gui&<cr>
@@ -70,6 +81,22 @@ nnoremap <silent><s-a-down> <c-v>
 inoremap <silent><pageup> <ESC><c-u>i
 inoremap <silent><pagedown> <ESC><c-d>i
 
-nnoremap <F5> :so %<CR>
+" INCREASE FONT                                         CTRL + SHIFT + RIGHT
+nnoremap <silent> <C-S-RIGHT> :call ZoomIn()<CR>
 
-" SHOW ALL COMMANDS                                     F1
+" DECREASE FONT                                         CTRL + SHIFT + LEFT
+nnoremap <silent> <C-S-LEFT> :call ZoomOut()<CR>
+
+" INDENT                                                TAB
+nnoremap <Tab> >>
+vnoremap <Tab> > <CR>gv
+
+" OUTDENT                                               SHIFT + TAB
+nnoremap <S-Tab> <<
+vnoremap <S-Tab> < <cr>gv
+
+" ALWAYS INSERT REAL TAB                                CTRL + TAB
+inoremap <C-Tab> <C-Q><Tab>
+nnoremap <C-Tab> i<C-Q><Tab>
+
+
