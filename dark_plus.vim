@@ -16,10 +16,6 @@ hi MatchParen       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg
 hi MoreMsg          gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi NonText          gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi Normal           gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
-hi Pmenu            gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
-hi PmenuSbar        gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
-hi PmenuSel         gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
-hi PmenuThumb       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi Question         gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi SignColumn       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi StatusLineTerm   gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
@@ -65,6 +61,12 @@ hi cursorcolumn     gui=NONE      guibg=#264f78 guifg=NONE    cterm=STANDOUT cte
 hi cursorline       gui=NONE      guibg=#264f78 guifg=NONE    cterm=NONE     ctermbg=4  ctermfg=4
 hi visual           gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     ctermbg=4  ctermfg=NONE
 hi visualnos        gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     ctermbg=4  ctermfg=NONE
+
+" POPUP MENUS
+hi Pmenu            gui=NONE      guibg=#68217A guifg=#FFFFFF cterm=NONE ctermbg=0  ctermfg=7
+hi PmenuSbar        gui=NONE      guibg=#2E2E2E guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
+hi PmenuThumb       gui=NONE      guibg=#FFFFFF guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
+hi PmenuSel         gui=BOLD      guibg=#264F78 guifg=NONE    cterm=BOLD ctermbg=4  ctermfg=7
 
 " SEARCH
 hi incsearch        gui=NONE      guibg=#515c6a guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7

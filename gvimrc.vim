@@ -1,6 +1,7 @@
 " HIDE TOOLBAR AND MENU
 set guioptions -=T
 set guioptions -=m
+set guioptions +=M
 
 " SET PREFERRED FONT + GVIM OPTIONS
 if has("gui_gtk2") || has("gui_gtk3")

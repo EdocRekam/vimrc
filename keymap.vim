@@ -35,18 +35,27 @@ inoremap <silent><s-end> <esc>v<end>
 nnoremap <silent><s-end> <esc>v<end>
 
 " COPY                                                  CTRL + C
+vnoremap <silent>y "+y
 vnoremap <c-c> "+y
 
 " CUT                                                   CTRL + X
+vnoremap <silent>x "+x
 vnoremap <c-x> "+x
 
 " PASTE                                                 CTRL + V
+vnoremap <silent>p "+p
+vnoremap <silent>P "+P
+nnoremap <silent>p "+p
+nnoremap <silent>P "+P
 inoremap <silent><c-v> <c-r>+
 
 " SHOW ALL COMMANDS                                     F1
 inoremap <silent> <F1> :call ToggleStatusLine()<CR>
 nnoremap <silent> <F1> :call ToggleStatusLine()<CR>
 vnoremap <silent> <F1> :call ToggleStatusLine()<CR>
+
+" GOTO FILE > DEFINITION                                F4
+nnoremap <silent><F4> :call GotoDefinition()<CR>
 
 " SOURCE CURRENT FILE                                   F5
 nnoremap <F5> :so %<CR>

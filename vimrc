@@ -1,6 +1,9 @@
 " NO VI COMPATIBILITY
 set nocp
 
+" SYNCHRONIZE CLIPBOARD
+set clipboard^=unnamed
+
 " NO START OF LINE ON MANY COMMANDS
 set nosol
 
@@ -61,6 +64,9 @@ colorscheme dark_plus
 " TURN ON SYNTAX HIGHLIGHTING
 syntax on
 
+" UNKNOWN
+set previewheight=5
+
 " KEY BINDINGS
 let s:path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 let s:script = s:path . '/keymap.vim'
@@ -80,6 +86,15 @@ endif
 " *******************************************************************
 " SOURCE CODE
 " *******************************************************************
+function! GotoDefinition()
+    let l:path = expand("<cfile>")
+    if filereadable(l:path)
+        :e! <cfile>
+    elseif exists("g:e0647a20")
+        call OmniSharpGotoDefinition()
+    endif
+endfunction
+
 function! RemoveTrailingWhitespace()
     let _s=@/
     :%s/\s\+$//e
@@ -106,8 +121,8 @@ endfunction
 command! Unix2Dos call Unix2Dos()
 
 function! FindInFiles(criteria)
-    execute 'silent grep! ' . a:criteria . ' *'
-    copen
+    execute 'silent grep! ' . a:criteria . ' **'
+    copen 35
 endfunction
 command! -nargs=1 Find call FindInFiles('<args>')
 

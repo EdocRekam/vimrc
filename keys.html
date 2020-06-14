@@ -29,13 +29,18 @@
             <tr>
                 <td>New</td>
                 <td>:new</td>
-                <td>:vnew</td>
+                <td>:vnew [path]</td>
             </tr>
             <tr>
                 <td>Open</td>
                 <td>:e &lt;file&gt;</td>
                 <td>:e +100 &lt;file&gt;</td>
             </td>
+            <tr>
+                <td>Goto File</td>
+                <td>gf</td>
+                <td>Ctrl + W + f</td>
+            </tr>
             <tr>
                 <td>Save</td>
                 <td>:w</td>
@@ -49,17 +54,9 @@
         <table>
             <caption>Custom</caption>
             <tr>
-                <td>Move Line Down</td>
-                <td>Alt + Down</td>
-            </tr>
-            <tr>
-                <td>Move Line Up</td>
+                <td>Move Line</td>
                 <td>Alt + Up</td>
-            </tr>
-            <tr>
-                <td>Resize Split</td>
-                <td>Ctrl + Left</td>
-                <td>Ctrl + Right</td>
+                <td>Alt + Down</td>
             </tr>
             <tr>
                 <td>Cursor Home Select</td>
@@ -72,21 +69,32 @@
             <tr>
                 <td>Cut</td>
                 <td>Ctrl + X</td>
+                <td>"+x</td>
             </tr>
             <tr>
                 <td>Copy</td>
                 <td>Ctrl + C</td>
+                <td>"+y</td>
             </tr>
             <tr>
                 <td>Paste</td>
                 <td>Ctrl + V</td>
+                <td>"+p</td>
             </tr>
             <tr>
                 <td>Set Language Mode</td>
                 <td>:setf cs</cs>
         </table>
         <table>
+            <tr>
+                <td>Source File</td>
+                <td>F5</td>
+            </tr>
             <caption>GIT</caption>
+            <tr>
+                <td>Reserved</td>
+                <td>F6</td>
+            </tr>
             <tr>
                 <td>Gui</td>
                 <td>F7</td>
@@ -99,16 +107,8 @@
         <table>
             <caption>Navigation</caption>
             <tr>
-                <td>Find In Files</td>
-                <td>:Find &lt;text&gt;</td>
-                <td>:grep 'text' *</td>
-            </tr>
-            <tr>
-                <td>Top of Screen</td>
+                <td>Top | Bottom</td>
                 <td>gg</td>
-            </tr>
-            <tr>
-                <td>Bottom Of Screen</td>
                 <td>Shift + g</td>
             </tr>
             <tr>
@@ -128,6 +128,10 @@
             <tr>
                 <td>Rename Symbol</td>
                 <td>F2</td>
+            </tr>
+            <tr>
+                <td>Reserved</td>
+                <td>F3</td>
             </tr>
             <tr>
                 <td>Goto Definition</td>
@@ -153,16 +157,23 @@
                 <td>F12</td>
                 <td>Shift + F12</td>
             </tr>
+            <tr>
+                <td>Resize Split</td>
+                <td>Ctrl + Left</td>
+                <td>Ctrl + Right</td>
+            </tr>
         </table>
         <table>
             <caption>Edit</caption>
             <tr>
-                <td>Uppercase</td>
-                <td>Visual Select + U</td>
+                <td>Sort</td>
+                <td>:sort</td>
+                <td>:uniq :reverse</td>
             </tr>
             <tr>
-                <td>Lowercase</td>
-                <td>Visual Select + u</td>
+                <td>Upper | Lower</td>
+                <td>Visual + U</td>
+                <td>Visual + u</td>
             </tr>
             <tr>
                 <td>Block Select</td>
@@ -199,6 +210,11 @@
                 <td>Outdent</td>
                 <td>Shift + Tab</td>
                 <td>&lt;&lt;</td>
+            </tr>
+            <tr>
+                <td>Put</td>
+                <td>Before: p</td>
+                <td>After: P</td>
             </tr>
         </table>
         <table>

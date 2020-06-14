@@ -3,7 +3,6 @@ if exists("g:e0647a20")
     finish
 endif
 
-
 " https://github.com/OmniSharp/Omnisharp-vim
 
 " 1. Install OmnisSharp-Roslyn
@@ -17,7 +16,6 @@ endif
 "
 " 4. Manually start server
 "         OmniSharp -s /path/to/sln
-
 
 " TRIGGER SUGGEST                                       CTRL + SPACE
 inoremap <silent><c-space> <c-x><c-o>
@@ -63,17 +61,11 @@ function! SwitchToCSharp()
     setlocal fileencoding=utf-8
     setlocal nobomb
 
-    set previewheight=5
-
-    "OmniSharpStartServer
     OmniSharpHighlight
 endfunction
 
 " REMOVE TRAILING WHITESPACE WHEN SAVING CSHARP FILES
 " au! BufWritePre *.cs,*.csproj,*.sln call SanitizeCSharp()
-
-" These are CSharp files
-" au! filetypedetect BufNewFile,BufRead *.Tests setf cs
 
 " Set type lookup function to preview window instead of echoing it
 " let g:OmniSharp_typeLookupInPreview = 1
