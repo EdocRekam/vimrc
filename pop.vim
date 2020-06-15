@@ -180,7 +180,7 @@ function! s:Filter(winid, key)
     if a:key == "\<ESC>" || a:key == "\<C-SPACE>" || a:key == "\<F1>"
         if s:len > 0
            let s:len = 0
-           let s:opts.title = ''
+           let s:opts.title = '> '
            let s:items = s:Menu()
         endif
         call popup_close(a:winid, -1)
@@ -195,7 +195,7 @@ function! s:Filter(winid, key)
         else
             let s:len = s:len - 1
             if s:len == 0
-                let s:opts.title = ''
+                let s:opts.title = '> '
                 let s:items = s:Menu()
             else
                 let s:opts.title = strpart(s:opts.title, 0, s:len)
@@ -230,8 +230,7 @@ endfunction
 function! s:Menu()
     let l:items = [
         \  s:CMD_ALIGN
-        \, s:CMD_UNIX2DOS
-        \, s:CMD_DOS2UNIX
+        \, s:CMD_UNIX2DOS, s:CMD_DOS2UNIX
         \, s:CMD_ENUM
         \, s:CMD_GIT_ADDALL, s:CMD_GIT_COMMIT, s:CMD_GIT_DIFF
         \, s:CMD_GIT_GUI, s:CMD_GIT_K, s:CMD_GIT_STAT
@@ -239,10 +238,7 @@ function! s:Menu()
         \, s:CMD_REMOVE_DUP
         \, s:CMD_REMOVE_WS
         \, s:CMD_HI_DISP
-        \, s:CMD_SORT
-        \, s:CMD_SORT_I
-        \, s:CMD_SORT_D
-        \, s:CMD_SORT_DI
+        \, s:CMD_SORT, s:CMD_SORT_I, s:CMD_SORT_D, s:CMD_SORT_DI
         \, s:CMD_SYM_GOTO
         \, s:CMD_FONT_UP, s:CMD_FONT_DOWN
         \, s:CMD_TAB_NEW, s:CMD_TAB_CLOSE
@@ -261,23 +257,21 @@ function! s:Reduce(items, key, len)
     return l:newItems
 endfunction
 
-function! DebugMenu()
-    unlet s:wid
-endfunction
-
 "-------------------------------------------------------------------------
 "     SOURCE CODE
 "-------------------------------------------------------------------------
 let s:len = 0
 let s:items = s:Menu()
 let s:opts = {
-    \  'maxheight'  : 20
-    \, 'padding'    : [1, 1, 0, 1]
-    \, 'cursorline' : 1
+    \  'border'     : [1,0,0,0]
+    \, 'borderchars': ['-']
     \, 'callback'   : function('s:Callback')
+    \, 'cursorline' : 1
     \, 'filter'     : function('s:Filter')
     \, 'filtermode' : 'a'
-    \, 'title'      : ''
+    \, 'maxheight'  : 20
+    \, 'padding'    : [1, 1, 0, 1]
+    \, 'title'      : '> '
     \, 'wrap'       : 0}
 
 nnoremap <silent><F1> :call ListFunctions()<CR>
