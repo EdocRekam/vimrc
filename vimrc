@@ -1,6 +1,9 @@
 " NO VI COMPATIBILITY
 set nocp
 
+" HIGHLIGHT LINE
+set cursorline
+
 " SYNCHRONIZE CLIPBOARD
 set clipboard^=unnamed
 
@@ -59,7 +62,7 @@ filetype on
 filetype indent plugin on
 
 " SET THEME (ORDER SPECIFIC)
-colorscheme dark_plus
+colorscheme Dark+
 
 " TURN ON SYNTAX HIGHLIGHTING
 syntax on
@@ -79,6 +82,11 @@ let g:OmniSharp_server_path='/usr/local/bin/omnisharp'
 
 " FILE TYPES
 let s:script = s:path . '/filetypes.vim'
+if filereadable(s:script)
+    execute 'source ' . s:script
+endif
+
+let s:script = s:path . '/pop.vim'
 if filereadable(s:script)
     execute 'source ' . s:script
 endif

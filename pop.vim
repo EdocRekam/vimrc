@@ -1,7 +1,60 @@
 " POPUP WINDOW
 
-function! s:AlignOn()
-    echom 'Todo: AlignOn'
+let s:CMD_ALIGN       = 'Align On'
+let s:CMD_DOS2UNIX    = 'Change Line Endings To Unix'
+let s:CMD_ENUM        = 'Enumerate'
+let s:CMD_EXPAND_TAB  = 'Convert Indentation To Spaces'
+let s:CMD_REMOVE_DUP  = 'Remove Duplicates'
+let s:CMD_REMOVE_WS   = 'Remove Trailing Whitespace'
+let s:CMD_UNIX2DOS    = 'Change Line Endings To DOS'
+let s:CMD_HI_DISP     = 'Show Highlight Colors'
+
+let s:CMD_GIT_ADDALL  = 'Git: Add All'
+let s:CMD_GIT_COMMIT  = 'Git: Commit'
+let s:CMD_GIT_DIFF    = 'Git: Diff'
+let s:CMD_GIT_GUI     = 'Git: Gui'
+let s:CMD_GIT_K       = 'Git: History'
+let s:CMD_GIT_STAT    = 'Git: Status'
+
+let s:CMD_LOWER       = 'Lowercase'
+let s:CMD_UPPER       = 'Uppercase'
+
+let s:CMD_FONT_UP     = 'Font: Increase Size'
+let s:CMD_FONT_DOWN   = 'Font: Decrease Size'
+
+let s:CMD_SORT        = 'Sort: Ascending'
+let s:CMD_SORT_D      = 'Sort: Descending'
+let s:CMD_SORT_DI     = 'Sort: Descending + Insensitive'
+let s:CMD_SORT_I      = 'Sort: Ascending + Insensitive'
+
+let s:CMD_SYM_GOTO    = 'Symbol: Goto Definition'
+
+let s:CMD_TAB_NEW     = 'Tab: New'
+let s:CMD_TAB_CLOSE   = 'Tab: Close'
+
+function! s:AlignOn(criteria)
+    let l:colAlign = 0
+    for l:line in getline(line("'<"), line("'>"))
+        let l:col = stridx(l:line, a:criteria)
+        if l:col > l:colAlign
+            let l:colAlign = l:col + 1
+        endif
+    endfor
+
+    let l:nr = line("'<")
+    let l:cnt = 0
+    for l:line in getline(line("'<"), line("'>"))
+        let l:col = stridx(l:line, a:criteria)
+        let l:diff = l:colAlign - l:col
+        let l:fmt = '%s%' . printf('%d', l:diff) . 's%s'
+        let l:front = strcharpart(l:line, 0, l:col)
+        let l:back = strcharpart(l:line, l:col, strlen(l:line))
+        let l:line = printf(l:fmt, l:front, ' ', l:back)
+        call setline(l:nr, l:line)
+        let l:nr = l:nr + 1
+        let l:cnt = l:cnt + 1
+    endfor
+    normal gv
 endfunction
 
 function! s:Enumerate()
@@ -57,24 +110,57 @@ function! s:Callback(winid, result)
     endif
 
     let l:cmd = s:items[a:result-1]
-    if 'Align On' == l:cmd
-        call s:AlignOn()
-    elseif 'Enumerate' == l:cmd
+    if s:CMD_ALIGN == l:cmd
+        let l:criteria = input('Align on: ', '=')
+        call s:AlignOn(l:criteria)
+    elseif s:CMD_DOS2UNIX == l:cmd
+        call Dos2Unix()
+    elseif s:CMD_UNIX2DOS == l:cmd
+        call Unix2Dos()
+    elseif s:CMD_ENUM == l:cmd
         call s:Enumerate()
-    elseif 'Remove Duplicates' == l:cmd
+    elseif s:CMD_EXPAND_TAB == l:cmd
+        call ExpandTabs()
+    elseif s:CMD_REMOVE_DUP == l:cmd
         call s:RemoveDuplicates()
-    elseif 'Sort Ascending' == l:cmd
+    elseif s:CMD_REMOVE_WS == l:cmd
+        call RemoveTrailingWhitespace()
+    elseif s:CMD_SORT == l:cmd
         call s:Sort()
-    elseif 'Sort Ascending (Insensitive)' == l:cmd
+    elseif s:CMD_SORT_I == l:cmd
         call s:SortI()
-    elseif 'Sort Descending' == l:cmd
+    elseif s:CMD_SORT_D == l:cmd
         call s:SortD()
-    elseif 'Sort Descending (Insensitive)' == l:cmd
+    elseif s:CMD_SORT_DI == l:cmd
         call s:SortDI()
-    elseif 'Lowercase' == l:cmd
+    elseif s:CMD_LOWER == l:cmd
         call s:Lowercase()
-    elseif 'Uppercase' == l:cmd
+    elseif s:CMD_UPPER == l:cmd
         call s:Uppercase()
+    elseif s:CMD_HI_DISP == l:cmd
+        so $VIMRUNTIME/syntax/hitest.vim
+    elseif s:CMD_FONT_UP == l:cmd
+        call ZoomIn()
+    elseif s:CMD_FONT_DOWN == l:cmd
+        call ZoomOut()
+    elseif s:CMD_TAB_NEW == l:cmd
+        tabnew
+    elseif s:CMD_TAB_CLOSE == l:cmd
+        tabclose
+    elseif s:CMD_SYM_GOTO == l:cmd
+        call GotoDefinition()
+    elseif s:CMD_GIT_ADDALL == l:cmd
+        execute 'silent !git add .&'
+    elseif s:CMD_GIT_COMMIT == l:cmd
+        execute 'silent !git commit&'
+    elseif s:CMD_GIT_DIFF == l:cmd
+        execute 'silent !git diff&'
+    elseif s:CMD_GIT_GUI == l:cmd
+        execute 'silent !git gui&'
+    elseif s:CMD_GIT_K == l:cmd
+        execute 'silent !gitk&'
+    elseif s:CMD_GIT_STAT == l:cmd
+        execute 'silent !git status&'
     endif
 
     unlet s:wid
@@ -143,15 +229,25 @@ endfunction
 
 function! s:Menu()
     let l:items = [
-        \  'Align On'
-        \, 'Enumerate'
-        \, 'Remove Duplicates'
-        \, 'Sort Acsending'
-        \, 'Sort Acsending (Insensitive)'
-        \, 'Sort Descending'
-        \, 'Sort Descending (Insensitive)'
-        \, 'Lowercase'
-        \, 'Uppercase' ]
+        \  s:CMD_ALIGN
+        \, s:CMD_UNIX2DOS
+        \, s:CMD_DOS2UNIX
+        \, s:CMD_ENUM
+        \, s:CMD_GIT_ADDALL, s:CMD_GIT_COMMIT, s:CMD_GIT_DIFF
+        \, s:CMD_GIT_GUI, s:CMD_GIT_K, s:CMD_GIT_STAT
+        \, s:CMD_EXPAND_TAB
+        \, s:CMD_REMOVE_DUP
+        \, s:CMD_REMOVE_WS
+        \, s:CMD_HI_DISP
+        \, s:CMD_SORT
+        \, s:CMD_SORT_I
+        \, s:CMD_SORT_D
+        \, s:CMD_SORT_DI
+        \, s:CMD_SYM_GOTO
+        \, s:CMD_FONT_UP, s:CMD_FONT_DOWN
+        \, s:CMD_TAB_NEW, s:CMD_TAB_CLOSE
+        \, s:CMD_LOWER
+        \, s:CMD_UPPER ]
     return l:items
 endfunction
 
@@ -175,7 +271,7 @@ endfunction
 let s:len = 0
 let s:items = s:Menu()
 let s:opts = {
-    \  'maxheight'  : 10
+    \  'maxheight'  : 20
     \, 'padding'    : [1, 1, 0, 1]
     \, 'cursorline' : 1
     \, 'callback'   : function('s:Callback')

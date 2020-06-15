@@ -4,7 +4,7 @@ hi clear
 if exists("syntax_on")
 	syntax reset
 end
-let g:colors_name="dark_plus"
+let g:colors_name="Dark+"
 
 " BACKGROUND / FOREGROUND
 hi Conceal          gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
@@ -58,7 +58,7 @@ hi Cursor           gui=NONE      guibg=#264f78 guifg=NONE    cterm=NONE ctermbg
 hi lCursor          gui=NONE      guibg=#264f78 guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 
 hi cursorcolumn     gui=NONE      guibg=#264f78 guifg=NONE    cterm=STANDOUT ctermbg=7  ctermfg=7
-hi cursorline       gui=NONE      guibg=#264f78 guifg=NONE    cterm=NONE     ctermbg=4  ctermfg=4
+hi cursorline       gui=NONE      guibg=#2e2e2e guifg=NONE    cterm=NONE     ctermbg=4  ctermfg=4
 hi visual           gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     ctermbg=4  ctermfg=NONE
 hi visualnos        gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     ctermbg=4  ctermfg=NONE
 
