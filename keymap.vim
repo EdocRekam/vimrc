@@ -56,7 +56,7 @@ vnoremap <silent> <F1> :call ToggleStatusLine()<CR>
 
 " GOTO FILE > DEFINITION                                F4
 nnoremap <silent><F4> :call GotoDefinition()<CR>
-nnoremap <silent><S-F4> :call FindInFiles(<cword>)<CR>
+nnoremap <silent><S-F4> :call FindInFiles('<cword>')<CR>
 
 " SOURCE CURRENT FILE                                   F5
 nnoremap <F5> :so %<CR>
