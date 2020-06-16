@@ -129,7 +129,7 @@ endfunction
 command! Unix2Dos call Unix2Dos()
 
 function! FindInFiles(criteria)
-    execute 'silent grep! ' . a:criteria . ' **'
+    execute 'silent grep! ' . a:criteria . ' **/*'
     copen 35
 endfunction
 command! -nargs=1 Find call FindInFiles('<args>')
