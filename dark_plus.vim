@@ -58,7 +58,7 @@ hi Cursor           gui=NONE      guibg=#264f78 guifg=NONE    cterm=NONE ctermbg
 hi lCursor          gui=NONE      guibg=#264f78 guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 
 hi cursorcolumn     gui=NONE      guibg=#264f78 guifg=NONE    cterm=STANDOUT ctermbg=7  ctermfg=7
-hi cursorline       gui=NONE      guibg=#2e2e2e guifg=NONE    cterm=NONE     ctermbg=4  ctermfg=4
+hi cursorline       gui=NONE      guibg=#2e2e2e guifg=NONE    cterm=NONE     ctermbg=4  ctermfg=NONE
 hi visual           gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     ctermbg=4  ctermfg=NONE
 hi visualnos        gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     ctermbg=4  ctermfg=NONE
 
