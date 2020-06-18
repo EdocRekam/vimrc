@@ -14,7 +14,6 @@ hi FoldColumn       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg
 hi Folded           gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi MatchParen       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi MoreMsg          gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
-hi NonText          gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi Normal           gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi Question         gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi SignColumn       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
@@ -34,6 +33,9 @@ hi LineNr           gui=NONE      guibg=#1e1e1e guifg=#858585 cterm=NONE ctermbg
 hi SpecialKey       gui=NONE      guibg=#1e1e1e guifg=#858585 cterm=NONE ctermbg=0  ctermfg=8
 
 hi VertSplit        gui=NONE      guibg=#1e1e1e guifg=#2e2e2e cterm=NONE ctermbg=0  ctermfg=7
+
+" HIDE ~ BEYOND FILE
+hi NonText          gui=NONE      guibg=#1e1e1e guifg=#1e1e1e cterm=NONE ctermbg=0  ctermfg=7
 
 " DIFF
 hi DiffAdd          gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7

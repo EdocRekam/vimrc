@@ -1,6 +1,9 @@
 " NO VI COMPATIBILITY
 set nocp
 
+" AUTO CHANGE DIRECTORY
+set autochdir
+
 " HIGHLIGHT LINE
 set cursorline
 
