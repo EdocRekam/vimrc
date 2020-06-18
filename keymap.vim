@@ -65,7 +65,7 @@ nnoremap <F5> :so %<CR>
 nnoremap <silent><F7> :silent !git gui&<cr>
 
 " GIT STATUS                                            F8
-nnoremap <silent><F8> :!git status<cr>
+nnoremap <silent><F8> :call GitStatus()<CR>
 
 " LAUNCH NEW INSTANCE                                   F9
 nnoremap <silent><F9> :silent !gvim&<cr>
@@ -73,14 +73,17 @@ nnoremap <silent><F9> :silent !gvim&<cr>
 " ROTATE WINDOWS RIGHT/LEFT                             F10
 nnoremap <silent><F10> <C-W>x
 
-" SPLIT WINDOW UP/DOWN                                  F11
-nnoremap <silent><F11> :bnext!<cr>
-nnoremap <silent><S-F11> :bprev!<cr>
+" NEXT TAB                                              F11
+nnoremap <silent><F11> :tabnext<CR>
+
+" NEXT BUFFER                                           SHIFT + F11
+nnoremap <silent><S-F11> :bnext!<CR>
 
 " SPLIT WINDOW LEFT|RIGHT                               F12
-"                UP|DOWN                                SHIFT + F12
 nnoremap <silent><F12> :vsplit<cr>
-nnoremap <silent><S-F12> :split<cr>
+
+" TOGGLE SPLIT UP DOWN | LEFT RIGHT
+nnoremap <silent><S-F12> :call ToggleSplit()<CR>
 
 " BLOCK VISUAL                                          SHIFT + ALT + UP
 "                                                       SHIFT + ALT + DOWN
@@ -108,5 +111,4 @@ vnoremap <S-Tab> < <cr>gv
 " ALWAYS INSERT REAL TAB                                CTRL + TAB
 inoremap <C-Tab> <C-Q><Tab>
 nnoremap <C-Tab> i<C-Q><Tab>
-
 

@@ -91,6 +91,11 @@ if filereadable(s:script)
     execute 'source ' . s:script
 endif
 
+let s:script = s:path . '/git.vim'
+if filereadable(s:script)
+    execute 'source ' . s:script
+endif
+
 " *******************************************************************
 " SOURCE CODE
 " *******************************************************************
@@ -150,6 +155,19 @@ function! ToggleStatusLine()
     else
         set statusline=
     endif
+endfunction
+
+function! ToggleSplit()
+    if exists('s:orient')
+        if s:orient == 'K'
+            let s:orient = 'H'
+        else
+            let s:orient = 'K'
+        endif
+    else
+        let s:orient = 'K'
+    endif
+    exe printf('windo wincmd %s', s:orient)
 endfunction
 
 function! ZoomIn()

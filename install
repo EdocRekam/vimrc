@@ -43,6 +43,7 @@ link "${CWD}/gvimrc.vim" "${HOME}/.gvimrc"
 mkdir -p "${HOME}/.vim/colors"
 link "${CWD}/dark_plus.vim" "${HOME}/.vim/colors/Dark+.vim"
 
-# C# SYNTAX
+# SYNTAX
 mkdir -p "${HOME}/.vim/syntax"
 link "${CWD}/cs.vim" "${HOME}/.vim/syntax/cs.vim"
+link "${CWD}/gitmisc.vim" "${HOME}/.vim/syntax/gitmisc.vim"

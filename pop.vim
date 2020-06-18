@@ -13,7 +13,8 @@ let s:CMD_GIT_ADDALL  = 'Git: Add All'
 let s:CMD_GIT_COMMIT  = 'Git: Commit'
 let s:CMD_GIT_DIFF    = 'Git: Diff'
 let s:CMD_GIT_GUI     = 'Git: Gui'
-let s:CMD_GIT_K       = 'Git: History'
+let s:CMD_GIT_LS      = 'Git: History'
+let s:CMD_GIT_K       = 'Git: History (Gitk)'
 let s:CMD_GIT_STAT    = 'Git: Status'
 
 let s:CMD_LOWER       = 'Lowercase'
@@ -160,7 +161,9 @@ function! s:Callback(winid, result)
     elseif s:CMD_GIT_K == l:cmd
         execute 'silent !gitk&'
     elseif s:CMD_GIT_STAT == l:cmd
-        execute 'silent !git status&'
+        call GitStatus()
+    elseif s:CMD_GIT_LS == l:cmd
+        call GitList()
     endif
 
     unlet s:wid
@@ -233,7 +236,7 @@ function! s:Menu()
         \, s:CMD_UNIX2DOS, s:CMD_DOS2UNIX
         \, s:CMD_ENUM
         \, s:CMD_GIT_ADDALL, s:CMD_GIT_COMMIT, s:CMD_GIT_DIFF
-        \, s:CMD_GIT_GUI, s:CMD_GIT_K, s:CMD_GIT_STAT
+        \, s:CMD_GIT_GUI, s:CMD_GIT_LS, s:CMD_GIT_K, s:CMD_GIT_STAT
         \, s:CMD_EXPAND_TAB
         \, s:CMD_REMOVE_DUP
         \, s:CMD_REMOVE_WS
