@@ -129,15 +129,15 @@ endfunction
 command! Dos2Unix call Dos2Unix()
 
 function! Unix2Dos()
-   :update
+   update
    :e ++ff=unix
-   :setlocal ff=dos
-   :w
+   setlocal ff=dos
+   update
 endfunction
 command! Unix2Dos call Unix2Dos()
 
 function! FindInFiles(criteria)
-    execute 'silent grep! ' . a:criteria . ' **/*'
+    silent execute printf('grep! -rn  %s *', a:criteria)
     copen 35
 endfunction
 command! -nargs=1 Find call FindInFiles('<args>')

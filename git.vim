@@ -15,9 +15,15 @@ function! GitCommand(title, cmd)
     unlet l:bufnr
 endfunction
 
+function! GitDiff(commit)
+    let l:cmd = printf('git diff HEAD..%s', a:commit)
+    call GitCommand('DIFF', l:cmd)
+endfunction
+
 function! GitList()
     let l:cmd = 'git log -n75 --pretty=format:\%h\ \ \%\<\(73\)\%s\%an'
     call GitCommand('GIT LOG', l:cmd)
+    nnoremap <silent><buffer><F4> :call GitDiff(expand('<cword>'))<CR>
     syn region Keyword start="\%1c" end="\%8c"
     syn region String start="\%10c" end="\%80c"
     syn region Identifier start="\%81c" end="$"
