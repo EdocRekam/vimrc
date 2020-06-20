@@ -34,6 +34,9 @@ nnoremap <silent><S-Home> <ESC>v<HOME>
 inoremap <silent><s-end> <esc>v<end>
 nnoremap <silent><s-end> <esc>v<end>
 
+" SELECT ALL                                            CTRL + A
+nnoremap <silent><C-a> :normal GVgg<CR>
+
 " COPY                                                  CTRL + C
 vnoremap <silent>y "+y
 vnoremap <c-c> "+y
