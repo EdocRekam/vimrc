@@ -20,12 +20,6 @@ endif
 " TRIGGER SUGGEST                                       CTRL + SPACE
 inoremap <silent><c-space> <c-x><c-o>
 
-" RENAME SYMBOL                                         F2
-nnoremap <silent><F2> :OmniSharpRename<cr>
-
-" GOTO DEFINITION                                       F4
-nnoremap <silent><F4> :OmniSharpGotoDefinition<cr>
-
 " RENAME SYMBOL COMMAND
 command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
 

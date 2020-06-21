@@ -1,7 +1,4 @@
-" RUN ONCE
-if exists("g:bd0da637")
-    finish
-endif
+
 
 function! s:LoadCSharp()
     setf cs
@@ -25,5 +22,3 @@ autocmd! filetypedetect BufNewFile,BufRead *.Tests call s:LoadCSharp()
 autocmd! filetypedetect BufNewFile,BufRead *.csproj setf xml
 autocmd! filetypedetect BufNewFile,BufRead *.props setf xml
 autocmd! filetypedetect BufNewFile,BufRead *.targets setf xml
-
-let g:bd0da637=1

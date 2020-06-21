@@ -35,9 +35,16 @@ NC='\033[0m' # No Color
 clear
 read -p "Press [Enter] key to install files into HOME directory at . . ."
 
-# CONFIGURATION
-link "${CWD}/vimrc" "${HOME}/.vimrc"
-link "${CWD}/gvimrc.vim" "${HOME}/.gvimrc"
+printf "Building .vimrc . . .\n"
+cat vimrc.vim > "${HOME}/.vimrc"
+cat keymap.vim >> "${HOME}/.vimrc"
+cat filetypes.vim >> "${HOME}/.vimrc"
+cat functions.vim >> "${HOME}/.vimrc"
+cat pop.vim >> "${HOME}/.vimrc"
+cat git.vim >> "${HOME}/.vimrc"
+
+printf "Building .gvimrc . . .\n"
+cat gvimrc.vim > "${HOME}/.gvimrc"
 
 # THEMES
 mkdir -p "${HOME}/.vim/colors"

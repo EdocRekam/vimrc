@@ -1,3 +1,5 @@
+
+
 " POPUP WINDOW
 
 let s:CMD_ALIGN       = 'Align On'
@@ -13,6 +15,7 @@ let s:CMD_GIT_ADDALL  = 'Git: Add All'
 let s:CMD_GIT_COMMIT  = 'Git: Commit'
 let s:CMD_GIT_DIFF    = 'Git: Diff'
 let s:CMD_GIT_GUI     = 'Git: Gui'
+let s:CMD_GIT_FETCH   = 'Git: Fetch'
 let s:CMD_GIT_LS      = 'Git: History'
 let s:CMD_GIT_K       = 'Git: History (Gitk)'
 let s:CMD_GIT_STAT    = 'Git: Status'
@@ -114,6 +117,7 @@ function! s:Callback(winid, result)
     if s:CMD_ALIGN == l:cmd
         let l:criteria = input('Align on: ', '=')
         call s:AlignOn(l:criteria)
+        unlet l:criteria
     elseif s:CMD_DOS2UNIX == l:cmd
         call Dos2Unix()
     elseif s:CMD_UNIX2DOS == l:cmd
@@ -164,6 +168,10 @@ function! s:Callback(winid, result)
         call GitStatus()
     elseif s:CMD_GIT_LS == l:cmd
         call GitList()
+    elseif s:CMD_GIT_FETCH == l:cmd
+        let l:criteria = input('Remote: ', 'vso')
+        call GitFetch(l:criteria)
+        unlet l:criteria
     endif
 
     unlet s:wid
@@ -236,7 +244,8 @@ function! s:Menu()
         \, s:CMD_UNIX2DOS, s:CMD_DOS2UNIX
         \, s:CMD_ENUM
         \, s:CMD_GIT_ADDALL, s:CMD_GIT_COMMIT, s:CMD_GIT_DIFF
-        \, s:CMD_GIT_GUI, s:CMD_GIT_LS, s:CMD_GIT_K, s:CMD_GIT_STAT
+        \, s:CMD_GIT_GUI, s:CMD_GIT_FETCH, s:CMD_GIT_LS
+        \, s:CMD_GIT_K, s:CMD_GIT_STAT
         \, s:CMD_EXPAND_TAB
         \, s:CMD_REMOVE_DUP
         \, s:CMD_REMOVE_WS
@@ -277,5 +286,3 @@ let s:opts = {
     \, 'title'      : '> '
     \, 'wrap'       : 0}
 
-nnoremap <silent><F1> :call ListFunctions()<CR>
-vnoremap <silent><F1> :call ListFunctions()<CR>
