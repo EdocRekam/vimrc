@@ -12,7 +12,7 @@ let s:FontMax = 36
 if has("gui_gtk2") || has("gui_gtk3")
     set gfn=Inconsolata\ 15
 elseif has("gui_win32")
-    set gfn=Consolas:h11:cANSI:qDRAFT
+    set gfn=Consolas:h14:cANSI:qDRAFT
 endif
 
 function! ZoomIn()
