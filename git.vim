@@ -138,6 +138,10 @@ function! GitList()
     syn region Comment start="remotes/" end="\s" containedin=String
 endfunction
 
+function! GitPrune(remote)
+    call GitCommand('PRUNE', printf('git remote prune %s', a:remote))
+endfunction
+
 function! GitListBranches()
     call GitCommand('BRANCHES', 'git branch -lra')
 endfunction
