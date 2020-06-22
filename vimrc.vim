@@ -3,9 +3,6 @@ set nocp
 set encoding=utf-8
 scriptencoding utf-8
 
-" AUTO CHANGE DIRECTORY
-set autochdir
-
 " MAKE BACKSPACE WORK CORRECTLY
 set backspace=indent,eol,start
 
