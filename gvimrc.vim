@@ -26,7 +26,7 @@ function! ZoomIn()
     endif
 
     if has("gui_win32")
-        let newFontName = printf("%s%d:cANSI:qDRAFT", l:fontFamily, l:newFontSize)
+        let newFontName = printf("%sh%d:cANSI:qDRAFT", l:fontFamily, l:newFontSize)
     else
         let newFontName = printf("%s %d", l:fontFamily, l:newFontSize)
     endif
@@ -50,7 +50,7 @@ function! ZoomOut()
     endif
 
     if has("gui_win32")
-        let newFontName = printf("%s%d:cANSI:qDRAFT", l:fontFamily, l:newFontSize)
+        let newFontName = printf("%sh%d:cANSI:qDRAFT", l:fontFamily, l:newFontSize)
     else
         let newFontName = printf("%s %d", l:fontFamily, l:newFontSize)
     endif
