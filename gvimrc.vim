@@ -12,7 +12,7 @@ let s:FontMax = 36
 if has("gui_gtk2") || has("gui_gtk3")
     set gfn=Inconsolata\ 15
 elseif has("gui_win32")
-    set gfn=Courier_New:h10:cDEFAULT
+    set gfn=Consolas:h11:cANSI:qDRAFT
 endif
 
 function! ZoomIn()
@@ -25,7 +25,11 @@ function! ZoomIn()
         let l:newFontSize = s:FontMin
     endif
 
-    let newFontName = printf("%s %d", l:fontFamily, l:newFontSize)
+    if has("gui_win32")
+        let newFontName = printf("%s:%d:cANSI:qDRAFT", l:fontFamily, l:newFontSize)
+    else
+        let newFontName = printf("%s %d", l:fontFamily, l:newFontSize)
+    endif
     let &guifont=l:newFontName
 
     unlet l:fontFamily
@@ -45,7 +49,11 @@ function! ZoomOut()
         let l:newFontSize = s:FontMax
     endif
 
-    let l:newFontName = printf("%s %d", l:fontFamily, l:newFontSize)
+    if has("gui_win32")
+        let newFontName = printf("%s:%d:cANSI:qDRAFT", l:fontFamily, l:newFontSize)
+    else
+        let newFontName = printf("%s %d", l:fontFamily, l:newFontSize)
+    endif
     let &guifont=l:newFontName
 
     unlet l:fontFamily
