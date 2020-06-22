@@ -126,11 +126,13 @@ function! GitList()
 
     nnoremap <silent><buffer><F4> :call GitDiffSummary(expand('<cword>'))<CR>
 
+    syn keyword Function Architect happy containedin=String,Comment nocase
     syn keyword Statement x86 x64 containedin=String,Comment
     syn keyword Statement boron carbon dublin
     syn keyword Statement ede containedin=String,Comment
     syn keyword Statement havana herne hobart containedin=String,Comment
     syn keyword Statement master freetown ibaraki containedin=String,Comment
+    syn match Comment "#\d\{5}" containedin=String,Comment
     syn match Comment "\d\{5}" containedin=String,Comment
     syn match Statement "\d\.\d" containedin=String,Comment
     syn match Statement "\d\.\d\.\d" containedin=String,Comment
