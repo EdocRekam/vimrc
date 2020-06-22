@@ -36,21 +36,21 @@ clear
 read -p "Press [Enter] key to install files into HOME directory at . . ."
 
 printf "Building .vimrc . . .\n"
-cat vimrc.vim > "${HOME}/.vimrc"
-cat keymap.vim >> "${HOME}/.vimrc"
-cat filetypes.vim >> "${HOME}/.vimrc"
-cat functions.vim >> "${HOME}/.vimrc"
-cat pop.vim >> "${HOME}/.vimrc"
-cat git.vim >> "${HOME}/.vimrc"
+cat "${CWD}/vimrc.vim" > "${HOME}/.vimrc"
+cat "${CWD}/keymap.vim" >> "${HOME}/.vimrc"
+cat "${CWD}/filetypes.vim" >> "${HOME}/.vimrc"
+cat "${CWD}/functions.vim" >> "${HOME}/.vimrc"
+cat "${CWD}/pop.vim" >> "${HOME}/.vimrc"
+cat "${CWD}/git.vim" >> "${HOME}/.vimrc"
 
 printf "Building .gvimrc . . .\n"
-cat gvimrc.vim > "${HOME}/.gvimrc"
+cat "${CWD}/gvimrc.vim" > "${HOME}/.gvimrc"
 
 # THEMES
 mkdir -p "${HOME}/.vim/colors"
-link "${CWD}/Dark+.vim" "${HOME}/.vim/colors/Dark+.vim"
+cat "${CWD}/Dark+.vim" > "${HOME}/.vim/colors/Dark+.vim"
 
 # SYNTAX
 mkdir -p "${HOME}/.vim/syntax"
-link "${CWD}/cs.vim" "${HOME}/.vim/syntax/cs.vim"
-link "${CWD}/gitmisc.vim" "${HOME}/.vim/syntax/gitmisc.vim"
+cat "${CWD}/cs.vim" > "${HOME}/.vim/syntax/cs.vim"
+cat "${CWD}/gitmisc.vim" > "${HOME}/.vim/syntax/gitmisc.vim"
