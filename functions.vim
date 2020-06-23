@@ -1,5 +1,59 @@
 
+" INTERNAL LIBRARY FUNCTIONS
+function! s:Chomp(msg)
+    return strcharpart(a:msg, 0, strlen(a:msg)-1)
+endfunction
 
+function! s:MakeTabBuffer(title)
+    if bufexists(a:title)
+        let l:bufnr = bufnr(a:title)
+        exe printf("%dbd!", l:bufnr)
+    endif
+
+    tabnew l:title
+    let l:bufnr = bufadd(a:title)
+    call bufload(l:bufnr)
+    exe printf("%db", l:bufnr)
+    unlet l:bufnr
+
+    setlocal buflisted
+    setlocal buftype=nofile
+
+    normal gg
+endfunction
+
+"
+" CREATE A BUFFER WITH TITLE, REPLACE IF EXITS
+"
+function! s:NewOrReplaceBuffer(title)
+    if bufexists(a:title)
+        let l:bufnr = bufnr(a:title)
+        exe printf("%dbd!", l:bufnr)
+    endif
+
+    let l:bufnr = bufadd(a:title)
+    call bufload(l:bufnr)
+    exe printf("%db", l:bufnr)
+    unlet l:bufnr
+
+    setlocal buflisted
+    setlocal buftype=nofile
+endfunction
+
+function! s:TabCommand(title, cmd)
+    call s:MakeTabBuffer(a:title)
+    call s:WriteExecute(a:cmd)
+endfunction
+
+function! s:WriteExecute(cmd)
+    silent execute printf('-1r !%s', a:cmd)
+endfunction
+
+function! s:WriteLine(msg)
+    call setline(winline(), [ a:msg, '' ])
+    normal G
+endfunction
+" ------------------------------------------------------------------------
 function! GotoDefinition()
     let l:path = expand("<cfile>")
     if filereadable(l:path)
@@ -70,4 +124,5 @@ function! ToggleStatusLine()
         set statusline=
     endif
 endfunction
+
 

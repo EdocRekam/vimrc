@@ -15,8 +15,8 @@ vnoremap <A-UP> :m '<-2<cr>gv=gv
 
 " PREVIOUS TAB                                          CTRL + LEFT
 " NEXT TAB                                              CTRL + RIGHT
-nnoremap <C-LEFT> :tabprev<cr>
-nnoremap <C-RIGHT> :tabnext<cr>
+nnoremap <silent><C-LEFT> :tabprev<cr>
+nnoremap <silent><C-RIGHT> :tabnext<cr>
 
 " DECREASE FONT                                         CTRL + SHIFT + LEFT
 " INCREASE FONT                                         CTRL + SHIFT + RIGHT

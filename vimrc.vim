@@ -6,6 +6,9 @@ scriptencoding utf-8
 " MAKE BACKSPACE WORK CORRECTLY
 set backspace=indent,eol,start
 
+" DISPLAY LENGTH OF SELECTION ON COMMAND
+set showcmd
+
 " DISPLAY COLUMN GUIDES
 set colorcolumn=75,80,120,160
 

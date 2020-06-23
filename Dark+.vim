@@ -77,7 +77,6 @@ hi search           gui=ITALIC    guibg=#613214 guifg=NONE    cterm=NONE ctermbg
 " AQUA #4EC9B0
 hi Identifier       gui=NONE      guibg=#1e1e1e guifg=#4EC9B0 cterm=NONE ctermbg=0  ctermfg=7
 
-
 " BLUE #569CD6
 hi Boolean          gui=NONE      guibg=#1e1e1e guifg=#569cd6 cterm=NONE ctermbg=0  ctermfg=6
 hi Keyword          gui=NONE      guibg=#1e1e1e guifg=#569cd6 cterm=NONE ctermbg=0  ctermfg=6

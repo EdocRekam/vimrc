@@ -1,41 +1,95 @@
 
-function! s:Chomp(msg)
-    return strcharpart(a:msg, 0, strlen(a:msg)-1)
-endfunction
-
-function! s:WriteLine(msg)
-    call append(line("$"), a:msg)
-endfunction
-
-function! s:WriteExecute(cmd)
-    silent execute printf('%dr !%s', line("$"), a:cmd)
-endfunction
-
-function! GitCommand(title, cmd)
-    if bufexists(a:title)
-        let l:bufnr = bufnr(a:title)
-        exe printf("%dbd!", l:bufnr)
-    endif
-
-    tabnew a:title
-    let l:bufnr = bufadd(a:title)
-    call bufload(l:bufnr)
-    exe printf("%db", l:bufnr)
-    setlocal buflisted
-    setlocal buftype=nofile
-    silent exe printf("0r !%s", a:cmd)
-    normal gg
-    unlet l:bufnr
+"
+" GIT SYNTAX COLORING
+"
+function! s:GitColors()
+    syn case ignore
+    syn keyword Comment boron carbon dublin ede havana herne hilla hobart
+    syn keyword Comment hofu freetown master ibaraki
+    syn keyword Function arch architect edoc happy head hector jjoker rekam
+    syn keyword Statement hub origin remotes usb vso
+    syn keyword String x86 x64 anycpu
+    syn region String start="`" end="`" contains=@NoSpell oneline
+    syn region String start='"' end='"' contains=@NoSpell oneline
+    syn match String "\d\+\.\d\+"
+    syn match String "\d\+\.\d\+\.\d\+"
+    syn match String "\d\+\.\d\+\.\d\+\.\d\+"
+    syn match String "\d\+\.\d\+\.\d\+\.\d\+\.\d\+"
+    syn match Identifier "#\=\d\{5}"
+    syn match Keyword "[0-9a-f]\{7,8}" contains=@NoSpell
 endfunction
 
 function! GitDiff(commit)
-    let l:cmd = printf('git diff HEAD..%s', a:commit)
-    call GitCommand('DIFF', l:cmd)
+    call s:TabCommand('DIFF', printf('git diff HEAD..%s', a:commit))
+endfunction
+
+function! GitDiffSummaryOpen()
+    let l:col = col('.')
+    let l:linenr = line('.')
+    let l:line = getline(l:linenr)
+    let l:file = trim(strcharpart(l:line, 0, 60))
+    let l:commit = trim(strcharpart(l:line, 61, 8))
+
+    if l:col < 73
+        call GitShowFile(l:commit, l:file)
+    elseif l:col < 81
+        silent exe printf('tabnew %s', l:file)
+    else
+        exe printf('tabnew %s', l:file)
+        let l:syntax = &syntax
+        exe 'vsplit'
+
+        call s:NewOrReplaceBuffer(l:commit)
+        exe printf('setf %s', l:syntax)
+        call s:WriteExecute(printf('git show %s:%s', l:commit, l:file))
+        exe 'windo diffthis'
+        unlet l:syntax
+    endif
+
+    unlet l:col
+    unlet l:commit
+    unlet l:file
+    unlet l:line
+    unlet l:linenr
+endfunction
+
+function! GitDiffSummary(commit)
+    call s:MakeTabBuffer(printf('Summary: %s', a:commit))
+
+    call s:WriteLine(printf('%-60s %s', 'FILE', 'COMMIT'))
+    call s:WriteLine(repeat('-', 120))
+
+    let l:cmd = printf('git diff --name-only HEAD..%s', a:commit)
+    let l:files = systemlist(l:cmd)
+    for l:file in l:files
+        call s:WriteLine(printf('%-60s %s    HEAD    DIFF', l:file, a:commit))
+    endfor
+
+    normal gg
+
+    noremap <silent><buffer><2-LeftMouse> :call GitDiffSummaryOpen()<CR>
+    nnoremap <silent><buffer><F4> :call GitDiffSummaryOpen()<CR>
+    exe printf("nnoremap <silent><buffer><F5> :call GitDiffSummary('%s')<CR>", a:commit)
+
+    " syn region Keyword    start="\%1c"  end="\%57c" contains=@NoSpell
+    " syn region Identifier start="\%57c" end="\%64c"
+    " syn region String     start="\%64c" end="\%71c"
+    " syn region Keyword    start="\%71c" end="$"
+    " syn match Comment "^COMMIT SUMMARY.*" contains=@NoSpell
+    call s:GitColors()
+endfunction
+
+function! GitFetch(remote)
+    call s:TabCommand('FETCH', printf('git fetch %s', a:remote))
+endfunction
+
+function! GitListBranches()
+    call s:TabCommand('BRANCHES', 'git branch -lra')
 endfunction
 
 function! GitShowFile(commit, file)
     let l:cmd = printf('git show %s:%s', a:commit, a:file)
-    call GitCommand(printf('%s:%s', a:commit, a:file), l:cmd)
+    call s:TabCommand(printf('%s:%s', a:commit, a:file), l:cmd)
     unlet l:cmd
 endfunction
 
@@ -51,106 +105,36 @@ function! NavigateToFile(commit)
     unlet l:args
 endfunction
 
-function! GitDiffSummary(commit)
-    let l:title = printf('Summary: %s', a:commit)
-    if bufexists(l:title)
-        let l:bufnr = bufnr(l:title)
-        exe printf("%dbd!", l:bufnr)
-    endif
-
-    tabnew l:title
-    let l:bufnr = bufadd(l:title)
-    call bufload(l:bufnr)
-    exe printf("%db", l:bufnr)
-    setlocal buflisted
-    setlocal buftype=nofile
-
-    call append(0, printf('COMMIT SUMMARY %s', a:commit))
-    call append(line("$"), 'FILE')
-    call append(line("$"), repeat('-', 75))
-
-    let l:cmd = printf('git diff --name-only HEAD..%s', a:commit)
-    let l:files = systemlist(l:cmd)
-    for l:file in l:files
-        call append(line("$"), printf('%-55s OLD    NEW    DIFF', l:file))
-    endfor
-
-    normal gg
-    unlet l:bufnr
-
-    exe printf("nnoremap <silent><buffer><F4> :call NavigateToFile('%s')<CR>", a:commit)
-
-    syn region Keyword    start="\%1c"  end="\%57c" contains=@NoSpell
-    syn region Identifier start="\%57c" end="\%64c"
-    syn region String     start="\%64c" end="\%71c"
-    syn region Keyword    start="\%71c" end="$"
-    syn match Comment "^COMMIT SUMMARY.*" contains=@NoSpell
-endfunction
-
-function! GitFetch(remote)
-    let l:cmd = printf('git fetch %s', a:remote)
-    call GitCommand('FETCH', l:cmd)
-    unlet l:cmd
-endfunction
-
+"
+" DISPLAY GIT LOG HISTORY AND BRANCHES IN A NEW TAB
+"
 function! GitList()
-    let l:title = 'GIT LOG'
-    if bufexists(l:title)
-        let l:bufnr = bufnr(l:title)
-        exe printf("%dbd!", l:bufnr)
-    endif
-
-    tabnew l:title
-    let l:bufnr = bufadd(l:title)
-    unlet l:title
-
-    call bufload(l:bufnr)
-    exe printf("%db", l:bufnr)
-    unlet l:bufnr
-
-    setlocal buflisted
-    setlocal buftype=nofile
+    call s:MakeTabBuffer('GIT LOG')
 
     let l:branch = s:Chomp(system('git rev-parse --abbrev-ref HEAD'))
 
-    call s:WriteLine(printf('HISTORY %s', l:branch))
-    call s:WriteLine(repeat('-', 95))
-    call s:WriteExecute('git log -n75 --pretty=format:\%h\ \ \%\<\(73\)\%s\%an')
+    call s:WriteLine(printf('TREE    COMMIT   %-81s AUTHOR', l:branch))
+    call s:WriteLine(repeat('-', 130))
+    call s:WriteExecute('git log -n75 --pretty=format:\%t\ \%h\ \ \%\<\(80,trunc\)\%s\ \ \%\<\(16\)\%an\ \ \%as')
 
     call s:WriteLine('')
     call s:WriteLine('BRANCHES')
-    call s:WriteLine(repeat('-', 95))
+    call s:WriteLine(repeat('-', 130))
     call s:WriteExecute('git branch -lrav --no-color')
 
     normal gg
+    call s:GitColors()
 
+    noremap <silent><buffer><2-LeftMouse> :call GitDiffSummary(expand('<cword>'))<CR>
     nnoremap <silent><buffer><F4> :call GitDiffSummary(expand('<cword>'))<CR>
-
-    syn keyword Function Architect happy containedin=String,Comment nocase
-    syn keyword Statement x86 x64 containedin=String,Comment
-    syn keyword Statement boron carbon dublin
-    syn keyword Statement ede containedin=String,Comment
-    syn keyword Statement havana herne hobart containedin=String,Comment
-    syn keyword Statement master freetown ibaraki containedin=String,Comment
-    syn match Comment "#\d\{5}" containedin=String,Comment
-    syn match Comment "\d\{5}" containedin=String,Comment
-    syn match Statement "\d\.\d" containedin=String,Comment
-    syn match Statement "\d\.\d\.\d" containedin=String,Comment
-    syn match Statement "\d\.\d\.\d\.\d" containedin=String,Comment
-    syn region String start="\s\s" end="$"
-    syn match Keyword "[0-9a-f]\{7,8}" containedin=String,Comment contains=@NoSpell
-    syn region Comment start="remotes/" end="\s" containedin=String
+    nnoremap <silent><buffer><F5> :call GitList()<CR>
 endfunction
 
 function! GitPrune(remote)
-    call GitCommand('PRUNE', printf('git remote prune %s', a:remote))
-endfunction
-
-function! GitListBranches()
-    call GitCommand('BRANCHES', 'git branch -lra')
+    call s:TabCommand('PRUNE', printf('git remote prune %s', a:remote))
 endfunction
 
 function! GitStatus()
-    call GitCommand('STATUS', 'git status')
+    call s:TabCommand('STATUS', 'git status')
     setf gitmisc
 endfunction

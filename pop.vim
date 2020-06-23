@@ -1,7 +1,5 @@
 
 
-" POPUP WINDOW
-
 let s:CMD_ALIGN       = 'Align On'
 let s:CMD_DOS2UNIX    = 'Change Line Endings To Unix'
 let s:CMD_ENUM        = 'Enumerate'
@@ -62,9 +60,9 @@ function! s:AlignOn(criteria)
     normal gv
 endfunction
 
-function! s:Enumerate()
+function! s:Enumerate(start)
     let l:nr = line("'<")
-    let l:cnt = 0
+    let l:cnt = a:start
     for l:line in getline(line("'<"), line("'>"))
         let l:line = printf('%04d %s', l:cnt, l:line)
         call setline(l:nr, l:line)
@@ -124,7 +122,9 @@ function! s:Callback(winid, result)
     elseif s:CMD_UNIX2DOS == l:cmd
         call Unix2Dos()
     elseif s:CMD_ENUM == l:cmd
-        call s:Enumerate()
+        let l:criteria = input('Start: ', '0')
+        call s:Enumerate(str2nr(l:criteria))
+        unlet l:criteria
     elseif s:CMD_EXPAND_TAB == l:cmd
         call ExpandTabs()
     elseif s:CMD_REMOVE_DUP == l:cmd
@@ -266,9 +266,9 @@ endfunction
 
 function! s:Reduce(items, key, len)
     let l:newItems = []
-    for i in a:items
-        if stridx(tolower(i), tolower(a:key), a:len) == a:len
-            call add(l:newItems, i)
+    for l:item in a:items
+        if stridx(tolower(l:item), tolower(a:key), a:len) == a:len
+            call add(l:newItems, l:item)
         endif
     endfor
     return l:newItems
