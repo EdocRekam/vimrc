@@ -7,18 +7,11 @@ endfunction
 function! s:MakeTabBuffer(title)
     if bufexists(a:title)
         let l:bufnr = bufnr(a:title)
-        exe printf("%dbd!", l:bufnr)
+        exe printf("bwipeout! %d", l:bufnr)
     endif
-
-    tabnew l:title
-    let l:bufnr = bufadd(a:title)
-    call bufload(l:bufnr)
-    exe printf("%db", l:bufnr)
-    unlet l:bufnr
-
-    setlocal buflisted
+    exe printf('tabnew %s', a:title)
     setlocal buftype=nofile
-
+    setlocal noswapfile
     normal gg
 endfunction
 
@@ -28,16 +21,14 @@ endfunction
 function! s:NewOrReplaceBuffer(title)
     if bufexists(a:title)
         let l:bufnr = bufnr(a:title)
-        exe printf("%dbd!", l:bufnr)
+        exe printf("bwipeout! %d", l:bufnr)
     endif
-
     let l:bufnr = bufadd(a:title)
     call bufload(l:bufnr)
     exe printf("%db", l:bufnr)
-    unlet l:bufnr
-
     setlocal buflisted
     setlocal buftype=nofile
+    setlocal noswapfile
 endfunction
 
 function! s:TabCommand(title, cmd)
