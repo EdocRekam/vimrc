@@ -17,7 +17,6 @@ function! s:GitColors()
     syn match String "\d\+\.\d\+\.\d\+\.\d\+\.\d\+"
     syn match Identifier "#\=\d\{5}"
     syn match Keyword "[0-9a-f]\{7,8}" contains=@NoSpell
-    " syn region Keyword    start="\%1c"  end="\%57c" contains=@NoSpell
     " syn region Identifier start="\%57c" end="\%64c"
     " syn region String     start="\%64c" end="\%71c"
     " syn region Keyword    start="\%71c" end="$"
@@ -35,35 +34,56 @@ function! GitDiffSummaryOpen()
     let l:file = trim(strcharpart(l:line, 0, 60))
     let l:commit = trim(strcharpart(l:line, 61, 8))
 
-    if l:col < 73
-        call GitShowFile(l:commit, l:file)
-    elseif l:col < 81
+    if l:col < 72
         silent exe printf('tabnew %s', l:file)
-    else
+    elseif l:col < 82 && l:col > 71
+        let l:before = trim(strcharpart(l:line, 71, 8))
+        call GitShowFile(l:before, l:file)
+    elseif l:col < 92 && l:col > 81
+        let l:after  = trim(strcharpart(l:line, 81, 8))
+        call GitShowFile(l:after, l:file)
+    elseif l:col < 102 && l:col > 91
+        let l:head = trim(strcharpart(l:line, 91, 8))
+        call GitShowFile(l:head, l:file)
+    elseif l:col > 105
         exe printf('tabnew %s', l:file)
         let l:syntax = &syntax
         exe 'vsplit'
-
-        call s:NewOrReplaceBuffer(l:commit)
+        let l:before = trim(strcharpart(l:line, 71, 8))
+        call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
+        call s:WriteExecute(printf('git show %s:%s', l:before, l:file))
         exe printf('setf %s', l:syntax)
-        call s:WriteExecute(printf('git show %s:%s', l:commit, l:file))
+        exe 'windo diffthis'
+    else
+        let l:after  = trim(strcharpart(l:line, 81, 8))
+        call GitShowFile(l:after, l:file)
+        let l:syntax = &syntax
+        exe 'vsplit'
+        let l:before = trim(strcharpart(l:line, 71, 8))
+        call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
+        call s:WriteExecute(printf('git show %s:%s', l:before, l:file))
+        exe printf('setf %s', l:syntax)
         exe 'windo diffthis'
     endif
 endfunction
 
 function! GitDiffSummary(commit)
     call s:MakeTabBuffer(printf('SUMMARY: %s', a:commit))
+    setlocal colorcolumn=
 
-    call s:WriteLine(printf('%-60s %s', 'FILE', 'COMMIT'))
-    call s:WriteLine(repeat('-', 120))
+    call s:WriteLine(printf('%-70s %-8s  %-8s  %-8s  %s', 'FILE', 'BEFORE', 'AFTER', 'HEAD', 'COMPARE'))
+    call s:WriteLine(repeat('-', 130))
 
+    let l:head = s:Chomp(system('git rev-parse --short HEAD'))
     let l:cmd = printf('git diff --name-only %s~1', a:commit)
     let l:files = systemlist(l:cmd)
     for l:file in l:files
-        call s:WriteLine(printf('%-60s %s    HEAD    DIFF', l:file, a:commit))
+        let l:parent = s:Chomp(system(printf("git log -n1 --pretty=%s %s '%s'", '%p', a:commit, l:file)))
+        call s:WriteLine(printf('%-70s %-8s  %-8s  %-8s  B:A  B:H', l:file, l:parent, a:commit, l:head))
     endfor
-    normal gg
+    exe '3'
     call s:GitColors()
+    syn region String start="\%>2l" end="\%70c" contains=@NoSpell oneline
 
     noremap <silent><buffer><2-LeftMouse> :call GitDiffSummaryOpen()<CR>
     nnoremap <silent><buffer><F4> :call GitDiffSummaryOpen()<CR>
@@ -72,10 +92,6 @@ endfunction
 
 function! GitFetch(remote)
     call s:TabCommand('FETCH', printf('git fetch %s', a:remote))
-endfunction
-
-function! GitListBranches()
-    call s:TabCommand('BRANCHES', 'git branch -lra')
 endfunction
 
 "
