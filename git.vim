@@ -109,14 +109,14 @@ function! GitList(...)
                 \ ,l:branch))
 
     call s:WriteLine('')
-    call s:WriteLine('  BRANCH/TAGS                 COMMIT')
+    call s:WriteLine('BRANCH/TAGS                   COMMIT')
     call s:WriteLine(repeat('-', 130))
 
     let l:tags = systemlist('git tag -l')
     for l:tag in l:tags
-        let l:cmd = printf("git log -n1 --pretty=format:'%s' %s", '%h  %<(80,trunc)%s  %<(16)%an  %as', l:tag)
+        let l:cmd = printf("git log -n1 --pretty=format:'%s' %s", '%<(8)%h  %<(80,trunc)%s  %<(16)%an  %as', l:tag)
         let l:msg = s:Chomp(system(l:cmd))
-        call s:WriteLine(printf('%7s %s', l:tag, l:msg))
+        call s:WriteLine(printf('%-8s  %s', l:tag, l:msg))
     endfor
     call s:WriteExecute('git branch -lrav --no-color')
 
