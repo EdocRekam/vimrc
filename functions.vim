@@ -31,17 +31,29 @@ function! s:NewOrReplaceBuffer(title)
     setlocal noswapfile
 endfunction
 
+function! s:Shell(...)
+    let s:cmd = call('printf', a:000)
+    return system(s:cmd)
+endfunction
+
+function! s:ShellList(...)
+    let s:cmd = call('printf', a:000)
+    return systemlist(s:cmd)
+endfunction
+
 function! s:TabCommand(title, cmd)
     call s:MakeTabBuffer(a:title)
     call s:WriteExecute(a:cmd)
 endfunction
 
-function! s:WriteExecute(cmd)
-    silent execute printf('-1r !%s', a:cmd)
+function! s:WriteExecute(...)
+    let l:cmd = call('printf', a:000)
+    silent execute printf('-1r !%s', l:cmd)
 endfunction
 
-function! s:WriteLine(msg)
-    call setline(winline(), [ a:msg, '' ])
+function! s:WriteLine(...)
+    let l:msg = call('printf', a:000)
+    call setline(winline(), [ l:msg, '' ])
     normal G
 endfunction
 " ------------------------------------------------------------------------

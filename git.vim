@@ -101,24 +101,27 @@ function! GitList(...)
     let l:branch = get(a:, 1, s:Chomp(system('git rev-parse --abbrev-ref HEAD')))
 
     call s:MakeTabBuffer(printf('LOG: %s', l:branch))
-    call s:WriteLine(printf('TREE      COMMIT    %-81s AUTHOR', l:branch))
+    call s:WriteLine('TREE      COMMIT    %-81s AUTHOR', l:branch)
     call s:WriteLine(repeat('-', 130))
 
-    call s:WriteExecute(printf("git log -n75 --pretty=format:'%s' %s"
+    call s:WriteExecute("git log -n75 --pretty=format:'%s' %s"
                 \ ,'\%<(8)\%t  \%<(8)\%h  \%<(80,trunc)\%s  \%<(16)\%an  \%as'
-                \ ,l:branch))
+                \ ,l:branch)
 
     call s:WriteLine('')
-    call s:WriteLine('BRANCH    COMMIT')
+    call s:WriteLine('TREE      COMMIT    TAG/REMOTE')
     call s:WriteLine(repeat('-', 130))
 
-    let l:tags = systemlist('git tag -l')
-    for l:tag in l:tags
-        let l:cmd = printf("git log -n1 --pretty=format:'%s' %s", '%<(8)%h  %<(80,trunc)%s  %<(16)%an  %as', l:tag)
-        let l:msg = s:Chomp(system(l:cmd))
-        call s:WriteLine(printf('%-8s  %s', l:tag, l:msg))
+    let l:refs = s:ShellList('git tag -l')
+    let l:refs = l:refs + s:ShellList('git branch -a')
+    let l:refs = sort(l:refs)
+
+    for l:ref in l:refs
+         let l:msg = s:Shell("git log -n1 --pretty=format:'%s' %s", '%<(8)%t  %<(8)%h  %<(80,trunc)%D  %<(16)%an  %as', l:ref)
+         if !v:shell_error
+             call s:WriteLine(l:msg)
+         endif
     endfor
-    call s:WriteExecute('git branch -lrav --no-color')
 
     normal gg
     normal 18|
