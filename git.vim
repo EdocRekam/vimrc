@@ -109,7 +109,7 @@ function! GitList(...)
                 \ ,l:branch))
 
     call s:WriteLine('')
-    call s:WriteLine('BRANCH/TAGS                   COMMIT')
+    call s:WriteLine('BRANCH    COMMIT')
     call s:WriteLine(repeat('-', 130))
 
     let l:tags = systemlist('git tag -l')
