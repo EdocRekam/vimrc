@@ -69,7 +69,7 @@ nnoremap <silent><F1> :call ListFunctions()<CR>
 vnoremap <silent><F1> :call ListFunctions()<CR>
 
 " RENAME SYMBOL                                         F2
-nnoremap <silent><F2> :OmniSharpRename<CR>
+nnoremap <silent><F2> :call Rename()<CR>
 
 " RESERVED (CODE HELPER)                                F3
 nnoremap <silent><F3> :bd<CR>

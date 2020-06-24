@@ -4,29 +4,29 @@
 
 link()
 {
-	if [ -h "${2}" ]; then
-		LNKDST=$(readlink -f "${2}")
-		if [ "${1}" -ef "${LNKDST}" ]; then
-			printf "Skip linking [${YELLOW}${1}${NC}] -\> [${YELLOW}${2}${NC}]\n"
-			return
-		fi
-	fi
+    if [ -h "${2}" ]; then
+        LNKDST=$(readlink -f "${2}")
+        if [ "${1}" -ef "${LNKDST}" ]; then
+            printf "Skip linking [${YELLOW}${1}${NC}] -\> [${YELLOW}${2}${NC}]\n"
+            return
+        fi
+    fi
 
-	if [ -f "${2}" ]; then
-		BAKFNAME=${2}.bak.${RANDOM}
-		printf "Backup file [${YELLOW}${2}${NC}] -\> [${YELLOW}${BAKFNAME}${NC}]\n"
-		mv "${2}" "${BAKFNAME}"
-	fi
+    if [ -f "${2}" ]; then
+        BAKFNAME=${2}.bak.${RANDOM}
+        printf "Backup file [${YELLOW}${2}${NC}] -\> [${YELLOW}${BAKFNAME}${NC}]\n"
+        mv "${2}" "${BAKFNAME}"
+    fi
 
-	printf "Linking [${YELLOW}${1}${NC}] -\> [${YELLOW}${2}${NC}]\n"
-	ln -s "${1}" "${2}"
+    printf "Linking [${YELLOW}${1}${NC}] -\> [${YELLOW}${2}${NC}]\n"
+    ln -s "${1}" "${2}"
 }
 
 mkfolder()
 {
-	if [ ! -d "${1}" ]; then
-		mkdir "${1}"
-	fi
+    if [ ! -d "${1}" ]; then
+        mkdir "${1}"
+    fi
 }
 
 CWD=$(dirname "$(realpath -s $0)")
@@ -46,8 +46,7 @@ cat "${CWD}/git.vim" >> "${HOME}/.vimrc"
 printf "Building .gvimrc . . .\n"
 cat "${CWD}/gvimrc.vim" > "${HOME}/.gvimrc"
 
-
-if [ "${OS}" == "GNU/Linux" ]; then
+if [ "${OSTYPE}" == "linux" ]; then
     VIMDIR=.vim
 else
     VIMDIR=vimfiles
@@ -60,4 +59,3 @@ cat "${CWD}/Dark+.vim" > "${HOME}/${VIMDIR}/colors/Dark+.vim"
 # SYNTAX
 mkdir -p "${HOME}/${VIMDIR}/syntax"
 cat "${CWD}/cs.vim" > "${HOME}/${VIMDIR}/syntax/cs.vim"
-cat "${CWD}/gitmisc.vim" > "${HOME}/${VIMDIR}/syntax/gitmisc.vim"

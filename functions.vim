@@ -83,6 +83,11 @@ function! ExpandTabs()
     update
 endfunction
 
+function! Rename()
+    let l:val = input('Value: ')
+    execute '%s//' . l:val . '/g'
+endfunction
+
 function! RemoveTrailingWhitespace()
     let _s=@/
     :%s/\s\+$//e
