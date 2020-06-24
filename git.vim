@@ -111,13 +111,14 @@ function! GitList(...)
     call s:WriteLine('')
     call s:WriteLine('  BRANCH/TAGS                 COMMIT')
     call s:WriteLine(repeat('-', 130))
-    call s:WriteExecute('git branch -lrav --no-color')
 
     let l:tags = systemlist('git tag -l')
     for l:tag in l:tags
-        let l:commit = strcharpart(s:Chomp(system(printf('git rev-list -n1 %s', l:tag))), 0, 7)
-        call s:WriteLine(printf('  %-27s %s', l:tag, l:commit))
+        let l:cmd = printf("git log -n1 --pretty=format:'%s' %s", '%h  %<(80,trunc)%s  %<(16)%an  %as', l:tag)
+        let l:msg = s:Chomp(system(l:cmd))
+        call s:WriteLine(printf('%7s %s', l:tag, l:msg))
     endfor
+    call s:WriteExecute('git branch -lrav --no-color')
 
     normal gg
     normal 18|
