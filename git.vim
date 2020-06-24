@@ -101,11 +101,11 @@ function! GitList(...)
     let l:branch = get(a:, 1, s:Chomp(system('git rev-parse --abbrev-ref HEAD')))
 
     call s:MakeTabBuffer(printf('LOG: %s', l:branch))
-    call s:WriteLine(printf('TREE    COMMIT   %-81s AUTHOR', l:branch))
+    call s:WriteLine(printf('TREE      COMMIT    %-81s AUTHOR', l:branch))
     call s:WriteLine(repeat('-', 130))
 
     call s:WriteExecute(printf("git log -n75 --pretty=format:'%s' %s"
-                \ ,'\%t \%h  \%<(80,trunc)\%s  \%<(16)\%an  \%as'
+                \ ,'\%<(8)\%t  \%<(8)\%h  \%<(80,trunc)\%s  \%<(16)\%an  \%as'
                 \ ,l:branch))
 
     call s:WriteLine('')
