@@ -39,12 +39,15 @@ function! GitDiffSummary(commit)
     for l:file in l:files
         let l:before = s:Chomp(s:Shell("git log -n2 --pretty=%s %s -- '%s' | tail -n1", '%h', a:commit, l:file))
         if filereadable(l:file)
-            let l:foo = 'DELETED'
-        else
             let l:foo = l:head
+        else
+            let l:foo = 'DELETED'
         endif
         call s:WriteLine('%-90s %-8s  %-8s  %-8s  B:A  B:H', l:file, l:before, a:commit, l:foo)
     endfor
+    call s:WriteLine('')
+    call s:WriteExecute('git diff --numstat %s~1', a:commit)
+
     exe '3'
     call s:GitColors()
     syn region String start="\%>2l" end="\%90c" contains=@NoSpell oneline
@@ -56,8 +59,8 @@ endfunction
 
 function! GitDiffSummaryGotoDefinition()
     let l:col = col('.')
-    let l:lin = getline(l:lnr)
     let l:lnr = line('.')
+    let l:lin = getline(l:lnr)
 
     " FILE
     let l:file = trim(strcharpart(l:lin, 0, 90))
