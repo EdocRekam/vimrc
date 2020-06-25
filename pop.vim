@@ -189,7 +189,7 @@ function! s:Filter(winid, key)
         unlet s:wid
     endif
 
-    if a:key == "\<UP>" || a:key == "\<DOWN>" || a:key == ':'
+    if a:key == ':' || 0 != match(a:key, '\p')
         return popup_filter_menu(a:winid, a:key)
     endif
 

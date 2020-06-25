@@ -56,36 +56,36 @@ endfunction
 
 function! GitDiffSummaryGotoDefinition()
     let l:col = col('.')
+    let l:lin = getline(l:lnr)
     let l:lnr = line('.')
-    let l:line = getline(l:lnr)
-    let l:file = trim(strcharpart(l:line, 0, 90))
 
     " FILE
+    let l:file = trim(strcharpart(l:lin, 0, 90))
     if l:col > 0 && l:col < 92
         silent exe printf('tabnew %s', l:file)
 
     " BEFORE
     elseif l:col > 91 && l:col < 102
-        let l:before = trim(strcharpart(l:line, 91, 8))
+        let l:before = trim(strcharpart(l:lin, 91, 8))
         call GitShowFile(l:before, l:file)
 
     " AFTER
     elseif l:col > 101 && l:col < 112
-        let l:after  = trim(strcharpart(l:line, 101, 8))
+        let l:after  = trim(strcharpart(l:lin, 101, 8))
         call GitShowFile(l:after, l:file)
 
     " HEAD
     elseif l:col > 111 && l:col < 121
-        let l:head = trim(strcharpart(l:line, 111, 8))
+        let l:head = trim(strcharpart(l:lin, 111, 8))
         call GitShowFile(l:head, l:file)
 
     " BEFORE AFTER
     elseif l:col > 121 && l:col < 127
-        let l:after  = trim(strcharpart(l:line, 101, 8))
+        let l:after  = trim(strcharpart(l:lin, 101, 8))
         call GitShowFile(l:after, l:file)
         let l:syntax = &syntax
         exe 'vsplit'
-        let l:before = trim(strcharpart(l:line, 91, 8))
+        let l:before = trim(strcharpart(l:lin, 91, 8))
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
         call s:WriteExecute("git show '%s:%s'", l:before, l:file)
         if l:syntax
@@ -99,7 +99,7 @@ function! GitDiffSummaryGotoDefinition()
         exe printf('tabnew %s', l:file)
         let l:syntax = &syntax
         exe 'vsplit'
-        let l:before = trim(strcharpart(l:line, 91, 8))
+        let l:before = trim(strcharpart(l:lin, 91, 8))
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
         call s:WriteExecute("git show '%s:%s'", l:before, l:file)
         exe printf('setf %s', l:syntax)
