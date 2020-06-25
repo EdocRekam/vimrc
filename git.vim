@@ -71,15 +71,14 @@ function! GitDiffSummary(commit)
     call s:MakeTabBuffer(printf('SUMMARY: %s', a:commit))
     setlocal colorcolumn=
 
-    call s:WriteLine(printf('%-70s %-8s  %-8s  %-8s  %s', 'FILE', 'BEFORE', 'AFTER', 'HEAD', 'COMPARE'))
-    call s:WriteLine(repeat('-', 130))
+    call s:WriteLine('%-90s %-8s  %-8s  %-8s  %s', 'FILE', 'BEFORE', 'AFTER', 'HEAD', 'COMPARE')
+    call s:WriteLine(repeat('-', 160))
 
-    let l:head = s:Chomp(system('git rev-parse --short HEAD'))
-    let l:cmd = printf('git diff --name-only %s~1', a:commit)
-    let l:files = systemlist(l:cmd)
+    let l:head = s:Chomp(s:Shell('git rev-parse --short HEAD'))
+    let l:files = s:ShellList('git diff --name-only %s~1', a:commit)
     for l:file in l:files
-        let l:parent = s:Chomp(system(printf("git log -n1 --pretty=%s %s '%s'", '%p', a:commit, l:file)))
-        call s:WriteLine(printf('%-70s %-8s  %-8s  %-8s  B:A  B:H', l:file, l:parent, a:commit, l:head))
+        let l:parent = s:Chomp(s:Shell("git log -n1 --pretty=%s %s -- '%s'", '%p', a:commit, l:file))
+        call s:WriteLine('%-90s %-8s  %-8s  %-8s  B:A  B:H', l:file, l:parent, a:commit, l:head)
     endfor
     exe '3'
     call s:GitColors()
