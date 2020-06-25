@@ -38,7 +38,12 @@ function! GitDiffSummary(commit)
     let l:files = s:ShellList('git diff --name-only %s~1', a:commit)
     for l:file in l:files
         let l:before = s:Chomp(s:Shell("git log -n2 --pretty=%s %s -- '%s' | tail -n1", '%h', a:commit, l:file))
-        call s:WriteLine('%-90s %-8s  %-8s  %-8s  B:A  B:H', l:file, l:before, a:commit, l:head)
+        if filereadable(l:file)
+            let l:foo = '--------'
+        else
+            let l:foo = l:head
+        endif
+        call s:WriteLine('%-90s %-8s  %-8s  %-8s  B:A  B:H', l:file, l:before, a:commit, l:foo)
     endfor
     exe '3'
     call s:GitColors()
@@ -82,7 +87,7 @@ function! GitDiffSummaryGotoDefinition()
         exe 'vsplit'
         let l:before = trim(strcharpart(l:line, 91, 8))
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        call s:WriteExecute("git show %s -- '%s'", l:before, l:file)
+        call s:WriteExecute("git show '%s:%s'", l:before, l:file)
         if l:syntax
             exe printf('setf %s', l:syntax)
         endif
@@ -96,7 +101,7 @@ function! GitDiffSummaryGotoDefinition()
         exe 'vsplit'
         let l:before = trim(strcharpart(l:line, 91, 8))
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        call s:WriteExecute('git show %s:%s', l:before, l:file)
+        call s:WriteExecute("git show '%s:%s'", l:before, l:file)
         exe printf('setf %s', l:syntax)
         exe 'windo diffthis'
         normal gg
@@ -159,7 +164,7 @@ function! GitPrune(remote)
 endfunction
 
 function! GitShowFile(commit, file)
-    let l:cmd = printf("git show %s -- '%s'", a:commit, a:file)
+    let l:cmd = printf("git show '%s:%s'", a:commit, a:file)
     call s:TabCommand(printf('%s:%s', a:commit, a:file), l:cmd)
 endfunction
 
