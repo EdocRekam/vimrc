@@ -50,6 +50,9 @@ set previewheight=5
 " DISPLAY POSITION AT BOTTOM OF FILE
 set ruler
 
+" KEEP CURSOR IN MIDDLE
+set scrolloff=40
+
 " TURN ON SPELL CHECKING.
 set spell spelllang=en_us
 

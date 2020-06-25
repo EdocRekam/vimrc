@@ -112,25 +112,32 @@ function! GitList(...)
     call s:WriteLine('TREE      COMMIT    TAG/REMOTE')
     call s:WriteLine(repeat('-', 130))
 
-    let l:refs = s:ShellList('git tag -l')
-    let l:refs = l:refs + s:ShellList('git branch -a')
-    let l:refs = sort(l:refs)
-
+    let l:refs = s:ShellList('git rev-parse --short --tags --branches --remotes HEAD | sort -u')
     for l:ref in l:refs
          let l:msg = s:Shell("git log -n1 --pretty=format:'%s' %s", '%<(8)%t  %<(8)%h  %<(80,trunc)%D  %<(16)%an  %as', l:ref)
-         if !v:shell_error
-             call s:WriteLine(l:msg)
-         endif
+         call s:WriteLine(l:msg)
     endfor
 
     normal gg
-    normal 18|
+    normal 21|
     setlocal colorcolumn=
     call s:GitColors()
 
-    noremap <silent><buffer><2-LeftMouse> :call GitDiffSummary(expand('<cword>'))<CR>
-    nnoremap <silent><buffer><F4> :call GitDiffSummary(expand('<cword>'))<CR>
-    nnoremap <silent><buffer><F5> :call GitList(expand('<cfile>'))<CR>
+    noremap <silent><buffer><2-LeftMouse> :call GitListGotoDefinition()<CR>
+    nnoremap <silent><buffer><F4> :call GitListGotoDefinition()<CR>
+    exe printf("nnoremap <silent><buffer><F5> :call GitList('%s')<CR>", l:branch)
+endfunction
+
+" JUMP TO A NEW LOCATION BASED ON CURSOR IN GITLIST
+function! GitListGotoDefinition()
+    let l:col = col('.')
+    if l:col > 0 && l:col < 11
+        call GitDiffSummary(expand('<cword>'))
+    elseif l:col > 10 && l:col < 21
+        call GitDiffSummary(expand('<cword>'))
+    else
+        call GitList(expand('<cfile>'))
+    endif
 endfunction
 
 function! GitPrune(remote)
