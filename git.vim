@@ -39,7 +39,7 @@ function! GitDiffSummary(commit)
     for l:file in l:files
         let l:before = s:Chomp(s:Shell("git log -n2 --pretty=%s %s -- '%s' | tail -n1", '%h', a:commit, l:file))
         if filereadable(l:file)
-            let l:foo = '--------'
+            let l:foo = 'DELETED'
         else
             let l:foo = l:head
         endif
