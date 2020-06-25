@@ -53,10 +53,10 @@ function! GitDiffSummaryGotoDefinition()
     let l:col = col('.')
     let l:lnr = line('.')
     let l:line = getline(l:lnr)
+    let l:file = trim(strcharpart(l:line, 0, 90))
 
     " FILE
     if l:col > 0 && l:col < 92
-        let l:file = trim(strcharpart(l:line, 0, 90))
         silent exe printf('tabnew %s', l:file)
 
     " BEFORE
@@ -70,12 +70,27 @@ function! GitDiffSummaryGotoDefinition()
         call GitShowFile(l:after, l:file)
 
     " HEAD
-    elseif l:col < 102 && l:col > 91
+    elseif l:col > 111 && l:col < 121
         let l:head = trim(strcharpart(l:line, 111, 8))
         call GitShowFile(l:head, l:file)
 
     " BEFORE AFTER
-    elseif l:col < 127 && l:col > 122
+    elseif l:col > 121 && l:col < 127
+        let l:after  = trim(strcharpart(l:line, 101, 8))
+        call GitShowFile(l:after, l:file)
+        let l:syntax = &syntax
+        exe 'vsplit'
+        let l:before = trim(strcharpart(l:line, 91, 8))
+        call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
+        call s:WriteExecute("git show %s -- '%s'", l:before, l:file)
+        if l:syntax
+            exe printf('setf %s', l:syntax)
+        endif
+        exe 'windo diffthis'
+        normal gg
+
+    " BEFORE HEAD
+    else
         exe printf('tabnew %s', l:file)
         let l:syntax = &syntax
         exe 'vsplit'
@@ -84,18 +99,8 @@ function! GitDiffSummaryGotoDefinition()
         call s:WriteExecute('git show %s:%s', l:before, l:file)
         exe printf('setf %s', l:syntax)
         exe 'windo diffthis'
+        normal gg
 
-    " BEFORE HEAD
-    else
-        let l:after  = trim(strcharpart(l:line, 101, 8))
-        call GitShowFile(l:after, l:file)
-        let l:syntax = &syntax
-        exe 'vsplit'
-        let l:before = trim(strcharpart(l:line, 71, 8))
-        call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        call s:WriteExecute('git show %s:%s', l:before, l:file)
-        exe printf('setf %s', l:syntax)
-        exe 'windo diffthis'
     endif
 endfunction
 
@@ -154,7 +159,7 @@ function! GitPrune(remote)
 endfunction
 
 function! GitShowFile(commit, file)
-    let l:cmd = printf('git show %s:%s', a:commit, a:file)
+    let l:cmd = printf("git show %s -- '%s'", a:commit, a:file)
     call s:TabCommand(printf('%s:%s', a:commit, a:file), l:cmd)
 endfunction
 
