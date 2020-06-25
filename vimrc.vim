@@ -51,7 +51,7 @@ set previewheight=5
 set ruler
 
 " KEEP CURSOR IN MIDDLE
-set scrolloff=40
+set scrolloff=30
 
 " TURN ON SPELL CHECKING.
 set spell spelllang=en_us

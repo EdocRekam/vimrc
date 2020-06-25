@@ -27,66 +27,76 @@ function! GitDiff(commit)
     call s:TabCommand('DIFF', printf('git diff HEAD..%s', a:commit))
 endfunction
 
-function! GitDiffSummaryOpen()
-    let l:col = col('.')
-    let l:lnr = line('.')
-    let l:line = getline(l:lnr)
-    let l:file = trim(strcharpart(l:line, 0, 60))
-    let l:commit = trim(strcharpart(l:line, 61, 8))
-
-    if l:col < 72
-        silent exe printf('tabnew %s', l:file)
-    elseif l:col < 82 && l:col > 71
-        let l:before = trim(strcharpart(l:line, 71, 8))
-        call GitShowFile(l:before, l:file)
-    elseif l:col < 92 && l:col > 81
-        let l:after  = trim(strcharpart(l:line, 81, 8))
-        call GitShowFile(l:after, l:file)
-    elseif l:col < 102 && l:col > 91
-        let l:head = trim(strcharpart(l:line, 91, 8))
-        call GitShowFile(l:head, l:file)
-    elseif l:col > 105
-        exe printf('tabnew %s', l:file)
-        let l:syntax = &syntax
-        exe 'vsplit'
-        let l:before = trim(strcharpart(l:line, 71, 8))
-        call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        call s:WriteExecute(printf('git show %s:%s', l:before, l:file))
-        exe printf('setf %s', l:syntax)
-        exe 'windo diffthis'
-    else
-        let l:after  = trim(strcharpart(l:line, 81, 8))
-        call GitShowFile(l:after, l:file)
-        let l:syntax = &syntax
-        exe 'vsplit'
-        let l:before = trim(strcharpart(l:line, 71, 8))
-        call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        call s:WriteExecute(printf('git show %s:%s', l:before, l:file))
-        exe printf('setf %s', l:syntax)
-        exe 'windo diffthis'
-    endif
-endfunction
-
 function! GitDiffSummary(commit)
     call s:MakeTabBuffer(printf('SUMMARY: %s', a:commit))
     setlocal colorcolumn=
 
-    call s:WriteLine('%-90s %-8s  %-8s  %-8s  %s', 'FILE', 'BEFORE', 'AFTER', 'HEAD', 'COMPARE')
+    call s:WriteLine('FILES %-84s %-8s  %-8s  %-8s  %s', a:commit, 'BEFORE', 'AFTER', 'HEAD', 'COMPARE')
     call s:WriteLine(repeat('-', 160))
 
     let l:head = s:Chomp(s:Shell('git rev-parse --short HEAD'))
     let l:files = s:ShellList('git diff --name-only %s~1', a:commit)
     for l:file in l:files
-        let l:parent = s:Chomp(s:Shell("git log -n1 --pretty=%s %s -- '%s'", '%p', a:commit, l:file))
-        call s:WriteLine('%-90s %-8s  %-8s  %-8s  B:A  B:H', l:file, l:parent, a:commit, l:head)
+        let l:before = s:Chomp(s:Shell("git log -n2 --pretty=%s %s -- '%s' | tail -n1", '%h', a:commit, l:file))
+        call s:WriteLine('%-90s %-8s  %-8s  %-8s  B:A  B:H', l:file, l:before, a:commit, l:head)
     endfor
     exe '3'
     call s:GitColors()
-    syn region String start="\%>2l" end="\%70c" contains=@NoSpell oneline
+    syn region String start="\%>2l" end="\%90c" contains=@NoSpell oneline
 
-    noremap <silent><buffer><2-LeftMouse> :call GitDiffSummaryOpen()<CR>
-    nnoremap <silent><buffer><F4> :call GitDiffSummaryOpen()<CR>
+    noremap <silent><buffer><2-LeftMouse> :call GitDiffSummaryGotoDefinition()<CR>
+    nnoremap <silent><buffer><F4> :call GitDiffSummaryGotoDefinition()<CR>
     exe printf("nnoremap <silent><buffer><F5> :call GitDiffSummary('%s')<CR>", a:commit)
+endfunction
+
+function! GitDiffSummaryGotoDefinition()
+    let l:col = col('.')
+    let l:lnr = line('.')
+    let l:line = getline(l:lnr)
+
+    " FILE
+    if l:col > 0 && l:col < 92
+        let l:file = trim(strcharpart(l:line, 0, 90))
+        silent exe printf('tabnew %s', l:file)
+
+    " BEFORE
+    elseif l:col > 91 && l:col < 102
+        let l:before = trim(strcharpart(l:line, 91, 8))
+        call GitShowFile(l:before, l:file)
+
+    " AFTER
+    elseif l:col > 101 && l:col < 112
+        let l:after  = trim(strcharpart(l:line, 101, 8))
+        call GitShowFile(l:after, l:file)
+
+    " HEAD
+    elseif l:col < 102 && l:col > 91
+        let l:head = trim(strcharpart(l:line, 111, 8))
+        call GitShowFile(l:head, l:file)
+
+    " BEFORE AFTER
+    elseif l:col < 127 && l:col > 122
+        exe printf('tabnew %s', l:file)
+        let l:syntax = &syntax
+        exe 'vsplit'
+        let l:before = trim(strcharpart(l:line, 91, 8))
+        call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
+        call s:WriteExecute('git show %s:%s', l:before, l:file)
+        exe printf('setf %s', l:syntax)
+        exe 'windo diffthis'
+
+    " BEFORE HEAD
+    else
+        let l:after  = trim(strcharpart(l:line, 101, 8))
+        call GitShowFile(l:after, l:file)
+        let l:syntax = &syntax
+        exe 'vsplit'
+        let l:before = trim(strcharpart(l:line, 71, 8))
+        call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
+        call s:WriteExecute('git show %s:%s', l:before, l:file)
+        exe printf('setf %s', l:syntax)
+        exe 'windo diffthis'
+    endif
 endfunction
 
 function! GitFetch(remote)
