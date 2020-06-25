@@ -46,7 +46,12 @@ function! GitDiffSummary(commit)
         call s:WriteLine('%-90s %-8s  %-8s  %-8s  B:A  B:H', l:file, l:before, a:commit, l:foo)
     endfor
     call s:WriteLine('')
-    call s:WriteExecute('git diff --numstat %s~1', a:commit)
+
+    let l:data = s:ShellList('git diff --numstat %s~1', a:commit)
+    for l:d in l:data
+        let l:tup = matchlist(l:d, '\(\d\+\)\s\(\d\+\)\s\(.*\)')
+        call s:WriteLine('%s %s %s', l:tup[1], l:tup[2], l:tup[3])
+    endfor
 
     exe '3'
     call s:GitColors()
