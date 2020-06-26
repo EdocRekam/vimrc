@@ -6,6 +6,8 @@ function! s:GitColors()
     syn case ignore
     syn keyword Comment boron carbon dublin ede havana herne hilla hobart
     syn keyword Comment hofu freetown master ibaraki
+    syn keyword DiffAdd added
+    syn keyword DiffDelete deleted
     syn keyword Function arch architect edoc happy head hector jjoker rekam
     syn keyword Statement hub origin remotes usb vso
     syn keyword String x86 x64 anycpu
