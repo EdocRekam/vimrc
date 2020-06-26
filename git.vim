@@ -35,23 +35,32 @@ function! GitDiffSummary(commit)
     call s:WriteLine(repeat('-', 160))
 
     let l:head = s:Chomp(s:Shell('git rev-parse --short HEAD'))
-    let l:files = s:ShellList('git diff --name-only %s~1', a:commit)
-    for l:file in l:files
+    let l:items = s:ShellList('git diff --numstat %s~1', a:commit)
+    for l:item in l:items
+        let l:parts = matchlist(l:item, '\(\d\+\)\s\(\d\+\)\s\(.*\)')
+        let l:x = parts[0]
+        let l:y = parts[1]
+        let l:file = parts[3]
+
         let l:before = s:Chomp(s:Shell("git log -n2 --pretty=%s %s -- '%s' | tail -n1", '%h', a:commit, l:file))
-        if filereadable(l:file)
-            let l:foo = l:head
+        if l:x > 0
+            let l:current = l:head
+            let l:after = a:commit
         else
-            let l:foo = 'DELETED'
+            let l:after = 'DELETED'
+
+            if filereadable(l:file)
+                let l:current = l:head
+            else
+                let l:current = 'DELETED'
+            endif
         endif
-        call s:WriteLine('%-90s %-8s  %-8s  %-8s  B:A  B:H', l:file, l:before, a:commit, l:foo)
+
+
+        call s:WriteLine('%-90s %-8s  %-8s  %-8s  B:A  B:H', l:file, l:before, l:after, l:current)
     endfor
     call s:WriteLine('')
 
-    let l:data = s:ShellList('git diff --numstat %s~1', a:commit)
-    for l:d in l:data
-        let l:tup = matchlist(l:d, '\(\d\+\)\s\(\d\+\)\s\(.*\)')
-        call s:WriteLine('%s %s %s', l:tup[1], l:tup[2], l:tup[3])
-    endfor
 
     exe '3'
     call s:GitColors()
@@ -70,7 +79,9 @@ function! GitDiffSummaryGotoDefinition()
     " FILE
     let l:file = trim(strcharpart(l:lin, 0, 90))
     if l:col > 0 && l:col < 92
-        silent exe printf('tabnew %s', l:file)
+        if filereadable(l:file)
+            silent exe printf('tabnew %s', l:file)
+        endif
 
     " BEFORE
     elseif l:col > 91 && l:col < 102
