@@ -38,10 +38,10 @@ hi VertSplit        gui=NONE      guibg=#1e1e1e guifg=#2e2e2e cterm=NONE ctermbg
 hi NonText          gui=NONE      guibg=#1e1e1e guifg=#1e1e1e cterm=NONE ctermbg=0  ctermfg=7
 
 " DIFF
-hi DiffAdd          gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
-hi DiffChange       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
-hi DiffDelete       gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
-hi DiffText         gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
+hi DiffChange       gui=NONE      guibg=#1e1e1e guifg=NONE cterm=NONE ctermbg=0  ctermfg=7
+hi DiffAdd          gui=NONE      guibg=#373d29 guifg=NONE cterm=NONE ctermbg=0  ctermfg=7
+hi DiffDelete       gui=NONE      guibg=#4b1818 guifg=NONE cterm=NONE ctermbg=0  ctermfg=7
+hi DiffText         gui=NONE      guibg=#1e1e1e guifg=NONE cterm=NONE ctermbg=0  ctermfg=7
 
 " STATUS BAR
 hi ModeMsg          gui=NONE      guibg=#68217a guifg=#ffffff cterm=NONE ctermbg=0  ctermfg=7
