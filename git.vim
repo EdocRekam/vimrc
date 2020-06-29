@@ -19,14 +19,6 @@ function! s:GitColors()
     syn match String "\d\+\.\d\+\.\d\+\.\d\+\.\d\+"
     syn match Identifier "#\=\d\{5}"
     syn match Keyword "[0-9a-f]\{7,8}" contains=@NoSpell
-    " syn region Identifier start="\%57c" end="\%64c"
-    " syn region String     start="\%64c" end="\%71c"
-    " syn region Keyword    start="\%71c" end="$"
-    " syn match Comment "^COMMIT SUMMARY.*" contains=@NoSpell
-endfunction
-
-function! GitDiff(commit)
-    call s:TabCommand('DIFF', printf('git diff HEAD..%s', a:commit))
 endfunction
 
 function! GitDiffSummary(commit)
@@ -135,7 +127,7 @@ function! GitDiffSummaryGotoDefinition()
         let l:syntax = &syntax
         exe 'vsplit'
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        call s:WriteExecute("git show '%s:%s'", l:before, l:file)
+        call s:WriteShell("git show '%s:%s'", l:before, l:file)
         if l:syntax
             exe printf('setf %s', l:syntax)
         endif
@@ -154,7 +146,7 @@ function! GitDiffSummaryGotoDefinition()
         let l:syntax = &syntax
         exe 'vsplit'
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        call s:WriteExecute("git show '%s:%s'", l:before, l:file)
+        call s:WriteShell("git show '%s:%s'", l:before, l:file)
         exe printf('setf %s', l:syntax)
         exe 'windo diffthis'
         normal gg
@@ -171,7 +163,7 @@ function! GitDiffSummaryGotoDefinition()
         let l:syntax = &syntax
         exe 'vsplit'
         call s:NewOrReplaceBuffer(printf('%s:%s', l:after, l:file))
-        call s:WriteExecute("git show '%s:%s'", l:after, l:file)
+        call s:WriteShell("git show '%s:%s'", l:after, l:file)
         exe printf('setf %s', l:syntax)
         exe 'windo diffthis'
         normal gg
@@ -192,15 +184,18 @@ function! GitList(...)
     call s:WriteLine('TREE      COMMIT    %-81s AUTHOR', l:branch)
     call s:WriteLine(repeat('-', 130))
 
-    call s:WriteExecute("git log -n75 --pretty=format:'%s' %s"
-                \ ,'\%<(8)\%t  \%<(8)\%h  \%<(80,trunc)\%s  \%<(16)\%an  \%as'
+    call s:WriteShell("git log -n75 --pretty=format:'%s' %s"
+                \ ,'%<(8)%t  %<(8)%h  %<(80,trunc)%s  %<(16)%an  %as'
                 \ ,l:branch)
 
     call s:WriteLine('')
     call s:WriteLine('TREE      COMMIT    TAG/REMOTE')
     call s:WriteLine(repeat('-', 130))
 
-    let l:refs = s:ShellList('git rev-parse --short --tags --branches --remotes HEAD | sort -u')
+    let l:refs = s:ShellList('git rev-parse --short --tags --branches --remotes HEAD')
+    call sort(l:refs)
+    call uniq(l:refs)
+
     for l:ref in l:refs
          let l:msg = s:Shell("git log -n1 --pretty=format:'%s' %s", '%<(8)%t  %<(8)%h  %<(80,trunc)%D  %<(16)%an  %as', l:ref)
          call s:WriteLine(l:msg)

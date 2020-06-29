@@ -43,12 +43,7 @@ endfunction
 
 function! s:TabCommand(title, cmd)
     call s:MakeTabBuffer(a:title)
-    call s:WriteExecute(a:cmd)
-endfunction
-
-function! s:WriteExecute(...)
-    let l:cmd = call('printf', a:000)
-    silent execute printf('-1r !%s', l:cmd)
+    call s:WriteShell(a:cmd)
 endfunction
 
 function! s:WriteLine(...)
@@ -56,6 +51,14 @@ function! s:WriteLine(...)
     call setline(winline(), [ l:msg, '' ])
     normal G
 endfunction
+
+function! s:WriteShell(...)
+    let l:cmd = call('printf', a:000)
+    let l:out = systemlist(l:cmd)
+    call setline(line('.'), l:out)
+    normal G
+endfunction
+
 " ------------------------------------------------------------------------
 function! GotoDefinition()
     let l:path = expand("<cfile>")
