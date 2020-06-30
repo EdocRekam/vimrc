@@ -152,13 +152,14 @@ function! s:Callback(winid, result)
     elseif l:cmd == 24
         tabnew
     endif
+    unlet s:wid
     return 1
 endfunction
 
 function! s:GetCommandId(result)
     let l:line = getbufline(s:menuId[1], a:result)[0]
-    let l:textId = strcharpart(l:line, 39, 4)
-    let l:cmdId = str2nr(l:textId)
+    let l:txtId = strcharpart(l:line, 39, 4)
+    let l:cmdId = str2nr(l:txtId)
     return l:cmdId
 endfunction
 
@@ -245,7 +246,10 @@ function! ListFunctions()
         let s:accum = 0
         call s:RestoreActiveMenuBuffer()
     endif
-    call popup_atcursor(s:menuId[1], s:opts)
+
+    if !exists('s:wid')
+        let s:wid = popup_atcursor(s:menuId[1], s:opts)
+    endif
 endfunction
 
 "-------------------------------------------------------------------------
