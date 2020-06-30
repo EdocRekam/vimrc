@@ -24,6 +24,10 @@ syn keyword Type bool byte char decimal delegate double enum float int
 syn keyword Type long object sbyte short string struct uint ulong ushort
 syn keyword Type var void
 
+" STRINGS
+syn region String start='"' end='"'
+syn region String start="'" end="'"
+
 " COMMENTS
 syn region Comment start="/\*" end="\*/" contains=@Spell
 syn match  Comment "///.*$" contains=@Spell

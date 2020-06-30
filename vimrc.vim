@@ -78,5 +78,3 @@ colorscheme Dark+
 " TURN ON SYNTAX HIGHLIGHTING
 syntax on
 
-" PREVENT OMNISHARP INSTALL DIALOG
-let g:OmniSharp_server_path='/usr/local/bin/omnisharp'

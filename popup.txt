@@ -1,0 +1,34 @@
+Align On                               1
+Build                                  2
+Build Restore                          3
+Case: Lower                            4
+Case: Upper                            5
+Convert: Indentation To Spaces         6
+Convert: Line Endings To DOS           7
+Convert: Line Endings To Unix          8
+Enumerate                              9
+Font: Decrease Size                    10
+Font: Increase Size                    11
+Git: Add All                           12
+Git: Commit                            13
+Git: Diff                              14
+Git: Fetch                             15
+Git: Git Status                        16
+Git: Gitk                              17
+Git: Gui                               18
+Git: History                           19
+Git: Prune Remote                      20
+Language: C#                           21
+Remove: Duplicates                     22
+Remove: Trailing Whitespace            23
+Sort: Ascending                        24
+Sort: Ascending + Insensitive          25
+Sort: Descending                       26
+Sort: Descending + Insensitive         27
+Symbol: Goto Definition                28
+Test: All                              29
+Test: This                             30
+Test: This File                        31
+Vim: Show Highlight Colors             32
+Vim: Tab: Close                        33
+Vim: Tab: New                          34

@@ -24,19 +24,7 @@ inoremap <silent><c-space> <c-x><c-o>
 command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
 
 " OMNISHARP
-let g:OmniSharp_server_path='/usr/local/bin/omnisharp'
-let g:OmniSharp_server_install='/usr/local/lib64/omnisharp-roslyn'
-let g:OmniSharp_highlighting=2
-let g:OmniSharp_hightlight_types=3
-let g:OmniSharp_server_stdio=1
-let g:OmniSharp_start_server = 1
-let g:OmniSharp_timeout=5
-let g:omnicomplete_fetch_full_documentation=1
 
-let g:OmniSharp_highlight_groups={
-\ 'StringLiteral': 'String',
-\ 'XmlDocCommentText': 'Comment'
-\}
 
 function! SanitizeCSharp()
     call ExpandTabs()
@@ -44,19 +32,6 @@ function! SanitizeCSharp()
     call Dos2Unix()
 endfunction
 
-function! SwitchToCSharp()
-    " SET TAB HANDLING
-    setlocal expandtab
-    setlocal shiftwidth=4
-    setlocal softtabstop=4
-    setlocal tabstop=4
-
-    " SET FILE ENCODING
-    setlocal fileencoding=utf-8
-    setlocal nobomb
-
-    OmniSharpHighlight
-endfunction
 
 " REMOVE TRAILING WHITESPACE WHEN SAVING CSHARP FILES
 " au! BufWritePre *.cs,*.csproj,*.sln call SanitizeCSharp()
