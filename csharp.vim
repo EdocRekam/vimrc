@@ -31,11 +31,6 @@ function! SwitchToCSharp()
     setf cs
 endfunction
 
-function! s:DotnetRestore()
-    call s:ShellNewTab('RESTORE', 'dotnet restore --nologo')
-    setlocal colorcolumn=
-endfunction
-
 function! s:DotnetBuild()
     call s:ShellNewTab('BUILD', 'dotnet build --nologo')
     setlocal colorcolumn=
@@ -47,4 +42,24 @@ function! s:DotnetBuild()
     hi Caution guifg=#eed320
     hi Bad guifg=#ee3020
 endfunction
+
+function! s:DotnetRestore()
+    call s:ShellNewTab('RESTORE', 'dotnet restore --nologo')
+    setlocal colorcolumn=
+endfunction
+
+function! s:DotnetTest(...)
+    let l:filter = get(a:, 1, '')
+    if l:filter == ''
+        let l:cmd = 'dotnet test --nologo'
+    else
+        let l:cmd = printf("dotnet test --nologo --filter '%s'", l:filter)
+    endif
+    call s:ShellNewTab('TEST', l:cmd)
+    setlocal colorcolumn=
+    syn case ignore
+    syn match Good "Passed:\s\d\+"
+    hi Good guifg=#00b135
+endfunction
+
 

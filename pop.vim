@@ -72,9 +72,9 @@ function! s:Callback(winid, result)
     elseif l:cmd == 28
         call GotoDefinition()
     elseif l:cmd == 29
-        " TEST ALL
+        call s:DotnetTest()
     elseif l:cmd == 30
-        " TEST THIS
+        call s:DotnetTest(expand('<cword>'))
     elseif l:cmd == 31
         " TEST THIS FILE
     elseif l:cmd == 32
