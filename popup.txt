@@ -11,7 +11,7 @@ Git: Add All                           12
 Git: Commit                            13
 Git: Diff                              14
 Git: Fetch                             15
-Git: Git Status                        16
+Git: Status                            16
 Git: Gitk                              17
 Git: Gui                               18
 Git: History                           19

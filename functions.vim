@@ -59,6 +59,75 @@ function! s:WriteShell(...)
     normal G
 endfunction
 
+" INTERNAL USER FUNCTIONS - TRIGGERED BY THINGS LIKE MENU
+function! s:AlignOn(criteria)
+    let l:colAlign = 0
+    for l:line in getline(line("'<"), line("'>"))
+        let l:col = stridx(l:line, a:criteria)
+        if l:col > l:colAlign
+            let l:colAlign = l:col + 1
+        endif
+    endfor
+
+    let l:nr = line("'<")
+    let l:cnt = 0
+    for l:line in getline(line("'<"), line("'>"))
+        let l:col = stridx(l:line, a:criteria)
+        let l:diff = l:colAlign - l:col
+        let l:fmt = '%s%' . printf('%d', l:diff) . 's%s'
+        let l:front = strcharpart(l:line, 0, l:col)
+        let l:back = strcharpart(l:line, l:col, strlen(l:line))
+        let l:line = printf(l:fmt, l:front, ' ', l:back)
+        call setline(l:nr, l:line)
+        let l:nr = l:nr + 1
+        let l:cnt = l:cnt + 1
+    endfor
+    normal gv
+endfunction
+
+function! s:Enumerate(start)
+    let l:nr = line("'<")
+    let l:cnt = a:start
+    for l:line in getline(line("'<"), line("'>"))
+        let l:line = printf('%04d %s', l:cnt, l:line)
+        call setline(l:nr, l:line)
+        let l:nr = l:nr + 1
+        let l:cnt = l:cnt + 1
+    endfor
+    normal gv
+endfunction
+
+function! s:RemoveDuplicates()
+    '<,'>%!uniq
+    normal gv
+endfunction
+
+function! s:SortD()
+    '<,'>sort!
+    normal gv
+endfunction
+
+function! s:SortDI()
+    '<,'>sort! i
+    normal gv
+endfunction
+
+function! s:Sort()
+    '<,'>sort
+    normal gv
+endfunction
+
+function! s:SortI()
+    '<,'>sort i
+    normal gv
+endfunction
+
+function! s:Uppercase()
+    normal gvU
+    normal gv
+endfunction
+
+" PUBLIC FUNCTIONS YOU MAY WANT TO CALL DIRECT YOURSELF
 " ------------------------------------------------------------------------
 function! GotoDefinition()
     let l:path = expand("<cfile>")

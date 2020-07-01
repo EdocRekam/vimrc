@@ -65,7 +65,7 @@ hi visual           gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     cte
 hi visualnos        gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     ctermbg=4  ctermfg=NONE
 
 " POPUP MENUS
-hi Pmenu            gui=NONE      guibg=#68217A guifg=#FFFFFF cterm=NONE ctermbg=0  ctermfg=7
+hi Pmenu            gui=NONE      guibg=#252526 guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
 hi PmenuSbar        gui=NONE      guibg=#2E2E2E guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 hi PmenuThumb       gui=NONE      guibg=#FFFFFF guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 hi PmenuSel         gui=BOLD      guibg=#264F78 guifg=NONE    cterm=BOLD ctermbg=4  ctermfg=7
