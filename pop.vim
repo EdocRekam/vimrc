@@ -14,9 +14,9 @@ function! s:Callback(winid, result)
         let l:criteria = input('Align on: ', '=')
         call s:AlignOn(l:criteria)
     elseif l:cmd == 2
-        " BUILD
+        call s:DotnetBuild()
     elseif l:cmd == 3
-        " RESTORE
+        call s:DotnetRestore()
     elseif l:cmd == 4
         call s:Lowercase()
     elseif l:cmd == 5
@@ -108,7 +108,7 @@ function! s:Filter(winid, key)
             call s:FilterActiveMenuBuffer(a:key, s:menuId[1], s:accum)
             let s:opts.title = s:opts.title . a:key
             let s:accum = s:accum +1
-            call popup_create(s:menuId[1], s:opts)
+            let s:wid = popup_create(s:menuId[1], s:opts)
 
     " NONPRINTABLE
     else
@@ -129,7 +129,7 @@ function! s:Filter(winid, key)
                 call s:FilterActiveMenuBuffer(s:opts.title[l:i], s:menuId[1], l:i)
                 let l:i = l:i +1
             endwhile
-            call popup_create(s:menuId[1], s:opts)
+            let s:wid = popup_create(s:menuId[1], s:opts)
         else
             return popup_filter_menu(a:winid, a:key)
         endif

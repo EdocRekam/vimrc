@@ -22,15 +22,29 @@ let g:OmniSharp_highlight_groups={
 
 " POPUP FUNCTIONS
 function! SwitchToCSharp()
-    " SET TAB HANDLING
     setlocal expandtab
     setlocal shiftwidth=4
     setlocal softtabstop=4
     setlocal tabstop=4
-
-    " SET FILE ENCODING
     setlocal fileencoding=utf-8
     setlocal nobomb
-
     setf cs
 endfunction
+
+function! s:DotnetRestore()
+    call s:ShellNewTab('RESTORE', 'dotnet restore --nologo')
+    setlocal colorcolumn=
+endfunction
+
+function! s:DotnetBuild()
+    call s:ShellNewTab('BUILD', 'dotnet build --nologo')
+    setlocal colorcolumn=
+
+    syn case ignore
+    syn match Caution "\d\+\sWarn.*"
+    syn match Bad "\d\+\sError.*"
+
+    hi Caution guifg=#eed320
+    hi Bad guifg=#ee3020
+endfunction
+

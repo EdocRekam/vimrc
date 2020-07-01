@@ -41,6 +41,21 @@ function! s:ShellList(...)
     return systemlist(s:cmd)
 endfunction
 
+function! s:ShellNewTab(title, ...)
+    if bufexists(a:title)
+        let l:bufnr = bufnr(a:title)
+        exe printf("bwipeout! %d", l:bufnr)
+    endif
+    exe printf('tabnew %s', a:title)
+    setlocal buftype=nofile
+    setlocal noswapfile
+
+    let l:cmd = call('printf', a:000)
+    let l:out = systemlist(l:cmd)
+    call setline(line('.'), l:out)
+    normal gg
+endfunction
+
 function! s:TabCommand(title, cmd)
     call s:MakeTabBuffer(a:title)
     call s:WriteShell(a:cmd)

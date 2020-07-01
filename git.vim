@@ -77,7 +77,6 @@ function! GitDiffSummary(commit)
     endfor
     call s:WriteLine('')
 
-
     exe '3'
     call s:GitColors()
     syn region String start="\%>2l" end="\%90c" contains=@NoSpell oneline
