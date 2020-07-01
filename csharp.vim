@@ -7,7 +7,7 @@
 let g:OmniSharp_server_path='/usr/local/bin/omnisharp'
 let g:OmniSharp_server_install='/usr/local/lib64/omnisharp-roslyn'
 let g:OmniSharp_server_stdio=1
-let g:OmniSharp_start_server=1
+let g:OmniSharp_start_server=0
 let g:OmniSharp_timeout=5
 
 " OMNISHARP - HIGHLIGHTING

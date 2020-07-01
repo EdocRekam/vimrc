@@ -49,10 +49,8 @@ function! s:ShellNewTab(title, ...)
     exe printf('tabnew %s', a:title)
     setlocal buftype=nofile
     setlocal noswapfile
-
     let l:cmd = call('printf', a:000)
-    let l:out = systemlist(l:cmd)
-    call setline('.', l:out)
+    silent execute printf('-1read !%s', l:cmd)
     normal gg
 endfunction
 
