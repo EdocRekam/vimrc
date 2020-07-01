@@ -52,7 +52,7 @@ function! s:ShellNewTab(title, ...)
 
     let l:cmd = call('printf', a:000)
     let l:out = systemlist(l:cmd)
-    call setline(line('.'), l:out)
+    call setline('.', l:out)
     normal gg
 endfunction
 
@@ -63,14 +63,14 @@ endfunction
 
 function! s:WriteLine(...)
     let l:msg = call('printf', a:000)
-    call setline(winline(), [ l:msg, '' ])
+    call setline('.', [ l:msg, '' ])
     normal G
 endfunction
 
 function! s:WriteShell(...)
     let l:cmd = call('printf', a:000)
     let l:out = systemlist(l:cmd)
-    call setline(line('.'), l:out)
+    call setline('.', l:out)
     normal G
 endfunction
 

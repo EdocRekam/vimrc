@@ -170,7 +170,13 @@ function! GitDiffSummaryGotoDefinition()
 endfunction
 
 function! GitFetch(remote)
-    call s:TabCommand('FETCH', printf('git fetch %s', a:remote))
+    call s:ShellNewTab('FETCH', 'git fetch %s', a:remote)
+    setlocal colorcolumn=
+    syn case ignore
+    syn match Bad "forced update"
+    syn match Good "[new branch]"
+    hi Bad guifg=#ee3020
+    hi Good guifg=#00b135
 endfunction
 
 "
@@ -232,7 +238,7 @@ function! GitShowFile(commit, file)
     endif
 
     let l:cmd = printf("git show '%s:%s'", a:commit, a:file)
-    call s:TabCommand(printf('%s:%s', a:commit, a:file), l:cmd)
+    call s:ShellNewTab(printf('%s:%s', a:commit, a:file), l:cmd)
 endfunction
 
 function! GitStatus()

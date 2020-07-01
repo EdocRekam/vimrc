@@ -35,7 +35,6 @@ function! s:Callback(winid, result)
     elseif l:cmd == 11
         call ZoomIn()
     elseif l:cmd == 12
-        " GIT - ADD ALL
         execute 'silent !git add .&'
     elseif l:cmd == 13
         execute 'silent !git commit&'
