@@ -137,13 +137,27 @@ function! s:Filter(winid, key)
     return 1
 endfunction
 
-function! s:FilterActiveMenuBuffer(key, buf, pos)
+function! s:FilterActiveMenuBuffer2(key, buf, pos)
     let l:x = tolower(a:key)
     let l:items = getbufline(a:buf, 0, '$')
     let l:index = 1
     for l:item in l:items
         let l:y = tolower(l:item[a:pos])
         if l:x == l:y
+            let l:index = l:index +1
+        else
+            call deletebufline(a:buf, l:index)
+        endif
+    endfor
+endfunction
+
+function! s:FilterActiveMenuBuffer(key, buf, pos)
+    let l:x = tolower(a:key)
+    let l:items = getbufline(a:buf, 0, '$')
+    let l:index = 1
+    for l:item in l:items
+        let l:y = stridx(tolower(l:item), l:x)
+        if l:y != -1
             let l:index = l:index +1
         else
             call deletebufline(a:buf, l:index)

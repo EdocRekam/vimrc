@@ -26,7 +26,7 @@ function! GitDiffSummary(commit)
     setlocal colorcolumn=
 
     let l:head = s:Chomp(s:Shell('git rev-parse --short HEAD'))
-    call s:WriteLine('FILES %-84s %-8s  %-8s  %-8s  %s', a:commit, 'BEFORE', 'AFTER', l:head, 'COMPARE')
+    call s:WriteLine('FILES %-84s %-8s  %-8s  %-8s  %-14s %s', a:commit, 'BEFORE', 'AFTER', l:head, 'COMPARE', 'SIDE BY SIDE')
     call s:WriteLine(repeat('-', 160))
 
     let l:items = s:ShellList('git diff --numstat %s~1 %s', a:commit,a:commit)
@@ -73,7 +73,7 @@ function! GitDiffSummary(commit)
             let l:current = 'DELETED'
         endif
 
-        call s:WriteLine('%-90s %-8s  %-8s  %-8s  B:A  B:H  A:H', l:file, l:before, l:after, l:current)
+        call s:WriteLine('%-90s %-8s  %-8s  %-8s  B:A  B:H  A:H  B-A  B-H  A-H', l:file, l:before, l:after, l:current)
     endfor
     call s:WriteLine('')
 
@@ -115,7 +115,7 @@ function! GitDiffSummaryGotoDefinition()
 
     " BEFORE AFTER
     elseif l:col > 121 && l:col < 127
-        let l:after  = trim(strcharpart(l:lin, 101, 8))
+        let l:after = trim(strcharpart(l:lin, 101, 8))
         let l:before = trim(strcharpart(l:lin, 91, 8))
 
         if l:before == 'DELETED' || l:after == 'DELETED'
@@ -151,9 +151,9 @@ function! GitDiffSummaryGotoDefinition()
         normal gg
 
     " AFTER HEAD
-    else
-        let l:after  = trim(strcharpart(l:lin, 101, 8))
-        let l:head   = trim(strcharpart(l:lin, 111, 8))
+    elseif l:col > 131 && l:col < 136
+        let l:after = trim(strcharpart(l:lin, 101, 8))
+        let l:head = trim(strcharpart(l:lin, 111, 8))
         if l:after == 'DELETED' || l:head == 'DELETED'
             return
         endif
@@ -165,6 +165,58 @@ function! GitDiffSummaryGotoDefinition()
         call s:WriteShell("git show '%s:%s'", l:after, l:file)
         exe printf('setf %s', l:syntax)
         exe 'windo diffthis'
+        normal gg
+
+    " SXS - BEFORE AFTER
+    elseif l:col > 136 && l:col < 141
+        let l:after = trim(strcharpart(l:lin, 101, 8))
+        let l:before = trim(strcharpart(l:lin, 91, 8))
+
+        if l:before == 'DELETED' || l:after == 'DELETED'
+            return
+        endif
+
+        call GitShowFile(l:after, l:file)
+        let l:syntax = &syntax
+        exe 'vsplit'
+        call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
+        call s:WriteShell("git show '%s:%s'", l:before, l:file)
+        if l:syntax
+            exe printf('setf %s', l:syntax)
+        endif
+        normal gg
+
+    " SXS - BEFORE HEAD
+    elseif l:col > 141 && l:col < 146
+        let l:before = trim(strcharpart(l:lin, 91, 8))
+        let l:head = trim(strcharpart(l:lin, 111, 8))
+        if l:before == 'DELETED' || l:head == 'DELETED'
+            return
+        endif
+
+        exe printf('tabnew %s', l:file)
+        let l:syntax = &syntax
+        exe 'vsplit'
+        call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
+        call s:WriteShell("git show '%s:%s'", l:before, l:file)
+        exe printf('setf %s', l:syntax)
+        exe 'windo diffthis'
+        normal gg
+
+    " SXS - AFTER HEAD
+    else
+        let l:after = trim(strcharpart(l:lin, 101, 8))
+        let l:head = trim(strcharpart(l:lin, 111, 8))
+        if l:after == 'DELETED' || l:head == 'DELETED'
+            return
+        endif
+
+        exe printf('tabnew %s', l:file)
+        let l:syntax = &syntax
+        exe 'vsplit'
+        call s:NewOrReplaceBuffer(printf('%s:%s', l:after, l:file))
+        call s:WriteShell("git show '%s:%s'", l:after, l:file)
+        exe printf('setf %s', l:syntax)
         normal gg
     endif
 endfunction
@@ -190,7 +242,7 @@ function! GitList(...)
     call s:WriteLine(repeat('-', 130))
 
     call s:WriteShell("git log -n75 --pretty=format:'%s' %s"
-                \ ,'%<(8)%t  %<(8)%h  %<(80,trunc)%s  %<(16)%an  %as'
+                \ ,'\%<(8)\%t  \%<(8)\%h  \%<(80,trunc)\%s  \%<(16)\%an  \%as'
                 \ ,l:branch)
 
     call s:WriteLine('')
@@ -229,7 +281,7 @@ function! GitListGotoDefinition()
 endfunction
 
 function! GitPrune(remote)
-    call s:TabCommand('PRUNE', printf('git remote prune %s', a:remote))
+    call s:ShellNewTab('PRUNE', 'git remote prune %s', a:remote)
 endfunction
 
 function! GitShowFile(commit, file)
@@ -242,6 +294,6 @@ function! GitShowFile(commit, file)
 endfunction
 
 function! GitStatus()
-    call s:TabCommand('STATUS', 'git status')
+    call s:ShellNewTab('STATUS', 'git status')
     setf gitmisc
 endfunction

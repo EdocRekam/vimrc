@@ -7,9 +7,9 @@ endfunction
 function! s:MakeTabBuffer(title)
     if bufexists(a:title)
         let l:bufnr = bufnr(a:title)
-        exe printf("bwipeout! %d", l:bufnr)
+        silent exe printf("bwipeout! %d", l:bufnr)
     endif
-    exe printf('tabnew %s', a:title)
+    silent exe printf('tabnew %s', a:title)
     setlocal buftype=nofile
     setlocal noswapfile
     normal gg
@@ -21,11 +21,11 @@ endfunction
 function! s:NewOrReplaceBuffer(title)
     if bufexists(a:title)
         let l:bufnr = bufnr(a:title)
-        exe printf("bwipeout! %d", l:bufnr)
+        silent exe printf("bwipeout! %d", l:bufnr)
     endif
     let l:bufnr = bufadd(a:title)
     call bufload(l:bufnr)
-    exe printf("%db", l:bufnr)
+    silent exe printf("%db", l:bufnr)
     setlocal buflisted
     setlocal buftype=nofile
     setlocal noswapfile
@@ -44,19 +44,13 @@ endfunction
 function! s:ShellNewTab(title, ...)
     if bufexists(a:title)
         let l:bufnr = bufnr(a:title)
-        exe printf("bwipeout! %d", l:bufnr)
+        silent exe printf("bwipeout! %d", l:bufnr)
     endif
-    exe printf('tabnew %s', a:title)
+    silent exe printf('tabnew %s', a:title)
     setlocal buftype=nofile
     setlocal noswapfile
-    let l:cmd = call('printf', a:000)
-    silent execute printf('-1read !%s', l:cmd)
+    silent exe printf('-1read !%s', call('printf', a:000))
     normal gg
-endfunction
-
-function! s:TabCommand(title, cmd)
-    call s:MakeTabBuffer(a:title)
-    call s:WriteShell(a:cmd)
 endfunction
 
 function! s:WriteLine(...)
@@ -66,9 +60,7 @@ function! s:WriteLine(...)
 endfunction
 
 function! s:WriteShell(...)
-    let l:cmd = call('printf', a:000)
-    let l:out = systemlist(l:cmd)
-    call setline('.', l:out)
+    silent exe printf('-1read !%s', call('printf', a:000))
     normal G
 endfunction
 
