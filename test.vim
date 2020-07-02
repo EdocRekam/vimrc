@@ -19,5 +19,5 @@ set fillchars=fold:\
 set foldcolumn=1
 set foldtext=GetFoldText()
 
-syn region Folded start="^{" end="}" transparent fold
-
+syn region Folded start="^{" end="^}" transparent fold
+syn sync fromstart
