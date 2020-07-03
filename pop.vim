@@ -9,88 +9,90 @@ function! s:Callback(winid, result)
         return 1
     endif
 
-    let l:cmd = s:GetCommandId(a:result)
-    if l:cmd == 1
-        let l:criteria = input('Align on: ', '=')
-        call s:AlignOn(l:criteria)
-    elseif l:cmd == 2
+    let l:id = s:GetCmdId(a:result)
+    if l:id == 1
+        let l:ask = input('Align on: ', '=')
+        call s:AlignOn(l:ask)
+    elseif l:id == 2
         call s:DotnetBuild()
-    elseif l:cmd == 3
+    elseif l:id == 3
         call s:DotnetRestore()
-    elseif l:cmd == 4
+    elseif l:id == 4
         call s:Lowercase()
-    elseif l:cmd == 5
+    elseif l:id == 5
         call s:Uppercase()
-    elseif l:cmd == 6
+    elseif l:id == 6
         call ExpandTabs()
-    elseif l:cmd == 7
+    elseif l:id == 7
         call Unix2Dos()
-    elseif l:cmd == 8
+    elseif l:id == 8
         call Dos2Unix()
-    elseif l:cmd == 9
-        let l:criteria = input('Start: ', '0')
-        call s:Enumerate(str2nr(l:criteria))
-    elseif l:cmd == 10
+    elseif l:id == 9
+        let l:ask = input('Start: ', '0')
+        call s:Enumerate(str2nr(l:ask))
+    elseif l:id == 10
         call ZoomOut()
-    elseif l:cmd == 11
+    elseif l:id == 11
         call ZoomIn()
-    elseif l:cmd == 12
+    elseif l:id == 12
         execute 'silent !git add .&'
-    elseif l:cmd == 13
+    elseif l:id == 13
         execute 'silent !git commit&'
-    elseif l:cmd == 14
+    elseif l:id == 14
         execute 'silent !git diff&'
-    elseif l:cmd == 15
-        let l:criteria = input('Remote: ', 'vso')
-        call GitFetch(l:criteria)
-    elseif l:cmd == 16
+    elseif l:id == 15
+        let l:ask = input('Remote: ', 'vso')
+        call GitFetch(l:ask)
+    elseif l:id == 16
         call GitStatus()
-    elseif l:cmd == 17
+    elseif l:id == 17
         execute 'silent !gitk&'
-    elseif l:cmd == 18
+    elseif l:id == 18
         execute 'silent !git gui&'
-    elseif l:cmd == 19
+    elseif l:id == 19
         call GitList()
-    elseif l:cmd == 20
-        let l:criteria = input('Remote: ', 'vso')
-        call GitPrune(l:criteria)
-    elseif l:cmd == 21
+    elseif l:id == 20
+        let l:ask = input('Remote: ', 'vso')
+        call GitPrune(l:ask)
+    elseif l:id == 21
         call SwitchToCsharp()
-    elseif l:cmd == 22
+    elseif l:id == 22
         call s:RemoveDuplicates()
-    elseif l:cmd == 23
+    elseif l:id == 23
         call RemoveTrailingWhitespace()
-    elseif l:cmd == 24
+    elseif l:id == 24
         call s:Sort()
-    elseif l:cmd == 25
+    elseif l:id == 25
         call s:SortI()
-    elseif l:cmd == 26
+    elseif l:id == 26
         call s:SortD()
-    elseif l:cmd == 27
+    elseif l:id == 27
         call s:SortDI()
-    elseif l:cmd == 28
+    elseif l:id == 28
         call GotoDefinition()
-    elseif l:cmd == 29
+    elseif l:id == 29
         call s:DotnetTest()
-    elseif l:cmd == 30
+    elseif l:id == 30
         call s:DotnetTest(expand('<cword>'))
-    elseif l:cmd == 31
+    elseif l:id == 31
         " TEST THIS FILE
-    elseif l:cmd == 32
+    elseif l:id == 32
         so $VIMRUNTIME/syntax/hitest.vim
-    elseif l:cmd == 33
+    elseif l:id == 33
         tabclose
-    elseif l:cmd == 24
+    elseif l:id == 34
         tabnew
+    elseif l:id == 35
+        let l:path = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
+        if filereadable(l:path)
+            silent exe printf("tabnew %s", l:path)
+        endif
+    elseif l:id == 36
+        silent exe 'options'
+    elseif l:id == 37
+        silent exe 'set guifont=*'
     endif
     return 1
-endfunction
-
-function! s:GetCommandId(result)
-    let l:line = getbufline(s:menuId[1], a:result)[0]
-    let l:txtId = strcharpart(l:line, 39, 4)
-    let l:cmdId = str2nr(l:txtId)
-    return l:cmdId
 endfunction
 
 function! s:Filter(winid, key)
@@ -104,9 +106,9 @@ function! s:Filter(winid, key)
 
             " ACCUMULATE
             call popup_close(a:winid, -1)
-            call s:FilterActiveMenuBuffer(a:key, s:menuId[1], s:accum)
             let s:opts.title = s:opts.title . a:key
-            let s:accum = s:accum +1
+            call s:FilterBuffer(s:menuId[1])
+            let s:accum +=1
             let s:wid = popup_create(s:menuId[1], s:opts)
 
     " NONPRINTABLE
@@ -120,14 +122,10 @@ function! s:Filter(winid, key)
 
             " REGRESS
             call popup_close(a:winid, -1)
-            call s:RestoreActiveMenuBuffer()
+            call s:RestoreBuffer()
             let s:opts.title = s:Chomp(s:opts.title)
-            let s:accum = s:accum -1
-            let l:i = 0
-            while l:i < s:accum
-                call s:FilterActiveMenuBuffer(s:opts.title[l:i], s:menuId[1], l:i)
-                let l:i = l:i +1
-            endwhile
+            call s:FilterBuffer(s:menuId[1])
+            let s:accum -=1
             let s:wid = popup_create(s:menuId[1], s:opts)
         else
             return popup_filter_menu(a:winid, a:key)
@@ -137,35 +135,25 @@ function! s:Filter(winid, key)
     return 1
 endfunction
 
-function! s:FilterActiveMenuBuffer2(key, buf, pos)
-    let l:x = tolower(a:key)
-    let l:items = getbufline(a:buf, 0, '$')
-    let l:index = 1
-    for l:item in l:items
-        let l:y = tolower(l:item[a:pos])
-        if l:x == l:y
-            let l:index = l:index +1
+function! s:FilterBuffer(buf)
+    let l:t = tolower(s:opts.title)
+    let l:idx = 1
+    for l:i in getbufline(a:buf, 0, '$')
+        if stridx(tolower(l:i), l:t) != -1
+            let l:idx +=1
         else
-            call deletebufline(a:buf, l:index)
+            call deletebufline(a:buf, l:idx)
         endif
     endfor
 endfunction
 
-function! s:FilterActiveMenuBuffer(key, buf, pos)
-    let l:x = tolower(a:key)
-    let l:items = getbufline(a:buf, 0, '$')
-    let l:index = 1
-    for l:item in l:items
-        let l:y = stridx(tolower(l:item), l:x)
-        if l:y != -1
-            let l:index = l:index +1
-        else
-            call deletebufline(a:buf, l:index)
-        endif
-    endfor
+function! s:GetCmdId(result)
+    let l:l = getbufline(s:menuId[1], a:result)[0]
+    let l:nr = strcharpart(l:l, 39, 4)
+    return str2nr(l:nr)
 endfunction
 
-function! s:RestoreActiveMenuBuffer()
+function! s:RestoreBuffer()
     if !exists('s:menuId')
         let s:menuId = [bufadd(printf('%s/.vim/popup.txt', $HOME))
                      \ ,bufadd('ea9b0bea-e515-40ed-b1a0-f58281ff9629')]
@@ -189,7 +177,7 @@ endfunction
 function! ListFunctions()
     if !exists('s:accum')
         let s:accum = 0
-        call s:RestoreActiveMenuBuffer()
+        call s:RestoreBuffer()
     endif
     if !exists('s:wid')
         let s:wid = popup_create(s:menuId[1], s:opts)
@@ -197,16 +185,14 @@ function! ListFunctions()
 endfunction
 
 let s:opts = {
-    \  'border'     : [1,0,0,0]
-    \, 'borderchars': ['-']
-    \, 'callback'   : function('s:Callback')
+    \  'callback'   : function('s:Callback')
     \, 'cursorline' : 1
     \, 'filter'     : function('s:Filter')
     \, 'filtermode' : 'a'
-    \, 'mapping'    : 0
-    \, 'maxheight'  : 20
     \, 'line'       : 2
-    \, 'maxwidth'   : 30
+    \, 'mapping'    : 0
+    \, 'maxheight'  : 25
+    \, 'maxwidth'   : 36
     \, 'padding'    : [1, 1, 0, 1]
     \, 'title'      : ''
     \, 'wrap'       : 0}

@@ -7,13 +7,14 @@ Convert: Line Endings To DOS           7
 Convert: Line Endings To Unix          8
 Font: Decrease Size                    10
 Font: Increase Size                    11
+Font: Dialog                           37
 Git: Add All                           12
 Git: Commit                            13
 Git: Diff                              14
 Git: Fetch                             15
 Git: Status                            16
 Git: Gitk                              17
-Git: Gui                               18
+Git: Gui                          F7   18
 Git: History                           19
 Git: Prune Remote                      20
 Language: C#                           21
@@ -23,7 +24,7 @@ Sort: Ascending                        24
 Sort: Ascending + Insensitive          25
 Sort: Descending                       26
 Sort: Descending + Insensitive         27
-Symbol: Goto Definition                28
+Symbol: Goto Definition           F4   28
 Test: All                              29
 Test: This                             30
 Test: This File                        31
@@ -32,3 +33,6 @@ Text: Enumerate                        9
 Vim: Show Highlight Colors             32
 Vim: Tab: Close                        33
 Vim: Tab: New                          34
+Vim: View Syntax                       35
+Vim: View Options                      36
+C#: Start Language Server              38

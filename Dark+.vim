@@ -34,7 +34,7 @@ hi VertSplit        gui=NONE      guibg=#1e1e1e guifg=#2e2e2e cterm=NONE ctermbg
 
 " FOLDING
 hi FoldColumn       gui=NONE      guibg=#1e1e1e guifg=#2e2e2e cterm=NONE ctermbg=0  ctermfg=7
-hi Folded           gui=NONE      guibg=#1e1e1e guifg=#2e2e2e cterm=NONE ctermbg=0  ctermfg=7
+hi Folded           gui=NONE      guibg=#1e1e1e guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 
 " HIDE ~ BEYOND FILE
 hi NonText          gui=NONE      guibg=#1e1e1e guifg=#1e1e1e cterm=NONE ctermbg=0  ctermfg=7
