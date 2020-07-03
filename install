@@ -55,6 +55,8 @@ fi
 
 # POPUP
 cat "${CWD}/popup.txt" > "${HOME}/${VIMDIR}/popup.txt"
+cat "${CWD}/keys.html" > "${HOME}/${VIMDIR}/keys.html"
+
 
 # THEMES
 mkdir -p "${HOME}/${VIMDIR}/colors"

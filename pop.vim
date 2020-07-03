@@ -91,7 +91,19 @@ function! s:Callback(winid, result)
         silent exe 'options'
     elseif l:id == 37
         silent exe 'set guifont=*'
+    elseif l:id == 38
+        call s:csharp_startserver()
+    elseif l:id == 39
+        call s:csharp_fold()
+    elseif l:id == 40
+        call s:csharp_nofold()
+    elseif l:id == 41
+        let l:path = printf('%skeys.html', s:VimDir())
+        if filereadable(l:path)
+            silent exe printf('!firefox --new-window %s', l:path)
+        endif
     endif
+
     return 1
 endfunction
 
@@ -155,7 +167,7 @@ endfunction
 
 function! s:RestoreBuffer()
     if !exists('s:menuId')
-        let s:menuId = [bufadd(printf('%s/.vim/popup.txt', $HOME))
+        let s:menuId = [bufadd(printf('%spopup.txt', s:VimDir()))
                      \ ,bufadd('ea9b0bea-e515-40ed-b1a0-f58281ff9629')]
 
         silent call bufload(s:menuId[0])

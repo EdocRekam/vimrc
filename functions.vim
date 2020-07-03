@@ -53,6 +53,14 @@ function! s:ShellNewTab(title, ...)
     normal gg
 endfunction
 
+function! s:VimDir()
+    if has('gui_gtk2') || has('gui_gtk3')
+        return printf('%s/.vim/', $HOME)
+    else
+        return printf('%s/vimfiles/', $HOME)
+    endif
+endfunction
+
 function! s:WriteLine(...)
     let l:msg = call('printf', a:000)
     call setline('.', [ l:msg, '' ])

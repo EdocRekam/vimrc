@@ -31,6 +31,37 @@ function! SwitchToCSharp()
     setf cs
 endfunction
 
+function! Csharp_get_indent()
+    if getline(v:lnum)[0] == 'n'
+        return ">1"
+    else
+        return 1
+    endif
+endfunction
+
+function! Csharp_get_foldtext()
+    return getline(v:foldstart)
+endfunction
+
+function! s:csharp_fold()
+    setlocal foldlevel=1
+    setlocal fillchars+=fold:\ 
+    setlocal foldcolumn=1
+    setlocal foldexpr=Csharp_get_indent()
+    setlocal foldmethod=expr
+    setlocal foldtext=Csharp_get_foldtext()
+    setlocal foldenable
+endfunction
+
+function! s:csharp_nofold()
+    setlocal nofoldenable
+    setlocal foldcolumn=0
+    setlocal foldmethod=manual
+endfunction
+
+function! s:charp_startserver()
+endfunction
+
 function! s:DotnetBuild()
     call s:ShellNewTab('BUILD', 'dotnet build --nologo')
     setlocal colorcolumn=

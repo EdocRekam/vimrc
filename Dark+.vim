@@ -33,7 +33,7 @@ hi SpecialKey       gui=NONE      guibg=#1e1e1e guifg=#858585 cterm=NONE ctermbg
 hi VertSplit        gui=NONE      guibg=#1e1e1e guifg=#2e2e2e cterm=NONE ctermbg=0  ctermfg=7
 
 " FOLDING
-hi FoldColumn       gui=NONE      guibg=#1e1e1e guifg=#2e2e2e cterm=NONE ctermbg=0  ctermfg=7
+hi FoldColumn       gui=NONE      guibg=#1e1e1e guifg=#858585 cterm=NONE ctermbg=0  ctermfg=7
 hi Folded           gui=NONE      guibg=#1e1e1e guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 
 " HIDE ~ BEYOND FILE
