@@ -1,8 +1,9 @@
 
+
 "
 " GIT SYNTAX COLORING
 "
-function! s:GitColors()
+function! s:git_colors()
     syn case ignore
     syn keyword Comment boron carbon dublin ede havana herne hilla hobart
     syn keyword Comment hofu freetown master ibaraki
@@ -19,9 +20,11 @@ function! s:GitColors()
     syn match String "\d\+\.\d\+\.\d\+\.\d\+\.\d\+"
     syn match Identifier "#\=\d\{5}"
     syn match Keyword "[0-9a-f]\{7,8}" contains=@NoSpell
+    hi Bad  guifg=#ee3020
+    hi Good guifg=#00b135
 endfunction
 
-function! GitDiffSummary(commit)
+function! s:git_diff(commit)
     call s:MakeTabBuffer(printf('SUMMARY: %s', a:commit))
     setlocal colorcolumn=
 
@@ -78,15 +81,15 @@ function! GitDiffSummary(commit)
     call s:WriteLine('')
 
     exe '3'
-    call s:GitColors()
+    call s:git_colors()
     syn region String start="\%>2l" end="\%90c" contains=@NoSpell oneline
 
-    noremap <silent><buffer><2-LeftMouse> :call GitDiffSummaryGotoDefinition()<CR>
-    nnoremap <silent><buffer><F4> :call GitDiffSummaryGotoDefinition()<CR>
-    exe printf("nnoremap <silent><buffer><F5> :call GitDiffSummary('%s')<CR>", a:commit)
+    noremap <silent><buffer><2-LeftMouse> :call <SID>git_diff_nav()<CR>
+    nnoremap <silent><buffer><F4> :call <SID>git_diff_nav()<CR>
+    exe printf("nnoremap <silent><buffer><F5> :call <SID>git_diff('%s')<CR>", a:commit)
 endfunction
 
-function! GitDiffSummaryGotoDefinition()
+function! s:git_diff_nav()
     let l:col = col('.')
     let l:lnr = line('.')
     let l:lin = getline(l:lnr)
@@ -101,17 +104,17 @@ function! GitDiffSummaryGotoDefinition()
     " BEFORE
     elseif l:col > 91 && l:col < 102
         let l:before = trim(strcharpart(l:lin, 91, 8))
-        call GitShowFile(l:before, l:file)
+        call s:git_show(l:before, l:file)
 
     " AFTER
     elseif l:col > 101 && l:col < 112
         let l:after  = trim(strcharpart(l:lin, 101, 8))
-        call GitShowFile(l:after, l:file)
+        call s:git_show(l:after, l:file)
 
     " HEAD
     elseif l:col > 111 && l:col < 121
         let l:head = trim(strcharpart(l:lin, 111, 8))
-        call GitShowFile(l:head, l:file)
+        call s:git_show(l:head, l:file)
 
     " BEFORE AFTER
     elseif l:col > 121 && l:col < 127
@@ -122,7 +125,7 @@ function! GitDiffSummaryGotoDefinition()
             return
         endif
 
-        call GitShowFile(l:after, l:file)
+        call s:git_show(l:after, l:file)
         let l:syntax = &syntax
         exe 'vsplit'
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
@@ -176,7 +179,7 @@ function! GitDiffSummaryGotoDefinition()
             return
         endif
 
-        call GitShowFile(l:after, l:file)
+        call s:git_show(l:after, l:file)
         let l:syntax = &syntax
         exe 'vsplit'
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
@@ -221,7 +224,7 @@ function! GitDiffSummaryGotoDefinition()
     endif
 endfunction
 
-function! GitFetch(remote)
+function! s:git_fetch(remote)
     call s:ShellNewTab('FETCH', 'git fetch %s', a:remote)
     setlocal colorcolumn=
     syn case ignore
@@ -234,7 +237,7 @@ endfunction
 "
 " DISPLAY GIT LOG HISTORY AND BRANCHES IN A NEW TAB
 "
-function! GitList(...)
+function! s:git_log(...)
     let l:branch = get(a:, 1, s:Chomp(system('git rev-parse --abbrev-ref HEAD')))
 
     call s:MakeTabBuffer(printf('LOG: %s', l:branch))
@@ -261,30 +264,30 @@ function! GitList(...)
     normal gg
     normal 21|
     setlocal colorcolumn=
-    call s:GitColors()
+    call s:git_colors()
 
-    noremap <silent><buffer><2-LeftMouse> :call GitListGotoDefinition()<CR>
-    nnoremap <silent><buffer><F4> :call GitListGotoDefinition()<CR>
-    exe printf("nnoremap <silent><buffer><F5> :call GitList('%s')<CR>", l:branch)
+    noremap <silent><buffer><2-LeftMouse> :call <SID>git_log_nav()<CR>
+    nnoremap <silent><buffer><F4> :call <SID>git_log_nav()<CR>
+    exe printf("nnoremap <silent><buffer><F5> :call <SID>git_log('%s')<CR>", l:branch)
 endfunction
 
 " JUMP TO A NEW LOCATION BASED ON CURSOR IN GITLIST
-function! GitListGotoDefinition()
+function! s:git_log_nav()
     let l:col = col('.')
     if l:col > 0 && l:col < 11
         call GitDiffSummary(expand('<cword>'))
     elseif l:col > 10 && l:col < 21
-        call GitDiffSummary(expand('<cword>'))
+        call s:git_diff(expand('<cword>'))
     else
-        call GitList(expand('<cfile>'))
+        call s:git_log(expand('<cfile>'))
     endif
 endfunction
 
-function! GitPrune(remote)
+function! s:git_prune(remote)
     call s:ShellNewTab('PRUNE', 'git remote prune %s', a:remote)
 endfunction
 
-function! GitShowFile(commit, file)
+function! s:git_show(commit, file)
     if a:commit == 'DELETED' || a:commit == 'ADDED'
         return
     endif
@@ -293,7 +296,8 @@ function! GitShowFile(commit, file)
     call s:ShellNewTab(printf('%s:%s', a:commit, a:file), l:cmd)
 endfunction
 
-function! GitStatus()
+function! s:git_status()
     call s:ShellNewTab('STATUS', 'git status')
-    setf gitmisc
+    call s:git_colors()
+    syn keyword Good modified
 endfunction

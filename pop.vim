@@ -42,18 +42,18 @@ function! s:Callback(winid, result)
         execute 'silent !git diff&'
     elseif l:id == 15
         let l:ask = input('Remote: ', 'vso')
-        call GitFetch(l:ask)
+        call s:git_fetch(l:ask)
     elseif l:id == 16
-        call GitStatus()
+        call s:git_status()
     elseif l:id == 17
         execute 'silent !gitk&'
     elseif l:id == 18
         execute 'silent !git gui&'
     elseif l:id == 19
-        call GitList()
+        call s:git_log()
     elseif l:id == 20
         let l:ask = input('Remote: ', 'vso')
-        call GitPrune(l:ask)
+        call s:git_prune(l:ask)
     elseif l:id == 21
         call SwitchToCsharp()
     elseif l:id == 22

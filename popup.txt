@@ -9,17 +9,17 @@ Convert: Indentation To Spaces         6
 Convert: Line Endings To DOS           7
 Convert: Line Endings To Unix          8
 Font: Decrease Size                    10
-Font: Dialog                           37
 Font: Increase Size                    11
+Font: Dialog                           37
 Git: Add All                           12
 Git: Commit                            13
 Git: Diff                              14
 Git: Fetch                             15
 Git: Gitk                              17
-Git: Gui                          F7   18
-Git: History                           19
+Git: Gui                          F6   18
+Git: Log                          F7   19
+Git: Status                       F8   16
 Git: Prune Remote                      20
-Git: Status                            16
 Language: C#                           21
 Remove: Duplicates                     22
 Remove: Trailing Whitespace            23

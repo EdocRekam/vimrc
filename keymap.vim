@@ -83,13 +83,13 @@ nnoremap <silent><S-F4> :call FindInFiles('<cword>')<CR>
 nnoremap <F5> :so %<CR>
 
 " RESERVED                                              F6
-
+nnoremap <silent><F6> :silent !git gui&<CR>
 
 " GIT GUI                                               F7
-nnoremap <silent><F7> :silent !git gui&<CR>
+nnoremap <silent><F7> :silent call <SID>git_log()<CR>
 
 " GIT STATUS                                            F8
-nnoremap <silent><F8> :call GitStatus()<CR>
+nnoremap <silent><F8> :call <SID>git_status()<CR>
 
 " LAUNCH NEW INSTANCE                                   F9
 nnoremap <silent><F9> :silent !gvim&<CR>

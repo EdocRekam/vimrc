@@ -30,7 +30,7 @@ syn region String start="'" end="'"
 
 " COMMENTS
 syn region Comment start="/\*" end="\*/" contains=@Spell
-syn match  Comment "///.*$" contains=@Spell
+syn match  Comment "//.*$" contains=@Spell
 
 let b:current_syntax = 'cs'
 
