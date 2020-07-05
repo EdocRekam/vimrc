@@ -33,6 +33,7 @@ Test: This                             30
 Test: This File                        31
 Text: Align On                         1
 Text: Enumerate                        9
+Text: Toggle Word Wrap                 42
 Vim: Cheat Sheet                       41
 Vim: Show Highlight Colors             32
 Vim: Tab: Close                        33

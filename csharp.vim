@@ -79,7 +79,7 @@ function! s:DotnetRestore()
     setlocal colorcolumn=
 endfunction
 
-function! s:DotnetTest(...)
+function! s:dotnet_test(...)
     let l:filter = get(a:, 1, '')
     if l:filter == ''
         let l:cmd = 'dotnet test --nologo'
@@ -89,7 +89,9 @@ function! s:DotnetTest(...)
     call s:ShellNewTab('TEST', l:cmd)
     setlocal colorcolumn=
     syn case ignore
+    syn match Bad "Failed:\s\d\+"
     syn match Good "Passed:\s\d\+"
+    hi Bad guifg=#ee3020
     hi Good guifg=#00b135
 endfunction
 

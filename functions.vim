@@ -111,6 +111,7 @@ function! s:Enumerate(start)
 endfunction
 
 function! s:RemoveDuplicates()
+    normal gv
     '<,'>%!uniq
     normal gv
 endfunction

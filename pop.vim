@@ -71,9 +71,9 @@ function! s:Callback(winid, result)
     elseif l:id == 28
         call GotoDefinition()
     elseif l:id == 29
-        call s:DotnetTest()
+        call s:dotnet_test()
     elseif l:id == 30
-        call s:DotnetTest(expand('<cword>'))
+        call s:dotnet_test(expand('<cword>'))
     elseif l:id == 31
         " TEST THIS FILE
     elseif l:id == 32
@@ -100,8 +100,10 @@ function! s:Callback(winid, result)
     elseif l:id == 41
         let l:path = printf('%skeys.html', s:VimDir())
         if filereadable(l:path)
-            silent exe printf('!firefox --new-window %s', l:path)
+            silent exe printf("!firefox --new-window '%s'&", l:path)
         endif
+    elseif l:id == 42
+        exe 'setlocal wrap!'
     endif
 
     return 1
@@ -167,7 +169,7 @@ endfunction
 
 function! s:RestoreBuffer()
     if !exists('s:menuId')
-        let s:menuId = [bufadd(printf('%spopup.txt', s:VimDir()))
+        let s:menuId = [bufadd(printf('%smenu.txt', s:VimDir()))
                      \ ,bufadd('ea9b0bea-e515-40ed-b1a0-f58281ff9629')]
 
         silent call bufload(s:menuId[0])

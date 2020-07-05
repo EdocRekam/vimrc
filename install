@@ -54,7 +54,7 @@ else
 fi
 
 # POPUP
-cat "${CWD}/popup.txt" > "${HOME}/${VIMDIR}/popup.txt"
+cat "${CWD}/menu.txt" > "${HOME}/${VIMDIR}/menu.txt"
 cat "${CWD}/keys.html" > "${HOME}/${VIMDIR}/keys.html"
 
 
