@@ -1,6 +1,15 @@
 
+" THINGS I CANNOT LOCALIZE
+function! Vimrc_get_statusline()
+    let l:head = exists('s:head') ? s:head : ''
+    let l:enc = strlen(&fenc) ? '  ' . toupper(&fenc) : '  PLAIN'
+    let l:bom = &bomb? '  with BOM' : ''
+    let l:le = &ff == 'unix' ? '  LF' : '  CRLF'
+    return l:head . '  %M%<%f%=' . l:enc . l:bom . l:le . '  %Y'
+endfunction
+
 " INTERNAL LIBRARY FUNCTIONS
-function! s:Chomp(msg)
+function! s:chomp(msg)
     return strcharpart(a:msg, 0, strlen(a:msg)-1)
 endfunction
 
@@ -31,17 +40,17 @@ function! s:NewOrReplaceBuffer(title)
     setlocal noswapfile
 endfunction
 
-function! s:Shell(...)
+function! s:shell(...)
     let s:cmd = call('printf', a:000)
     return system(s:cmd)
 endfunction
 
-function! s:ShellList(...)
+function! s:shell_list(...)
     let s:cmd = call('printf', a:000)
     return systemlist(s:cmd)
 endfunction
 
-function! s:ShellNewTab(title, ...)
+function! s:shell_tab(title, ...)
     if bufexists(a:title)
         let l:bufnr = bufnr(a:title)
         silent exe printf("bwipeout! %d", l:bufnr)
@@ -53,7 +62,7 @@ function! s:ShellNewTab(title, ...)
     normal gg
 endfunction
 
-function! s:VimDir()
+function! s:vim_dir()
     if has('gui_gtk2') || has('gui_gtk3')
         return printf('%s/.vim/', $HOME)
     else
@@ -61,13 +70,13 @@ function! s:VimDir()
     endif
 endfunction
 
-function! s:WriteLine(...)
+function! s:write(...)
     let l:msg = call('printf', a:000)
     call setline('.', [ l:msg, '' ])
     normal G
 endfunction
 
-function! s:WriteShell(...)
+function! s:write_shell(...)
     silent exe printf('-1read !%s', call('printf', a:000))
     normal G
 endfunction
@@ -117,21 +126,25 @@ function! s:RemoveDuplicates()
 endfunction
 
 function! s:SortD()
+    normal gv
     '<,'>sort!
     normal gv
 endfunction
 
 function! s:SortDI()
+    normal gv
     '<,'>sort! i
     normal gv
 endfunction
 
 function! s:Sort()
+    normal gv
     '<,'>sort
     normal gv
 endfunction
 
 function! s:SortI()
+    normal gv
     '<,'>sort i
     normal gv
 endfunction
@@ -158,7 +171,6 @@ function! Dos2Unix()
     :setlocal ff=unix
     :w
 endfunction
-command! Dos2Unix call Dos2Unix()
 
 function! Unix2Dos()
    update
@@ -166,7 +178,6 @@ function! Unix2Dos()
    setlocal ff=dos
    update
 endfunction
-command! Unix2Dos call Unix2Dos()
 
 function! FindInFiles(criteria)
     silent execute printf('grep! -rn  %s *', a:criteria)
@@ -193,30 +204,16 @@ function! RemoveTrailingWhitespace()
     :nohl
     unlet _s
 endfunction
-command! RemoveTrailingWhitespace call RemoveTrailingWhitespace()
 
-function! ToggleSplit()
+function! s:rotate()
     if exists('s:orient')
-        if s:orient == 'K'
-            let s:orient = 'H'
-        else
+        if s:orient == 'H'
             let s:orient = 'K'
+        else
+            let s:orient = 'H'
         endif
     else
-        let s:orient = 'K'
+        let s:orient = 'H'
     endif
     exe printf('windo wincmd %s', s:orient)
 endfunction
-
-function! ToggleStatusLine()
-    if (""==&statusline)
-        set statusline+=[%{strlen(&fenc)?&fenc:'none'},
-        set statusline+=%{&ff},
-        set statusline+=%{&bomb?'bom':'no-bom'}]
-        set statusline+=%y " filetype
-    else
-        set statusline=
-    endif
-endfunction
-
-

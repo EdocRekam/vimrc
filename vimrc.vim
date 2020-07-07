@@ -9,14 +9,8 @@ set backspace=indent,eol,start
 " DISPLAY LENGTH OF SELECTION ON COMMAND
 set showcmd
 
-" DISPLAY COLUMN GUIDES
-set colorcolumn=75,80,120,160
-
 " SYNCHRONIZE CLIPBOARD
 set clipboard^=unnamed
-
-" HIGHLIGHT LINE
-set cursorline
 
 " HIGHLIGHT ALL SEARCH MATCH(S)
 set hlsearch
@@ -34,37 +28,28 @@ set listchars=tab:▸\ ,trail:·
 " NO START OF LINE ON MANY COMMANDS
 set nosol
 
-" DO NOT WRAP LINES
-set nowrap
-
-" DISPLAY LINE NUMBERS WITH 5 CHAR GUTTER
-set number
-set numberwidth=5
-
 " FUZZY FILE GLOBS
 set path+=**
-
-" UNKNOWN
-set previewheight=5
-
-" DISPLAY POSITION AT BOTTOM OF FILE
-set ruler
 
 " KEEP CURSOR IN MIDDLE
 set scrolloff=30
 
-" TURN ON SPELL CHECKING.
-set spell spelllang=en_us
-
-" DEFAULT TAB HANDLING
+" MISC
+set colorcolumn=75,80,120,160
+set cursorline
 set expandtab
+set fileencoding=utf-8
+set nobomb
+set nowrap
+set number
+set numberwidth=5
+set previewheight=5
+set ruler
 set shiftwidth=4
 set softtabstop=4
+set spell spelllang=en_us
+set statusline=%!Vimrc_get_statusline()
 set tabstop=4
-
-" DEFAULT FILE ENCODING
-set nobomb
-set fileencoding=utf-8
 
 " TURN ON FILE TYPE INSPECTION TO RECEIVE FILETYPE EVENTS
 filetype on
@@ -77,4 +62,3 @@ colorscheme Dark+
 
 " TURN ON SYNTAX HIGHLIGHTING
 syntax on
-

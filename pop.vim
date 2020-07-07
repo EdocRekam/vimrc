@@ -14,9 +14,9 @@ function! s:Callback(winid, result)
         let l:ask = input('Align on: ', '=')
         call s:AlignOn(l:ask)
     elseif l:id == 2
-        call s:DotnetBuild()
+        call s:dotnet_build()
     elseif l:id == 3
-        call s:DotnetRestore()
+        call s:dotnet_restore()
     elseif l:id == 4
         call s:Lowercase()
     elseif l:id == 5
@@ -35,20 +35,20 @@ function! s:Callback(winid, result)
     elseif l:id == 11
         call ZoomIn()
     elseif l:id == 12
-        execute 'silent !git add .&'
+        exe 'silent !git add .&'
     elseif l:id == 13
-        execute 'silent !git commit&'
+        exe 'Gcommit'
     elseif l:id == 14
-        execute 'silent !git diff&'
+        exe 'silent !git diff&'
     elseif l:id == 15
         let l:ask = input('Remote: ', 'vso')
         call s:git_fetch(l:ask)
     elseif l:id == 16
         call s:git_status()
     elseif l:id == 17
-        execute 'silent !gitk&'
+        exe 'silent !gitk&'
     elseif l:id == 18
-        execute 'silent !git gui&'
+        exe 'silent !git gui&'
     elseif l:id == 19
         call s:git_log()
     elseif l:id == 20
@@ -98,12 +98,14 @@ function! s:Callback(winid, result)
     elseif l:id == 40
         call s:csharp_nofold()
     elseif l:id == 41
-        let l:path = printf('%skeys.html', s:VimDir())
+        let l:path = printf('%skeys.html', s:vim_dir())
         if filereadable(l:path)
             silent exe printf("!firefox --new-window '%s'&", l:path)
         endif
     elseif l:id == 42
         exe 'setlocal wrap!'
+    elseif l:id == 43
+        call s:git_log_file(expand('<cfile>'))
     endif
 
     return 1
@@ -137,7 +139,7 @@ function! s:Filter(winid, key)
             " REGRESS
             call popup_close(a:winid, -1)
             call s:RestoreBuffer()
-            let s:opts.title = s:Chomp(s:opts.title)
+            let s:opts.title = s:chomp(s:opts.title)
             call s:FilterBuffer(s:menuId[1])
             let s:accum -=1
             let s:wid = popup_create(s:menuId[1], s:opts)
@@ -169,7 +171,7 @@ endfunction
 
 function! s:RestoreBuffer()
     if !exists('s:menuId')
-        let s:menuId = [bufadd(printf('%smenu.txt', s:VimDir()))
+        let s:menuId = [bufadd(printf('%smenu.txt', s:vim_dir()))
                      \ ,bufadd('ea9b0bea-e515-40ed-b1a0-f58281ff9629')]
 
         silent call bufload(s:menuId[0])

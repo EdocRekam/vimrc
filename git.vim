@@ -28,18 +28,18 @@ function! s:git_diff(commit)
     call s:MakeTabBuffer(printf('SUMMARY: %s', a:commit))
     setlocal colorcolumn=
 
-    let l:head = s:Chomp(s:Shell('git rev-parse --short HEAD'))
-    call s:WriteLine('FILES %-84s %-8s  %-8s  %-8s  %-14s %s', a:commit, 'BEFORE', 'AFTER', l:head, 'COMPARE', 'SIDE BY SIDE')
-    call s:WriteLine(repeat('-', 160))
+    let s:head = s:chomp(s:shell('git rev-parse --short HEAD'))
+    call s:write('FILES %-84s %-8s  %-8s  %-8s  %-14s %s', a:commit, 'BEFORE', 'AFTER', s:head, 'COMPARE', 'SIDE BY SIDE')
+    call s:write(repeat('-', 160))
 
-    let l:items = s:ShellList('git diff --numstat %s~1 %s', a:commit,a:commit)
+    let l:items = s:shell_list('git diff --numstat %s~1 %s', a:commit,a:commit)
     for l:item in l:items
         let l:stats = matchlist(l:item, '\(\d\+\)\s\(\d\+\)\s\(.*\)')
         let l:add = str2nr(stats[1])
         let l:del = str2nr(stats[2])
         let l:file = stats[3]
 
-        let l:hist = s:ShellList("git log -n3 --pretty=%s %s -- '%s'", '%h', a:commit, l:file)
+        let l:hist = s:shell_list("git log -n3 --pretty=%s %s -- '%s'", '%h', a:commit, l:file)
         if len(l:hist) == 1
             let l:before = 'ADDED'
             let l:after = a:commit
@@ -48,7 +48,7 @@ function! s:git_diff(commit)
             if l:add > 1
                 let l:after = a:commit
             else
-                call s:Shell("git show '%s:%s'", a:commit, l:file)
+                call s:shell("git show '%s:%s'", a:commit, l:file)
                 if v:shell_error
                     let l:after = 'DELETED'
                 else
@@ -60,7 +60,7 @@ function! s:git_diff(commit)
             if l:add > 1
                 let l:after = a:commit
             else
-                call s:Shell("git show '%s:%s'", a:commit, l:file)
+                call s:shell("git show '%s:%s'", a:commit, l:file)
                 if v:shell_error
                     let l:after = 'DELETED'
                 else
@@ -71,14 +71,14 @@ function! s:git_diff(commit)
 
         " HEAD
         if filereadable(l:file)
-            let l:current = l:head
+            let l:current = s:head
         else
             let l:current = 'DELETED'
         endif
 
-        call s:WriteLine('%-90s %-8s  %-8s  %-8s  B:A  B:H  A:H  B-A  B-H  A-H', l:file, l:before, l:after, l:current)
+        call s:write('%-90s %-8s  %-8s  %-8s  B:A  B:H  A:H  B-A  B-H  A-H', l:file, l:before, l:after, l:current)
     endfor
-    call s:WriteLine('')
+    call s:write('')
 
     exe '3'
     call s:git_colors()
@@ -129,7 +129,7 @@ function! s:git_diff_nav()
         let l:syntax = &syntax
         exe 'vsplit'
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        call s:WriteShell("git show '%s:%s'", l:before, l:file)
+        call s:write_shell("git show '%s:%s'", l:before, l:file)
         if l:syntax
             exe printf('setf %s', l:syntax)
         endif
@@ -148,7 +148,7 @@ function! s:git_diff_nav()
         let l:syntax = &syntax
         exe 'vsplit'
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        call s:WriteShell("git show '%s:%s'", l:before, l:file)
+        call s:write_shell("git show '%s:%s'", l:before, l:file)
         exe printf('setf %s', l:syntax)
         exe 'windo diffthis'
         normal gg
@@ -165,7 +165,7 @@ function! s:git_diff_nav()
         let l:syntax = &syntax
         exe 'vsplit'
         call s:NewOrReplaceBuffer(printf('%s:%s', l:after, l:file))
-        call s:WriteShell("git show '%s:%s'", l:after, l:file)
+        call s:write_shell("git show '%s:%s'", l:after, l:file)
         exe printf('setf %s', l:syntax)
         exe 'windo diffthis'
         normal gg
@@ -183,7 +183,7 @@ function! s:git_diff_nav()
         let l:syntax = &syntax
         exe 'vsplit'
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        call s:WriteShell("git show '%s:%s'", l:before, l:file)
+        call s:write_shell("git show '%s:%s'", l:before, l:file)
         if l:syntax
             exe printf('setf %s', l:syntax)
         endif
@@ -201,7 +201,7 @@ function! s:git_diff_nav()
         let l:syntax = &syntax
         exe 'vsplit'
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        call s:WriteShell("git show '%s:%s'", l:before, l:file)
+        call s:write_shell("git show '%s:%s'", l:before, l:file)
         exe printf('setf %s', l:syntax)
         exe 'windo diffthis'
         normal gg
@@ -218,14 +218,14 @@ function! s:git_diff_nav()
         let l:syntax = &syntax
         exe 'vsplit'
         call s:NewOrReplaceBuffer(printf('%s:%s', l:after, l:file))
-        call s:WriteShell("git show '%s:%s'", l:after, l:file)
+        call s:write_shell("git show '%s:%s'", l:after, l:file)
         exe printf('setf %s', l:syntax)
         normal gg
     endif
 endfunction
 
 function! s:git_fetch(remote)
-    call s:ShellNewTab('FETCH', 'git fetch %s', a:remote)
+    call s:shell_tab('FETCH', 'git fetch %s', a:remote)
     setlocal colorcolumn=
     syn case ignore
     syn match Bad "forced update"
@@ -238,27 +238,27 @@ endfunction
 " DISPLAY GIT LOG HISTORY AND BRANCHES IN A NEW TAB
 "
 function! s:git_log(...)
-    let l:branch = get(a:, 1, s:Chomp(system('git rev-parse --abbrev-ref HEAD')))
+    let s:head = get(a:, 1, s:chomp(system('git rev-parse --abbrev-ref HEAD')))
 
-    call s:MakeTabBuffer(printf('LOG: %s', l:branch))
-    call s:WriteLine('TREE      COMMIT    %-81s AUTHOR', l:branch)
-    call s:WriteLine(repeat('-', 130))
+    call s:MakeTabBuffer(printf('LOG: %s', s:head))
+    call s:write('TREE      COMMIT    %-81s AUTHOR', s:head)
+    call s:write(repeat('-', 130))
 
-    call s:WriteShell("git log -n75 --pretty=format:'%s' %s"
+    call s:write_shell("git log -n75 --pretty=format:'%s' %s"
                 \ ,'\%<(8)\%t  \%<(8)\%h  \%<(80,trunc)\%s  \%<(16)\%an  \%as'
-                \ ,l:branch)
+                \ ,s:head)
 
-    call s:WriteLine('')
-    call s:WriteLine('TREE      COMMIT    TAG/REMOTE')
-    call s:WriteLine(repeat('-', 130))
+    call s:write('')
+    call s:write('TREE      COMMIT    TAG/REMOTE')
+    call s:write(repeat('-', 130))
 
-    let l:refs = s:ShellList('git rev-parse --short --tags --branches --remotes HEAD')
+    let l:refs = s:shell_list('git rev-parse --short --tags --branches --remotes HEAD')
     call sort(l:refs)
     call uniq(l:refs)
 
     for l:ref in l:refs
-         let l:msg = s:Shell("git log -n1 --pretty=format:'%s' %s", '%<(8)%t  %<(8)%h  %<(80,trunc)%D  %<(16)%an  %as', l:ref)
-         call s:WriteLine(l:msg)
+         let l:msg = s:shell("git log -n1 --pretty=format:'%s' %s", '%<(8)%t  %<(8)%h  %<(80,trunc)%D  %<(16)%an  %as', l:ref)
+         call s:write(l:msg)
     endfor
 
     normal gg
@@ -268,14 +268,36 @@ function! s:git_log(...)
 
     noremap <silent><buffer><2-LeftMouse> :call <SID>git_log_nav()<CR>
     nnoremap <silent><buffer><F4> :call <SID>git_log_nav()<CR>
-    exe printf("nnoremap <silent><buffer><F5> :call <SID>git_log('%s')<CR>", l:branch)
+    exe printf("nnoremap <silent><buffer><F5> :call <SID>git_log('%s')<CR>", l:head)
+endfunction
+
+function! s:git_log_file(path)
+    call s:MakeTabBuffer('TRACE')
+    call s:write('COMMIT   %-80s DATE       AUTHOR', a:path)
+    call s:write(repeat('-', 130))
+    call s:write_shell("git log --pretty=format:'%s' -- '%s'"
+                    \,'\%<(8)\%h \%<(80,trunc)\%s \%cs \%an'
+                    \,a:path)
+
+    exe '3'
+    normal 1|
+    setlocal colorcolumn=
+    call s:git_colors()
+
+    exe printf("noremap <silent><buffer><2-LeftMouse> :call <SID>git_trace_nav('%s')<CR>", a:path)
+    exe printf("nnoremap <silent><buffer><F4> :call <SID>git_trace_nav('%s')<CR>", a:path)
+    exe printf("nnoremap <silent><buffer><F5> :call <SID>git_log_file('%s')<CR>", a:path)
+endfunction
+
+function! s:git_trace_nav(path)
+    call s:git_show(expand('<cword>'), a:path)
 endfunction
 
 " JUMP TO A NEW LOCATION BASED ON CURSOR IN GITLIST
 function! s:git_log_nav()
     let l:col = col('.')
     if l:col > 0 && l:col < 11
-        call GitDiffSummary(expand('<cword>'))
+        call s:git_diff(expand('<cword>'))
     elseif l:col > 10 && l:col < 21
         call s:git_diff(expand('<cword>'))
     else
@@ -284,7 +306,7 @@ function! s:git_log_nav()
 endfunction
 
 function! s:git_prune(remote)
-    call s:ShellNewTab('PRUNE', 'git remote prune %s', a:remote)
+    call s:shell_tab('PRUNE', 'git remote prune %s', a:remote)
 endfunction
 
 function! s:git_show(commit, file)
@@ -293,11 +315,11 @@ function! s:git_show(commit, file)
     endif
 
     let l:cmd = printf("git show '%s:%s'", a:commit, a:file)
-    call s:ShellNewTab(printf('%s:%s', a:commit, a:file), l:cmd)
+    call s:shell_tab(printf('%s:%s', a:commit, a:file), l:cmd)
 endfunction
 
 function! s:git_status()
-    call s:ShellNewTab('STATUS', 'git status')
+    call s:shell_tab('STATUS', 'git status')
     call s:git_colors()
     syn keyword Good modified
 endfunction

@@ -79,8 +79,13 @@ nnoremap <silent><S-F3> :bd!<CR>
 nnoremap <silent><F4> :call GotoDefinition()<CR>
 nnoremap <silent><S-F4> :call FindInFiles('<cword>')<CR>
 
+function! s:source_file()
+    exe 'w'
+    exe 'so %'
+endfunction
+
 " SOURCE CURRENT FILE                                   F5
-nnoremap <F5> :so %<CR>
+nnoremap <F5> :call <SID>source_file()<CR>
 
 " RESERVED                                              F6
 nnoremap <silent><F6> :silent !git gui&<CR>
@@ -107,7 +112,7 @@ nnoremap <silent><S-F11> :bnext!<CR>
 nnoremap <silent><F12> :vsplit<CR>
 
 " TOGGLE SPLIT UP DOWN | LEFT RIGHT                     SHIFT + F12
-nnoremap <silent><S-F12> :call ToggleSplit()<CR>
+nnoremap <silent><S-F12> :call <SID>rotate()<CR>
 
 " BLOCK VISUAL                                          SHIFT + ALT + UP
 "                                                       SHIFT + ALT + DOWN

@@ -16,7 +16,7 @@ syn keyword Keyword typeof unchecked unsafe virtual volatile
 syn keyword Include     using
 syn keyword Exception   throw try catch finally
 syn keyword Repeat      do for foreach in while
-syn keyword Conditional if else switch case
+syn keyword Conditional if else switch case ifen ifn ifne ifns
 syn keyword Conditional break continue default goto return yield
 
 " VALUE TYPES
@@ -28,6 +28,7 @@ syn keyword Identifier Int32 String
 syn keyword Identifier Fact Theory InlineData
 
 syn keyword Function IsNullOrEmpty ToInt32 ToString
+
 " STRINGS
 syn region String start='"' end='"'
 syn region String start="'" end="'"
