@@ -1,8 +1,9 @@
 
+function! s:git_checkout(ref)
+    call s:shell('git checkout %s', a:ref)
+    let g:head = s:chomp(s:shell('git rev-parse --short HEAD'))
+endfunction
 
-"
-" GIT SYNTAX COLORING
-"
 function! s:git_colors()
     syn case ignore
     syn keyword Comment boron carbon dublin ede havana herne hilla hobart
@@ -28,8 +29,8 @@ function! s:git_diff(commit)
     call s:MakeTabBuffer(printf('SUMMARY: %s', a:commit))
     setlocal colorcolumn=
 
-    let s:head = s:chomp(s:shell('git rev-parse --short HEAD'))
-    call s:write('FILES %-84s %-8s  %-8s  %-8s  %-14s %s', a:commit, 'BEFORE', 'AFTER', s:head, 'COMPARE', 'SIDE BY SIDE')
+    let g:head = s:chomp(s:shell('git rev-parse --short HEAD'))
+    call s:write('FILES %-84s %-8s  %-8s  %-8s  %-14s %s', a:commit, 'BEFORE', 'AFTER', g:head, 'COMPARE', 'SIDE BY SIDE')
     call s:write(repeat('-', 160))
 
     let l:items = s:shell_list('git diff --numstat %s~1 %s', a:commit,a:commit)
@@ -71,7 +72,7 @@ function! s:git_diff(commit)
 
         " HEAD
         if filereadable(l:file)
-            let l:current = s:head
+            let l:current = g:head
         else
             let l:current = 'DELETED'
         endif
@@ -227,6 +228,7 @@ endfunction
 function! s:git_fetch(remote)
     call s:shell_tab('FETCH', 'git fetch %s', a:remote)
     setlocal colorcolumn=
+    call s:git_colors()
     syn case ignore
     syn match Bad "forced update"
     syn match Good "[new branch]"
@@ -238,15 +240,15 @@ endfunction
 " DISPLAY GIT LOG HISTORY AND BRANCHES IN A NEW TAB
 "
 function! s:git_log(...)
-    let s:head = get(a:, 1, s:chomp(system('git rev-parse --abbrev-ref HEAD')))
+    let g:head = get(a:, 1, s:chomp(system('git rev-parse --abbrev-ref HEAD')))
 
-    call s:MakeTabBuffer(printf('LOG: %s', s:head))
-    call s:write('TREE      COMMIT    %-81s AUTHOR', s:head)
+    call s:MakeTabBuffer(printf('LOG: %s', g:head))
+    call s:write('TREE      COMMIT    %-81s AUTHOR', g:head)
     call s:write(repeat('-', 130))
 
     call s:write_shell("git log -n75 --pretty=format:'%s' %s"
                 \ ,'\%<(8)\%t  \%<(8)\%h  \%<(80,trunc)\%s  \%<(16)\%an  \%as'
-                \ ,s:head)
+                \ ,g:head)
 
     call s:write('')
     call s:write('TREE      COMMIT    TAG/REMOTE')
@@ -268,7 +270,7 @@ function! s:git_log(...)
 
     noremap <silent><buffer><2-LeftMouse> :call <SID>git_log_nav()<CR>
     nnoremap <silent><buffer><F4> :call <SID>git_log_nav()<CR>
-    exe printf("nnoremap <silent><buffer><F5> :call <SID>git_log('%s')<CR>", l:head)
+    exe printf("nnoremap <silent><buffer><F5> :call <SID>git_log('%s')<CR>", g:head)
 endfunction
 
 function! s:git_log_file(path)

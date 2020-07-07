@@ -65,11 +65,11 @@ nnoremap <silent>P "+P
 inoremap <silent><c-v> <c-r>+
 
 " LIST FUNCTIONS                                        F1
-nnoremap <silent><F1> :call ListFunctions()<CR>
-vnoremap <silent><F1> :call ListFunctions()<CR>
+nnoremap <silent><F1> :call <SID>menu()<CR>
+vnoremap <silent><F1> :call <SID>menu()<CR>
 
 " RENAME SYMBOL                                         F2
-nnoremap <silent><F2> :call Rename()<CR>
+nnoremap <silent><F2> :call <SID>rename()<CR>
 
 " RESERVED (CODE HELPER)                                F3
 nnoremap <silent><F3> :bd<CR>

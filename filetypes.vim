@@ -7,7 +7,7 @@ function! s:LoadCSharp()
         let l:path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
         let l:script = l:path . '/omni.vim'
         if filereadable(l:script)
-            execute 'source ' . l:script
+            exe 'source ' . l:script
         endif
         unlet l:path
         unlet l:script

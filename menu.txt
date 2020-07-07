@@ -12,6 +12,7 @@ Font: Decrease Size                    10
 Font: Increase Size                    11
 Font: Dialog                           37
 Git: Add All                           12
+Git: Checkout Branch                   44
 Git: Commit                            13
 Git: Diff                              14
 Git: Fetch                             15

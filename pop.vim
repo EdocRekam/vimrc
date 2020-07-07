@@ -12,34 +12,34 @@ function! s:Callback(winid, result)
     let l:id = s:GetCmdId(a:result)
     if l:id == 1
         let l:ask = input('Align on: ', '=')
-        call s:AlignOn(l:ask)
+        call s:align(l:ask)
     elseif l:id == 2
         call s:dotnet_build()
     elseif l:id == 3
         call s:dotnet_restore()
     elseif l:id == 4
-        call s:Lowercase()
+        call s:lower()
     elseif l:id == 5
-        call s:Uppercase()
+        call s:upper()
     elseif l:id == 6
-        call ExpandTabs()
+        call s:notabs()
     elseif l:id == 7
-        call Unix2Dos()
+        call s:tocrlf()
     elseif l:id == 8
-        call Dos2Unix()
+        call s:tolf()
     elseif l:id == 9
         let l:ask = input('Start: ', '0')
-        call s:Enumerate(str2nr(l:ask))
+        call s:enum(str2nr(l:ask))
     elseif l:id == 10
         call ZoomOut()
     elseif l:id == 11
         call ZoomIn()
     elseif l:id == 12
-        exe 'silent !git add .&'
+        call s:shell_tab('GIT', 'git add .')
     elseif l:id == 13
         exe 'Gcommit'
     elseif l:id == 14
-        exe 'silent !git diff&'
+        call s:shell_tab('GIT', 'git diff')
     elseif l:id == 15
         let l:ask = input('Remote: ', 'vso')
         call s:git_fetch(l:ask)
@@ -55,19 +55,19 @@ function! s:Callback(winid, result)
         let l:ask = input('Remote: ', 'vso')
         call s:git_prune(l:ask)
     elseif l:id == 21
-        call SwitchToCsharp()
+        call s:csharp_use()
     elseif l:id == 22
-        call s:RemoveDuplicates()
+        call s:unique()
     elseif l:id == 23
-        call RemoveTrailingWhitespace()
+        call s:notrails()
     elseif l:id == 24
-        call s:Sort()
+        call s:ort()
     elseif l:id == 25
-        call s:SortI()
+        call s:orti()
     elseif l:id == 26
-        call s:SortD()
+        call s:sortd()
     elseif l:id == 27
-        call s:SortDI()
+        call s:sortdi()
     elseif l:id == 28
         call GotoDefinition()
     elseif l:id == 29
@@ -106,15 +106,27 @@ function! s:Callback(winid, result)
         exe 'setlocal wrap!'
     elseif l:id == 43
         call s:git_log_file(expand('<cfile>'))
+    elseif l:id == 44
+        call s:git_checkout(expand('<cfile>'))
     endif
-
     return 1
 endfunction
 
 function! s:Filter(winid, key)
 
+    if a:key == "\<F1>"
+        call popup_close(a:winid, -1)
+
+    " PASS
+    elseif a:key == "\<F2>" || a:key == "\<F3>" || a:key == "\<F4>"
+      \ || a:key == "\<F5>" || a:key == "\<F6>" || a:key == "\<F7>"
+      \ || a:key == "\<F8>" || a:key == "\<F9>" || a:key == "\<F10>"
+      \ || a:key == "\<F11>" || a:key == "\<F12>"
+        call popup_close(a:winid, -1)
+        call feedkeys(a:key)
+
     " PRINTABLE CHAR
-    if 0 == match(a:key, '\p')
+    elseif 0 == match(a:key, '\p')
             " IGNORE THESE
             if a:key == ':'
                 return popup_filter_menu(a:winid, a:key)
@@ -190,7 +202,7 @@ function! s:RestoreBuffer()
 endfunction
 
 " THE ONE AND ONLY WAY INTO MENU
-function! ListFunctions()
+function! s:menu()
     if !exists('s:accum')
         let s:accum = 0
         call s:RestoreBuffer()

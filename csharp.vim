@@ -21,7 +21,7 @@ let g:OmniSharp_highlight_groups={
 \}
 
 " POPUP FUNCTIONS
-function! SwitchToCSharp()
+function! s:csharp_use()
     setlocal expandtab
     setlocal shiftwidth=4
     setlocal softtabstop=4
