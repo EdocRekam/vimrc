@@ -30,7 +30,18 @@ function! s:align(criteria)
         let l:nr = l:nr + 1
         let l:cnt = l:cnt + 1
     endfor
-    normal gv
+    norm gv
+endfunction
+
+function! s:buf_tab(title)
+    if bufexists(a:title)
+        sil exe 'bwipeout! '.bufnr(a:title)
+    endif
+    sil exe 'tabe '.a:title
+    setl buftype=nofile
+    setl noswapfile
+    norm gg
+    retu tabpagenr()
 endfunction
 
 function! s:chomp(msg)
@@ -46,25 +57,35 @@ function! s:enum(start)
         let l:nr = l:nr + 1
         let l:cnt = l:cnt + 1
     endfor
-    normal gv
+    norm gv
 endfunction
 
 function! FindInFiles(criteria)
-    silent exe printf('grep! -rn  %s *', a:criteria)
+    sil exe printf('grep! -rn  %s *', a:criteria)
     copen 35
 endfunction
 command! -nargs=1 Find call FindInFiles('<args>')
 
 function! s:hell_tab(title, ...)
     if bufexists(a:title)
-        let l:bufnr = bufnr(a:title)
-        silent exe printf("bwipeout! %d", l:bufnr)
+        sil exe 'bwipeout! '.bufnr(a:title)
     endif
-    silent exe printf('tabnew %s', a:title)
-    setlocal buftype=nofile
-    setlocal noswapfile
-    silent exe printf('-1read !%s', call('printf', a:000))
-    normal gg
+    sil exe 'tabnew '.a:title
+    setl buftype=nofile
+    setl noswapfile
+    sil exe printf('-1read !%s', call('printf', a:000))
+    norm gg
+endfunction
+
+function! s:hell_win(title, ...)
+    if bufexists(a:title)
+        sil exe 'bwipeout! '.bufnr(a:title)
+    endif
+    sil exe 'new '.a:title
+    setl buftype=nofile
+    setl noswapfile
+    sil exe printf('-1read !%s', call('printf', a:000))
+    sil exe "norm gg\<c-w>J"
 endfunction
 
 function! GotoDefinition()
@@ -77,19 +98,18 @@ function! GotoDefinition()
 endfunction
 
 function! s:lower()
-    normal gvu
-    normal gv
+    norm gvu
+    norm gv
 endfunction
 
 function! s:MakeTabBuffer(title)
     if bufexists(a:title)
-        let l:bufnr = bufnr(a:title)
-        silent exe printf("bwipeout! %d", l:bufnr)
+        sil exe 'bwipeout! '.bufnr(a:title)
     endif
-    silent exe printf('tabnew %s', a:title)
-    setlocal buftype=nofile
-    setlocal noswapfile
-    normal gg
+    sil exe 'tabnew '.a:title
+    setl buftype=nofile
+    setl noswapfile
+    norm gg
 endfunction
 
 "
@@ -97,21 +117,20 @@ endfunction
 "
 function! s:NewOrReplaceBuffer(title)
     if bufexists(a:title)
-        let l:bufnr = bufnr(a:title)
-        silent exe printf("bwipeout! %d", l:bufnr)
+        sil exe 'bwipeout! '.bufnr(a:title)
     endif
     let l:bufnr = bufadd(a:title)
     call bufload(l:bufnr)
-    silent exe printf("%db", l:bufnr)
-    setlocal buflisted
-    setlocal buftype=nofile
-    setlocal noswapfile
+    sil exe printf("%db", l:bufnr)
+    setl buflisted
+    setl buftype=nofile
+    setl noswapfile
 endfunction
 
 function! s:notabs()
     update
-    :setlocal expandtab
-    :retab
+    setl expandtab
+    retab
     update
 endfunction
 
@@ -119,32 +138,32 @@ function! s:notrails()
     let _s=@/
     :%s/\s\+$//e
     let @/=_s
-    :nohl
+    nohl
     unlet _s
 endfunction
 
 function! s:ortd()
-    normal gv
+    norm gv
     '<,'>sort!
-    normal gv
+    norm gv
 endfunction
 
 function! s:ortdi()
-    normal gv
+    norm gv
     '<,'>sort! i
-    normal gv
+    norm gv
 endfunction
 
 function! s:ort()
-    normal gv
+    norm gv
     '<,'>sort
-    normal gv
+    norm gv
 endfunction
 
 function! s:orti()
-    normal gv
+    norm gv
     '<,'>sort i
-    normal gv
+    norm gv
 endfunction
 
 function! s:shell(...)
@@ -167,14 +186,14 @@ au VimEnter * ++once call s:tartup()
 function! s:tocrlf()
    update
    :e ++ff=unix
-   setlocal ff=dos
+   setl ff=dos
    update
 endfunction
 
 function! s:tolf()
-    :update
+    update
     :e ++ff=dos
-    :setlocal ff=unix
+    setl ff=unix
     :w
 endfunction
 
@@ -205,25 +224,25 @@ function! s:vim_dir()
 endfunction
 
 function! s:unique()
-    normal gv
+    norm gv
     '<,'>%!uniq
-    normal gv
+    norm gv
 endfunction
 
 function! s:upper()
-    normal gvU
-    normal gv
+    norm gvU
+    norm gv
 endfunction
 
 function! s:write(...)
     let l:msg = call('printf', a:000)
     call setline('.', [ l:msg, '' ])
-    normal G
+    norm G
 endfunction
 
 function! s:write_shell(...)
-    silent exe printf('-1read !%s', call('printf', a:000))
-    normal G
+    sil exe printf('-1read !%s', call('printf', a:000))
+    norm G
 endfunction
 
 

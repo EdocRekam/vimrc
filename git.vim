@@ -1,7 +1,14 @@
 
-function! s:git_branch()
+function! s:git_branch(...)
     call s:git_head()
-    call s:MakeTabBuffer('GIT')
+    let l:tnr = get(a:, 1, -1)
+    if -1 == l:tnr
+        let l:tnr = s:buf_tab('GIT')
+    else
+        sil exe 'tabn '.l:tnr
+        sil exe "norm \<c-w>k"
+        norm ggvGD
+    endif
 
     call s:write('  BRANCH                        COMMIT  SUBJECT')
     call s:write(repeat('-', 100))
@@ -13,21 +20,36 @@ function! s:git_branch()
     call s:write('Press <F7> to hard reset to branch under cursor')
     call s:write('Press <DEL> to delete branch under cursor')
     exe '3'
-    normal 3|
+    norm 3|
     call s:git_colors()
-    setlocal colorcolumn=
+    setl colorcolumn=
 
     noremap <silent><buffer><2-LeftMouse> :call <SID>git_branch_nav()<CR>
-    nnoremap <silent><buffer><F4> :call <SID>git_branch_nav()<CR>
-    nnoremap <silent><buffer><F5> :call <SID>git_branch()<CR>
-    nnoremap <silent><buffer><F6> :call <SID>shell('git clean -xdf')<CR>
-    nnoremap <silent><buffer><F7> :call <SID>shell('git reset --hard %s', expand('<cfile>'))<CR>
-    nnoremap <silent><buffer><DEL> :call <SID>shell('git branch -d %s', expand('<cfile>')) <bar> call <SID>git_branch()<CR>
+    sil exe printf('nnoremap <silent><buffer><F4> :call <SID>git_branch_nav(%d)<CR>', l:tnr)
+    sil exe printf('nnoremap <silent><buffer><F5> :call <SID>git_branch(%d)<CR>', l:tnr)
+    sil exe printf('nnoremap <silent><buffer><F6> :call <SID>git_branch_clean(%d)<CR>', l:tnr)
+    sil exe printf('nnoremap <silent><buffer><F7> :call <SID>git_branch_reset(%d)<CR>', l:tnr)
+    sil exe printf('nnoremap <silent><buffer><DEL> :call <SID>git_branch_del(%d)<CR>', l:tnr)
 endfunction
 
-function! s:git_branch_nav()
-    call s:git_checkout(expand('<cfile>:t'))
-    call s:git_branch()
+function! s:git_branch_clean(tnr)
+    call s:hell_win('BRANCH', 'git clean -xdf')
+    call s:git_branch(a:tnr)
+endfunction
+
+function! s:git_branch_nav(tnr)
+    call s:hell_win('BRANCH', 'git checkout %s', expand('<cfile>:t'))
+    call s:git_branch(a:tnr)
+endfunction
+
+function! s:git_branch_reset(tnr)
+    call s:hell_win('BRANCH', 'git reset --hard %s', expand('<cfile>'))
+    call s:git_branch(a:tnr)
+endfunction
+
+function! s:git_branch_del(tnr)
+    call s:hell_win('BRANCH', 'git branch -d %s', expand('<cfile>'))
+    call s:git_branch(a:tnr)
 endfunction
 
 function! s:git_checkout(ref)
