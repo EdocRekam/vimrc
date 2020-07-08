@@ -55,6 +55,18 @@ function! FindInFiles(criteria)
 endfunction
 command! -nargs=1 Find call FindInFiles('<args>')
 
+function! s:hell_tab(title, ...)
+    if bufexists(a:title)
+        let l:bufnr = bufnr(a:title)
+        silent exe printf("bwipeout! %d", l:bufnr)
+    endif
+    silent exe printf('tabnew %s', a:title)
+    setlocal buftype=nofile
+    setlocal noswapfile
+    silent exe printf('-1read !%s', call('printf', a:000))
+    normal gg
+endfunction
+
 function! GotoDefinition()
     let l:path = expand("<cfile>")
     if filereadable(l:path)
@@ -143,18 +155,6 @@ endfunction
 function! s:shell_list(...)
     let s:cmd = call('printf', a:000)
     return systemlist(s:cmd)
-endfunction
-
-function! s:shell_tab(title, ...)
-    if bufexists(a:title)
-        let l:bufnr = bufnr(a:title)
-        silent exe printf("bwipeout! %d", l:bufnr)
-    endif
-    silent exe printf('tabnew %s', a:title)
-    setlocal buftype=nofile
-    setlocal noswapfile
-    silent exe printf('-1read !%s', call('printf', a:000))
-    normal gg
 endfunction
 
 function! s:tartup()

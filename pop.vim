@@ -35,11 +35,11 @@ function! s:Callback(winid, result)
     elseif l:id == 11
         call ZoomIn()
     elseif l:id == 12
-        call s:shell_tab('GIT', 'git add .')
+        call s:hell_tab('GIT', 'git add .')
     elseif l:id == 13
         exe 'Gcommit'
     elseif l:id == 14
-        call s:shell_tab('GIT', 'git diff')
+        call s:hell_tab('GIT', 'git diff')
     elseif l:id == 15
         let l:ask = input('Remote: ', 'vso')
         call s:git_fetch(l:ask)
@@ -107,7 +107,9 @@ function! s:Callback(winid, result)
     elseif l:id == 43
         call s:git_log_file(expand('<cfile>'))
     elseif l:id == 44
-        call s:git_checkout(expand('<cfile>'))
+        call s:git_checkout(expand('<cfile>:t'))
+    elseif l:id == 45
+        call s:git_branch()
     endif
     return 1
 endfunction

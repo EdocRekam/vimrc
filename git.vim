@@ -1,7 +1,37 @@
 
+function! s:git_branch()
+    call s:git_head()
+    call s:MakeTabBuffer('GIT')
+
+    call s:write('  BRANCH')
+    call s:write(repeat('-', 100))
+    call s:write_shell('git branch -av')
+    call s:write('')
+    call s:write('Press <F4> to checkout branch under cursor')
+    call s:write('Press <F5> to refresh')
+    call s:write('Press <F6> to force clean')
+    call s:write('Press <F7> to hard reset to branch under cursor')
+
+    exe '3'
+    normal 3|
+    call s:git_colors()
+    setlocal colorcolumn=
+
+    noremap <silent><buffer><2-LeftMouse> :call <SID>git_branch_nav()<CR>
+    nnoremap <silent><buffer><F4> :call <SID>git_branch_nav()<CR>
+    nnoremap <silent><buffer><F5> :call <SID>git_branch()<CR>
+    nnoremap <silent><buffer><F6> :call <SID>shell('git clean -xdf')<CR>
+    nnoremap <silent><buffer><F7> :call <SID>shell('git reset --hard %s', expand('<cfile>'))<CR>
+endfunction
+
+function! s:git_branch_nav()
+    call s:git_checkout(expand('<cfile>:t'))
+    call s:git_branch()
+endfunction
+
 function! s:git_checkout(ref)
+    call s:git_head()
     call s:shell('git checkout %s', a:ref)
-    let g:head = s:chomp(s:shell('git rev-parse --short HEAD'))
 endfunction
 
 function! s:git_colors()
@@ -13,6 +43,7 @@ function! s:git_colors()
     syn keyword Function arch architect edoc happy head hector jjoker rekam
     syn keyword Statement hub origin remotes usb vso
     syn keyword String x86 x64 anycpu
+    syn keyword Good modified
     syn region String start="`" end="`" contains=@NoSpell oneline
     syn region String start='"' end='"' contains=@NoSpell oneline
     syn match String "\d\+\.\d\+"
@@ -21,51 +52,52 @@ function! s:git_colors()
     syn match String "\d\+\.\d\+\.\d\+\.\d\+\.\d\+"
     syn match Identifier "#\=\d\{5}"
     syn match Keyword "[0-9a-f]\{7,8}" contains=@NoSpell
+    syn match Function '^Press.*' contains=@NoSpell
     hi Bad  guifg=#ee3020
     hi Good guifg=#00b135
 endfunction
 
-function! s:git_diff(commit)
-    call s:MakeTabBuffer(printf('SUMMARY: %s', a:commit))
+function! s:git_diff(ref)
+    call s:MakeTabBuffer(printf('SUMMARY: %s', a:ref))
     setlocal colorcolumn=
 
-    let g:head = s:chomp(s:shell('git rev-parse --short HEAD'))
-    call s:write('FILES %-84s %-8s  %-8s  %-8s  %-14s %s', a:commit, 'BEFORE', 'AFTER', g:head, 'COMPARE', 'SIDE BY SIDE')
+    call s:git_head()
+    call s:write('FILES %-84s %-8s  %-8s  %-8s  %-14s %s', a:ref, 'BEFORE', 'AFTER', g:head, 'COMPARE', 'SIDE BY SIDE')
     call s:write(repeat('-', 160))
 
-    let l:items = s:shell_list('git diff --numstat %s~1 %s', a:commit,a:commit)
+    let l:items = s:shell_list('git diff --numstat %s~1 %s', a:ref,a:ref)
     for l:item in l:items
         let l:stats = matchlist(l:item, '\(\d\+\)\s\(\d\+\)\s\(.*\)')
         let l:add = str2nr(stats[1])
         let l:del = str2nr(stats[2])
         let l:file = stats[3]
 
-        let l:hist = s:shell_list("git log -n3 --pretty=%s %s -- '%s'", '%h', a:commit, l:file)
+        let l:hist = s:shell_list("git log -n3 --pretty=%s %s -- '%s'", '%h', a:ref, l:file)
         if len(l:hist) == 1
             let l:before = 'ADDED'
-            let l:after = a:commit
+            let l:after = a:ref
         elseif len(l:hist) == 2
             let l:before = l:hist[1]
             if l:add > 1
-                let l:after = a:commit
+                let l:after = a:ref
             else
-                call s:shell("git show '%s:%s'", a:commit, l:file)
+                call s:shell("git show '%s:%s'", a:ref, l:file)
                 if v:shell_error
                     let l:after = 'DELETED'
                 else
-                    let l:after = a:commit
+                    let l:after = a:ref
                 endif
             endif
         else
             let l:before = l:hist[1]
             if l:add > 1
-                let l:after = a:commit
+                let l:after = a:ref
             else
-                call s:shell("git show '%s:%s'", a:commit, l:file)
+                call s:shell("git show '%s:%s'", a:ref, l:file)
                 if v:shell_error
                     let l:after = 'DELETED'
                 else
-                    let l:after = a:commit
+                    let l:after = a:ref
                 endif
             endif
         endif
@@ -87,7 +119,7 @@ function! s:git_diff(commit)
 
     noremap <silent><buffer><2-LeftMouse> :call <SID>git_diff_nav()<CR>
     nnoremap <silent><buffer><F4> :call <SID>git_diff_nav()<CR>
-    exe printf("nnoremap <silent><buffer><F5> :call <SID>git_diff('%s')<CR>", a:commit)
+    exe printf("nnoremap <silent><buffer><F5> :call <SID>git_diff('%s')<CR>", a:ref)
 endfunction
 
 function! s:git_diff_nav()
@@ -226,7 +258,7 @@ function! s:git_diff_nav()
 endfunction
 
 function! s:git_fetch(remote)
-    call s:shell_tab('FETCH', 'git fetch %s', a:remote)
+    call s:hell_tab('FETCH', 'git fetch %s', a:remote)
     setlocal colorcolumn=
     call s:git_colors()
     syn case ignore
@@ -236,11 +268,15 @@ function! s:git_fetch(remote)
     hi Good guifg=#00b135
 endfunction
 
+function! s:git_head()
+    let g:head = get(a:, 1, s:chomp(system('git rev-parse --abbrev-ref HEAD')))
+endfunction
+
 "
 " DISPLAY GIT LOG HISTORY AND BRANCHES IN A NEW TAB
 "
 function! s:git_log(...)
-    let g:head = get(a:, 1, s:chomp(system('git rev-parse --abbrev-ref HEAD')))
+    call s:git_head()
 
     call s:MakeTabBuffer(printf('LOG: %s', g:head))
     call s:write('TREE      COMMIT    %-81s AUTHOR', g:head)
@@ -308,20 +344,28 @@ function! s:git_log_nav()
 endfunction
 
 function! s:git_prune(remote)
-    call s:shell_tab('PRUNE', 'git remote prune %s', a:remote)
+    call s:hell_tab('PRUNE', 'git remote prune %s', a:remote)
 endfunction
 
-function! s:git_show(commit, file)
-    if a:commit == 'DELETED' || a:commit == 'ADDED'
+function! s:git_show(ref, file)
+    if a:ref == 'DELETED' || a:ref == 'ADDED'
         return
     endif
 
-    let l:cmd = printf("git show '%s:%s'", a:commit, a:file)
-    call s:shell_tab(printf('%s:%s', a:commit, a:file), l:cmd)
+    let l:cmd = printf("git show '%s:%s'", a:ref, a:file)
+    call s:hell_tab(printf('%s:%s', a:ref, a:file), l:cmd)
 endfunction
 
 function! s:git_status()
-    call s:shell_tab('STATUS', 'git status')
+    call s:MakeTabBuffer('STATUS')
+    call s:write_shell('git status')
+    call s:write('Press <F5> to refresh')
+    call s:write('Press <F6> to add all')
+    call s:write('Press <F7> to commit')
     call s:git_colors()
-    syn keyword Good modified
+    setlocal colorcolumn=
+
+    nnoremap <silent><buffer><F5> :call <SID>git_status()<CR>
+    nnoremap <silent><buffer><F6> :call <SID>shell('git add .')<CR>
+    nnoremap <silent><buffer><F7> :Gcommit<CR>
 endfunction
