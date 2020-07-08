@@ -371,7 +371,7 @@ function! s:git_status()
     nnoremap <silent><buffer><F5> :call <SID>git_status()<CR>
     nnoremap <silent><buffer><F6> :call <SID>shell('git fetch') <bar> call <SID>git_status()<CR>
     nnoremap <silent><buffer><F7> :call <SID>shell('git add .') <bar> call <SID>git_status()<CR>
-    nnoremap <silent><buffer><F8> :Gcommit <bar> call <SID>git_status()<CR>
+    nnoremap <silent><buffer><F8> :Gcommit<CR>
     nnoremap <silent><buffer><F9> :call <SID>shell('git push') <bar> call <SID>git_status()<CR>
 
 endfunction
