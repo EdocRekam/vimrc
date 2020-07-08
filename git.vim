@@ -359,6 +359,7 @@ endfunction
 function! s:git_status()
     call s:MakeTabBuffer('STATUS')
     call s:write_shell('git status')
+    call s:write('')
     call s:write('Press <F5> to refresh')
     call s:write('Press <F6> to add all')
     call s:write('Press <F7> to commit')
@@ -366,6 +367,6 @@ function! s:git_status()
     setlocal colorcolumn=
 
     nnoremap <silent><buffer><F5> :call <SID>git_status()<CR>
-    nnoremap <silent><buffer><F6> :call <SID>shell('git add .')<CR>
+    nnoremap <silent><buffer><F6> :call <SID>shell('git add .') <bar> call <SID>git_status()<CR>
     nnoremap <silent><buffer><F7> :Gcommit<CR>
 endfunction
