@@ -361,12 +361,14 @@ function! s:git_status()
     call s:write_shell('git status')
     call s:write('')
     call s:write('Press <F5> to refresh')
-    call s:write('Press <F6> to add all')
-    call s:write('Press <F7> to commit')
+    call s:write('Press <F6> to fetch')
+    call s:write('Press <F7> to add all')
+    call s:write('Press <F8> to commit')
     call s:git_colors()
     setlocal colorcolumn=
 
     nnoremap <silent><buffer><F5> :call <SID>git_status()<CR>
-    nnoremap <silent><buffer><F6> :call <SID>shell('git add .') <bar> call <SID>git_status()<CR>
-    nnoremap <silent><buffer><F7> :Gcommit<CR>
+    nnoremap <silent><buffer><F6> :call <SID>shell('git fetch') <bar> call <SID>git_status()<CR>
+    nnoremap <silent><buffer><F7> :call <SID>shell('git add .') <bar> call <SID>git_status()<CR>
+    nnoremap <silent><buffer><F8> :Gcommit<CR>
 endfunction
