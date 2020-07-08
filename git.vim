@@ -3,7 +3,7 @@ function! s:git_branch()
     call s:git_head()
     call s:MakeTabBuffer('GIT')
 
-    call s:write('  BRANCH')
+    call s:write('  BRANCH                        COMMIT  SUBJECT')
     call s:write(repeat('-', 100))
     call s:write_shell('git branch -av')
     call s:write('')
@@ -11,7 +11,7 @@ function! s:git_branch()
     call s:write('Press <F5> to refresh')
     call s:write('Press <F6> to force clean')
     call s:write('Press <F7> to hard reset to branch under cursor')
-
+    call s:write('Press <DEL> to delete branch under cursor')
     exe '3'
     normal 3|
     call s:git_colors()
@@ -22,6 +22,7 @@ function! s:git_branch()
     nnoremap <silent><buffer><F5> :call <SID>git_branch()<CR>
     nnoremap <silent><buffer><F6> :call <SID>shell('git clean -xdf')<CR>
     nnoremap <silent><buffer><F7> :call <SID>shell('git reset --hard %s', expand('<cfile>'))<CR>
+    nnoremap <silent><buffer><DEL> :call <SID>shell('git branch -d %s', expand('<cfile>')) <bar> call <SID>git_branch()<CR>
 endfunction
 
 function! s:git_branch_nav()
