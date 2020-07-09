@@ -466,6 +466,6 @@ function! s:git_status(...)
     sil exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_status(%d)<CR>", l:tnr)
     sil exe printf("nnoremap <silent><buffer><F6> :cal <SID>hell_win('SO', 'git fetch') <bar> cal <SID>git_status(%d)<CR>", l:tnr)
     sil exe printf("nnoremap <silent><buffer><F7> :cal <SID>hell_win('SO', 'git add .') <bar> cal <SID>git_status(%d)<CR>", l:tnr)
-    nnoremap <silent><buffer><F8> :Gcommit<CR>
+    nnoremap <silent><buffer><F8> :sil Gcommit<CR>
     sil exe printf("nnoremap <silent><buffer><F9> :cal <SID>hell_win('SO', 'git push') <bar> cal <SID>git_status(%d)<CR>", l:tnr)
 endfunction
