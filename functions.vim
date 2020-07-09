@@ -5,7 +5,7 @@ function! Vimrc_get_statusline()
     let l:enc = strlen(&fenc) ? '  ' . toupper(&fenc) : '  PLAIN'
     let l:bom = &bomb? '  with BOM' : ''
     let l:le = &ff == 'unix' ? '  LF' : '  CRLF'
-    return l:head . '  %M%<%f%=' . l:enc . l:bom . l:le . '  %Y'
+    return l:head . '  %M%<%f%=Col %c' . l:enc . l:bom . l:le . '  %Y'
 endfunction
 
 function! s:align(criteria)
@@ -66,6 +66,11 @@ function! FindInFiles(criteria)
 endfunction
 command! -nargs=1 Find call FindInFiles('<args>')
 
+function! s:hell(...)
+    let s:cmd = call('printf', a:000)
+    return system(s:cmd)
+endfunction
+
 function! s:hell_tab(title, ...)
     if bufexists(a:title)
         sil exe 'bwipeout! '.bufnr(a:title)
@@ -73,7 +78,7 @@ function! s:hell_tab(title, ...)
     sil exe 'tabnew '.a:title
     setl buftype=nofile
     setl noswapfile
-    sil exe printf('-1read !%s', call('printf', a:000))
+    sil exe '-1read !'.call('printf', a:000)
     norm gg
 endfunction
 
@@ -241,7 +246,7 @@ function! s:write(...)
 endfunction
 
 function! s:write_shell(...)
-    sil exe printf('-1read !%s', call('printf', a:000))
+    sil exe '-1read !'.call('printf', a:000)
     norm G
 endfunction
 

@@ -10,6 +10,92 @@ function! s:git_branch(...)
         norm ggvGD
     endif
 
+    cal s:write('BRANCH: %s', g:head)
+    cal s:write('')
+    cal s:write_shell("git log -n1 %s HEAD", "--pretty=\\%b")
+
+    " LOCAL BRANCHES
+    let l:fmt = '%-10s  %-30s  %s'
+    cal s:write(l:fmt, 'COMMIT', 'BRANCH', 'SUBJECT'.repeat(' ', 75).'AUTHOR')
+    cal s:write(repeat('-', 160))
+    let l:lines = systemlist("git show-ref --abbrev --heads")
+    for l:line in l:lines
+        let l:ref = split(l:line)
+        let l:name = substitute(l:ref[1], 'refs/heads/', '', '')
+        let l:subj = s:chomp(system("git log -n1 --pretty='%<(80,trunc)%s  %an' ".l:ref[0]))
+        cal s:write(l:fmt, l:ref[0], l:name, l:subj)
+    endfor
+
+    " REMOTES
+    call s:write('')
+    call s:write('')
+    cal s:write(l:fmt, 'COMMIT', 'REMOTE BRANCH', 'SUBJECT'.repeat(' ', 75).'AUTHOR')
+    cal s:write(repeat('-', 160))
+    let l:lines = systemlist("git branch -r --format='%(objectname:short) %(refname)'")
+    for l:line in l:lines
+        let l:ref = split(l:line)
+        let l:name = substitute(l:ref[1], 'refs/remotes/', '', '')
+        let l:subj = s:chomp(system("git log -n1 --pretty='%<(80,trunc)%s  %an' ".l:ref[0]))
+        cal s:write(l:fmt, l:ref[0], l:name, l:subj)
+    endfor
+
+    call s:write('')
+    call s:write('')
+    call s:write('Press <F4> to view git log of commit under cursor')
+    call s:write('Press <F4> to checkout branch under cursor')
+    call s:write('Press <F5> to refresh')
+    call s:write('Press <F6> to force clean')
+    call s:write('Press <F7> to hard reset to branch under cursor')
+    call s:write('Press <DEL> to delete branch under cursor')
+    exe '14'
+    norm 13|
+    call s:git_colors()
+    setl colorcolumn=
+
+    sil exe printf('nnoremap <silent><buffer><F4> :call <SID>git_branch_nav(%d)<CR>', l:tnr)
+endfunction
+
+function! s:git_branch_clean(tnr)
+    call s:hell_win('BRANCH', 'git clean -xdf')
+    call s:git_branch(a:tnr)
+endfunction
+
+function! s:git_branch_nav(tnr)
+    let l:col = col('.')
+    if l:col > 0 && l:col < 12
+        call s:git_log(expand('<cword>'))
+    elseif l:col > 10 && l:col < 80
+        call s:hell_win('BRANCH', 'git checkout %s', expand('<cfile>:t'))
+        call s:git_branch(a:tnr)
+    endif
+endfunction
+
+function! s:git_branch_reset(tnr)
+    call s:hell_win('BRANCH', 'git reset --hard %s', expand('<cfile>'))
+    call s:git_branch(a:tnr)
+endfunction
+
+function! s:git_branch_del(tnr)
+    call s:hell_win('BRANCH', 'git branch -d %s', expand('<cfile>'))
+    call s:git_branch(a:tnr)
+endfunction
+
+function! s:git_checkout(ref)
+    call s:git_head()
+    call s:shell('git checkout %s', a:ref)
+endfunction
+
+function! s:git_branch2(...)
+    call s:git_head()
+    let l:tnr = get(a:, 1, -1)
+    if -1 == l:tnr
+        let l:tnr = s:buf_tab('GIT')
+    else
+        sil exe 'tabn '.l:tnr
+        sil exe "norm \<c-w>k"
+        norm ggvGD
+    endif
+
     call s:write('  BRANCH                        COMMIT  SUBJECT')
     call s:write(repeat('-', 100))
     call s:write_shell('git branch -av')
@@ -30,31 +116,6 @@ function! s:git_branch(...)
     sil exe printf('nnoremap <silent><buffer><F6> :call <SID>git_branch_clean(%d)<CR>', l:tnr)
     sil exe printf('nnoremap <silent><buffer><F7> :call <SID>git_branch_reset(%d)<CR>', l:tnr)
     sil exe printf('nnoremap <silent><buffer><DEL> :call <SID>git_branch_del(%d)<CR>', l:tnr)
-endfunction
-
-function! s:git_branch_clean(tnr)
-    call s:hell_win('BRANCH', 'git clean -xdf')
-    call s:git_branch(a:tnr)
-endfunction
-
-function! s:git_branch_nav(tnr)
-    call s:hell_win('BRANCH', 'git checkout %s', expand('<cfile>:t'))
-    call s:git_branch(a:tnr)
-endfunction
-
-function! s:git_branch_reset(tnr)
-    call s:hell_win('BRANCH', 'git reset --hard %s', expand('<cfile>'))
-    call s:git_branch(a:tnr)
-endfunction
-
-function! s:git_branch_del(tnr)
-    call s:hell_win('BRANCH', 'git branch -d %s', expand('<cfile>'))
-    call s:git_branch(a:tnr)
-endfunction
-
-function! s:git_checkout(ref)
-    call s:git_head()
-    call s:shell('git checkout %s', a:ref)
 endfunction
 
 function! s:git_colors()
@@ -181,7 +242,7 @@ function! s:git_diff_nav()
             return
         endif
 
-        call s:git_show(l:after, l:file)
+        sil cal s:git_show(l:after, l:file)
         let l:syntax = &syntax
         exe 'vsplit'
         call s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
@@ -301,13 +362,15 @@ endfunction
 function! s:git_log(...)
     call s:git_head()
 
-    call s:MakeTabBuffer(printf('LOG: %s', g:head))
-    call s:write('TREE      COMMIT    %-81s AUTHOR', g:head)
+    let l:head = get(a:, 1, g:head)
+
+    call s:MakeTabBuffer(printf('LOG: %s', l:head))
+    call s:write('TREE      COMMIT    %-81s AUTHOR', l:head)
     call s:write(repeat('-', 130))
 
     call s:write_shell("git log -n75 --pretty=format:'%s' %s"
                 \ ,'\%<(8)\%t  \%<(8)\%h  \%<(80,trunc)\%s  \%<(16)\%an  \%as'
-                \ ,g:head)
+                \ ,l:head)
 
     call s:write('')
     call s:write('TREE      COMMIT    TAG/REMOTE')
@@ -329,7 +392,7 @@ function! s:git_log(...)
 
     noremap <silent><buffer><2-LeftMouse> :call <SID>git_log_nav()<CR>
     nnoremap <silent><buffer><F4> :call <SID>git_log_nav()<CR>
-    exe printf("nnoremap <silent><buffer><F5> :call <SID>git_log('%s')<CR>", g:head)
+    exe printf("nnoremap <silent><buffer><F5> :call <SID>git_log('%s')<CR>", l:head)
 endfunction
 
 function! s:git_log_file(path)
@@ -376,7 +439,7 @@ function! s:git_show(ref, file)
     endif
 
     let l:cmd = printf("git show '%s:%s'", a:ref, a:file)
-    call s:hell_tab(printf('%s:%s', a:ref, a:file), l:cmd)
+    sil cal s:hell_tab(printf('%s:%s', a:ref, a:file), l:cmd)
 endfunction
 
 function! s:git_status()

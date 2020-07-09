@@ -37,12 +37,12 @@ hi FoldColumn       gui=NONE      guibg=#1e1e1e guifg=#858585 cterm=NONE ctermbg
 hi Folded           gui=NONE      guibg=#1e1e1e guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 
 " HIDE ~ BEYOND FILE
-hi NonText          gui=NONE      guibg=#1e1e1e guifg=#1e1e1e cterm=NONE ctermbg=0  ctermfg=7
+hi NonText          gui=NONE      guibg=#1e1e1e guifg=#1e1e1e cterm=NONE ctermbg=0  ctermfg=0
 
 " DIFF
-hi DiffChange       gui=NONE      guibg=#1e1e1e guifg=NONE cterm=NONE ctermbg=0  ctermfg=7
-hi DiffAdd          gui=NONE      guibg=#373d29 guifg=NONE cterm=NONE ctermbg=0  ctermfg=7
-hi DiffDelete       gui=NONE      guibg=#4b1818 guifg=NONE cterm=NONE ctermbg=0  ctermfg=7
+hi DiffChange       gui=BOLD      guibg=#2e2e2e guifg=NONE cterm=NONE ctermbg=8  ctermfg=7
+hi DiffAdd          gui=NONE      guibg=#373d29 guifg=NONE cterm=NONE ctermbg=2  ctermfg=7
+hi DiffDelete       gui=NONE      guibg=#4b1818 guifg=NONE cterm=NONE ctermbg=1  ctermfg=7
 hi DiffText         gui=NONE      guibg=#1e1e1e guifg=NONE cterm=NONE ctermbg=0  ctermfg=7
 
 " STATUS BAR
@@ -62,7 +62,7 @@ hi Cursor           gui=NONE      guibg=#264f78 guifg=NONE    cterm=NONE ctermbg
 hi lCursor          gui=NONE      guibg=#264f78 guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 
 hi cursorcolumn     gui=NONE      guibg=#264f78 guifg=NONE    cterm=STANDOUT ctermbg=7  ctermfg=7
-hi cursorline       gui=NONE      guibg=#2e2e2e guifg=NONE    cterm=NONE     ctermbg=4  ctermfg=NONE
+hi CursorLine       gui=NONE      guibg=#2e2e2e guifg=NONE    cterm=NONE     ctermbg=0  ctermfg=NONE
 hi visual           gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     ctermbg=4  ctermfg=NONE
 hi visualnos        gui=NONE      guibg=#264f78 guifg=NONE    cterm=BOLD     ctermbg=4  ctermfg=NONE
 
