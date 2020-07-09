@@ -10,10 +10,6 @@ function! s:git_branch(...)
         norm ggvGD
     endif
 
-    cal s:write('BRANCH: %s', g:head)
-    cal s:write('')
-    cal s:write_shell("git log -n1 %s HEAD", "--pretty=\\%b")
-
     " LOCAL BRANCHES
     let l:fmt = '%-10s  %-30s  %s'
     cal s:write(l:fmt, 'COMMIT', 'BRANCH', 'SUBJECT'.repeat(' ', 75).'AUTHOR')
@@ -41,13 +37,18 @@ function! s:git_branch(...)
 
     cal s:write('')
     cal s:write('')
+    cal s:write('BRANCH: %s', g:head)
+    cal s:write('')
+    cal s:write_shell("git log -n1 %s HEAD", "--pretty=\\%b")
+    cal s:write('')
+    cal s:write('')
     cal s:write('Press <F4> to view git log of commit under cursor')
     cal s:write('Press <F4> to checkout branch under cursor')
     cal s:write('Press <F5> to refresh')
     cal s:write('Press <F6> to force clean')
     cal s:write('Press <F7> to hard reset to branch under cursor')
     cal s:write('Press <DEL> to delete branch under cursor')
-    exe '14'
+    exe '3'
     norm 13|
     cal s:git_colors()
     setl colorcolumn=
