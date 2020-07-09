@@ -442,8 +442,17 @@ function! s:git_show(ref, file)
     sil cal s:hell_tab(printf('%s:%s', a:ref, a:file), l:cmd)
 endfunction
 
-function! s:git_status()
-    call s:MakeTabBuffer('STATUS')
+function! s:git_status(...)
+    call s:git_head()
+    let l:tnr = get(a:, 1, -1)
+    if -1 == l:tnr
+        let l:tnr = s:buf_tab('STATUS')
+    else
+        sil exe 'tabn '.l:tnr
+        sil exe "norm \<c-w>k"
+        norm ggvGD
+    endif
+
     call s:write_shell('git status')
     call s:write('')
     call s:write('Press <F5> to refresh')
@@ -454,9 +463,9 @@ function! s:git_status()
     call s:git_colors()
     setlocal colorcolumn=
     normal gg
-    nnoremap <silent><buffer><F5> :call <SID>git_status()<CR>
-    nnoremap <silent><buffer><F6> :call <SID>shell('git fetch') <bar> call <SID>git_status()<CR>
-    nnoremap <silent><buffer><F7> :call <SID>shell('git add .') <bar> call <SID>git_status()<CR>
+    sil exe printf("nnoremap <silent><buffer><F5> :call <SID>git_status(%d)<CR>", l:tnr)
+    sil exe printf("nnoremap <silent><buffer><F6> :call <SID>hell_win('SO', 'git fetch') <bar> call <SID>git_status(%d)<CR>", l:tnr)
+    sil exe printf("nnoremap <silent><buffer><F7> :call <SID>hell_win('SO', 'git add .') <bar> call <SID>git_status(%d)<CR>", l:tnr)
     nnoremap <silent><buffer><F8> :Gcommit<CR>
-    nnoremap <silent><buffer><F9> :call <SID>shell('git push') <bar> call <SID>git_status()<CR>
+    sil exe printf("nnoremap <silent><buffer><F9> :call <SID>hell_win('SO', 'git push') <bar> call <SID>git_status(%d)<CR>", l:tnr)
 endfunction
