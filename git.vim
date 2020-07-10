@@ -137,7 +137,7 @@ function! s:git_colors()
     syn match String "\d\+\.\d\+\.\d\+\.\d\+\.\d\+"
     syn match Identifier "#\=\d\{5}"
     syn match Keyword "[0-9a-f]\{7,8}" contains=@NoSpell
-    syn match Function '^Press.*' contains=@NoSpell
+    syn match Function '^<.*' contains=@NoSpell
     hi Bad  guifg=#ee3020
     hi Good guifg=#00b135
 endfunction
@@ -461,13 +461,10 @@ function! s:git_status()
     cal s:opentab('STATUS')
     cal s:write_shell('git status')
     cal setline('$',[''
-    \,'Press <INS> to add all'
-    \,'Press <END> to commit'
-    \,'Press <PGUP> to push'
-    \,'Press <PGDN> to fetch',''
-    \,'Press <F6> to open git gui'
-    \,'Press <F7> to view git log of commit under cursor'
-    \,'Press <F8> to refresh','','',repeat('-',80),''])
+    \,'<INS> ADD ALL    <PGUP> PUSH'
+    \,'<END> COMMIT     <PGDN> FETCH'
+    \,'<F6>  GIT GUI    <F7>   GIT LOG (COMMIT UNDER CURSOR)'
+    \,'<F8>  REFRESH','','',repeat('-',80),''])
     norm G
     cal s:write_shell('git log -n5')
     cal s:git_colors()

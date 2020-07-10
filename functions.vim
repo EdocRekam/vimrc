@@ -93,14 +93,9 @@ function! s:hell_tab(title, ...)
 endfunction
 
 function! s:hell_win(title, ...)
-    if bufexists(a:title)
-        sil exe 'bwipeout! '.bufnr(a:title)
-    endif
-    sil exe 'new '.a:title
-    setl buftype=nofile
-    setl noswapfile
-    sil exe printf('-1read !%s', call('printf', a:000))
-    sil exe "norm gg\<c-w>J"
+    cal s:openwin(a:title)
+    sil exe '-1read !'.call('printf', a:000)
+    exe "norm gg\<c-w>J"
 endfunction
 
 function! GotoDefinition()
@@ -165,7 +160,20 @@ function! s:opentab(title)
         setl noswapfile
     else
         cal win_gotoid(l:ids[0])
-        norm ggvGD
+        sil norm ggvGD
+    endif
+    retu tabpagenr()
+endfunction
+
+function! s:openwin(title)
+    let l:ids = win_findbuf(bufnr(a:title))
+    if empty(l:ids)
+        sil exe 'new '.a:title
+        setl buftype=nofile
+        setl noswapfile
+    else
+        cal win_gotoid(l:ids[0])
+        sil norm ggvGD
     endif
     retu tabpagenr()
 endfunction
