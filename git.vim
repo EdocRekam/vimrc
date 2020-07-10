@@ -40,14 +40,14 @@ function! s:git_branch(...)
     cal s:write('BRANCH: %s', g:head)
     cal s:write('')
     cal s:write_shell("git log -n1 %s HEAD", "--pretty=\\%b")
-    cal s:write('')
-    cal s:write('')
-    cal s:write('Press <F4> to view git log of commit under cursor')
-    cal s:write('Press <F4> to checkout branch under cursor')
-    cal s:write('Press <F5> to refresh')
-    cal s:write('Press <F6> to force clean')
-    cal s:write('Press <F7> to hard reset to branch under cursor')
-    cal s:write('Press <DEL> to delete branch under cursor')
+    cal setline('.', ['',''
+    \,'Press <F4> to view git log of commit under cursor'
+    \,'Press <F4> to checkout branch under cursor'
+    \,'Press <F5> to refresh'
+    \,'Press <F6> to force clean'
+    \,'Press <F7> to hard reset to branch under cursor'
+    \,'Press <DEL> to delete branch under cursor''])
+
     exe '3'
     norm 13|
     cal s:git_colors()
@@ -443,30 +443,39 @@ function! s:git_show(ref, file)
     sil cal s:hell_tab(printf('%s:%s', a:ref, a:file), l:cmd)
 endfunction
 
-function! s:git_status(...)
-    cal s:git_head()
+function! s:get_tab(...)
     let l:tnr = get(a:, 1, -1)
+    let l:title = get(a:, 2, '')
     if -1 == l:tnr
-        let l:tnr = s:buf_tab('STATUS')
+        let l:tnr = s:buf_tab(l:title)
     else
         sil exe 'tabn '.l:tnr
         sil exe "norm \<c-w>k"
         norm ggvGD
     endif
+    return l:tnr
+endfunction
 
+function! s:git_status()
+    cal s:git_head()
+    cal s:opentab('STATUS')
     cal s:write_shell('git status')
-    cal s:write('')
-    cal s:write('Press <F5> to refresh')
-    cal s:write('Press <F6> to fetch')
-    cal s:write('Press <F7> to add all')
-    cal s:write('Press <F8> to commit')
-    cal s:write('Press <F9> to push')
+    cal setline('$',[''
+    \,'Press <INS> to add all'
+    \,'Press <END> to commit'
+    \,'Press <PGUP> to push'
+    \,'Press <PGDN> to fetch',''
+    \,'Press <F6> to open git gui'
+    \,'Press <F7> to view git log of commit under cursor'
+    \,'Press <F8> to refresh','','',repeat('-',80),''])
+    norm G
+    cal s:write_shell('git log -n5')
     cal s:git_colors()
-    setlocal colorcolumn=
-    normal gg
-    sil exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_status(%d)<CR>", l:tnr)
-    sil exe printf("nnoremap <silent><buffer><F6> :cal <SID>hell_win('SO', 'git fetch') <bar> cal <SID>git_status(%d)<CR>", l:tnr)
-    sil exe printf("nnoremap <silent><buffer><F7> :cal <SID>hell_win('SO', 'git add .') <bar> cal <SID>git_status(%d)<CR>", l:tnr)
-    nnoremap <silent><buffer><F8> :sil Gcommit<CR>
-    sil exe printf("nnoremap <silent><buffer><F9> :cal <SID>hell_win('SO', 'git push') <bar> cal <SID>git_status(%d)<CR>", l:tnr)
+    setl colorcolumn=
+    norm gg
+    nnoremap <silent><buffer><END> :sil Gcommit<CR>
+    nnoremap <silent><buffer><INS> :cal <SID>hell_win('SO', 'git add .') <bar> cal <SID>git_status()<CR>
+    nnoremap <silent><buffer><PageDown> :cal <SID>hell_win('SO', 'git fetch') <bar> cal <SID>git_status()<CR>
+    nnoremap <silent><buffer><PageUp> :cal <SID>hell_win('SO', 'git push') <bar> cal <SID>git_status()<CR>
+    nnoremap <silent><buffer><F7> :cal <SID>git_log(expand('<cword>'))<CR>
 endfunction

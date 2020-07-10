@@ -6,8 +6,8 @@ scriptencoding utf-8
 " MAKE BACKSPACE WORK CORRECTLY
 set backspace=indent,eol,start
 
-" DISPLAY LENGTH OF SELECTION ON COMMAND
-set showcmd
+" DISPLAY SELECTION LEN
+set sc
 
 " SYNCHRONIZE CLIPBOARD
 set clipboard^=unnamed

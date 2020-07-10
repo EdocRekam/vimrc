@@ -1,11 +1,13 @@
 
 " THINGS I CANNOT LOCALIZE
 function! Vimrc_get_statusline()
+    let l:c = strchars(getreg('*'))
+    let l:sel = l:c > 1 ? '  SEL:'.l:c : ''
     let l:head = exists('g:head') ? g:head : ''
     let l:enc = strlen(&fenc) ? '  ' . toupper(&fenc) : '  PLAIN'
     let l:bom = &bomb? '  with BOM' : ''
     let l:le = &ff == 'unix' ? '  LF' : '  CRLF'
-    return l:head . '  %M%<%f%=Col %c' . l:enc . l:bom . l:le . '  %Y'
+    return l:head . '  %M%<%f%='.l:sel.'  Col %c'.l:enc.l:bom.l:le.'  %Y'
 endfunction
 
 function! s:align(criteria)
@@ -48,10 +50,18 @@ function! s:chomp(msg)
     return strcharpart(a:msg, 0, strlen(a:msg)-1)
 endfunction
 
+function! s:el_len()
+    let l:c=0
+    for l:l in getline("'<","'>")
+        let l:c+=len(l:l)
+    endfor
+    retu l:c
+endfunction
+
 function! s:enum(start)
     let l:nr = line("'<")
     let l:cnt = a:start
-    for l:line in getline(line("'<"), line("'>"))
+    for l:line in getline("'<", "'>")
         let l:line = printf('%04d %s', l:cnt, l:line)
         call setline(l:nr, l:line)
         let l:nr = l:nr + 1
@@ -145,6 +155,19 @@ function! s:notrails()
     let @/=_s
     nohl
     unlet _s
+endfunction
+
+function! s:opentab(title)
+    let l:ids = win_findbuf(bufnr(a:title))
+    if empty(l:ids)
+        sil exe 'tabe '.a:title
+        setl buftype=nofile
+        setl noswapfile
+    else
+        cal win_gotoid(l:ids[0])
+        norm ggvGD
+    endif
+    retu tabpagenr()
 endfunction
 
 function! s:ortd()
@@ -249,7 +272,4 @@ function! s:write_shell(...)
     sil exe '-1read !'.call('printf', a:000)
     norm G
 endfunction
-
-
-
 
