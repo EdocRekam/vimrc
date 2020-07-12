@@ -305,38 +305,6 @@ enddef
 "
 " DISPLAY GIT LOG HISTORY AND BRANCHES IN A NEW TAB
 "
-def! s:git_log(head: any = g:head): void
-    s:git_head()
-    s:MakeTabBuffer(printf('LOG: %s', head))
-    s:write(['TREE      COMMIT    %-81s AUTHOR', head])
-    s:write([repeat('-', 130)])
-
-    s:write_shell(["git log -n75 --pretty=format:'%s' %s"
-                \, '\%<(8)\%t  \%<(8)\%h  \%<(80,trunc)\%s  \%<(16)\%an  \%as'
-                \, head])
-
-    s:write([''])
-    s:write(['TREE      COMMIT    TAG/REMOTE'])
-    s:write([repeat('-', 130)])
-
-    let refs = s:hell_list(['git rev-parse --short --tags --branches --remotes HEAD'])
-    sort(refs)
-    uniq(refs)
-
-    for ref in refs
-         let msg = s:hell(["git log -n1 --pretty=format:'%s' %s", '%<(8)%t  %<(8)%h  %<(80,trunc)%D  %<(16)%an  %as', ref])
-         s:write([msg])
-    endfor
-
-    normal gg
-    normal 21|
-    setl colorcolumn=
-    s:git_colors()
-
-    noremap <silent><buffer><2-LeftMouse> :cal <SID>git_log_nav()<CR>
-    nnoremap <silent><buffer><F4> :cal <SID>git_log_nav()<CR>
-    exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_log('%s')<CR>", head)
-enddef
 
 def! s:git_log_file(path: string): void
     s:MakeTabBuffer('TRACE')
@@ -391,6 +359,5 @@ enddef
 nnoremap <silent><F6> :sil !git gui&<CR>
 
 " GIT GUI                                               F7
-nnoremap <silent><F7> :cal <SID>git_log()<CR>
 
 " GIT STATUS                                            F8

@@ -89,8 +89,6 @@ def! s:longest(rows: list<list<string>>, col: number, min: number, max: number )
     retu c
 enddef
 
-
-
 def! s:ortd()
     norm gv
     :'<,'>sort!
@@ -120,10 +118,6 @@ def! s:hell(args: list<string>): string
     retu system(cmd)
 enddef
 
-def! s:hell_list(args: list<string>): list<string>
-    let cmd = call('printf', args)
-    retu systemlist(cmd)
-enddef
 
 def! s:unique(): void
     norm gv
@@ -131,9 +125,4 @@ def! s:unique(): void
     norm gv
 enddef
 
-def! s:write(args: list<any>)
-    let msg = call('printf', args)
-    setline('.', [ msg, '' ])
-    norm G
-enddef
 

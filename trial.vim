@@ -43,7 +43,7 @@ def! s:opentab(title: string): number
         setl noswapfile
     else
         win_gotoid(get(ids, 0))
-        norm ggvGD
+        exe 'sil norm ggvGD'
     endif
     retu tabpagenr()
 enddef
@@ -56,7 +56,7 @@ def! s:openwin(title: string): number
         setl noswapfile
     else
         win_gotoid(get(ids, 0))
-        norm ggvGD
+        exe 'sil norm ggvGD'
     endif
     retu tabpagenr()
 enddef
@@ -65,6 +65,15 @@ def! s:openwin_shell(title: string, args: list<any>)
     s:openwin(title)
     exe 'sil -1read !' .. call('printf', args)
     exe "norm gg\<c-w>J"
+enddef
+
+def! s:hell_list(args: list<string>): list<string>
+    retu systemlist(call('printf', args))
+enddef
+
+def! s:write(args: list<any>)
+    setline('.', [ call('printf', args), '' ])
+    norm G
 enddef
 
 def! s:write_shell(args: list<any>)

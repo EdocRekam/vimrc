@@ -1,1 +1,1 @@
-exe 'tabnew trial.vim'
+exe 'tabnew git2.vim'

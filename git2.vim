@@ -1,5 +1,5 @@
 
-def! s:git_colors(): void
+def! s:git_colors()
     syn case ignore
     syn keyword Comment boron carbon dublin ede havana herne hilla hobart
     syn keyword Comment hofu freetown master ibaraki
@@ -28,10 +28,44 @@ def! s:git_colors(): void
     hi Good guifg=#00b135
 enddef
 
-let s:head = ''
-def! s:git_head()
-    s:head = s:chomp(system('git rev-parse --abbrev-ref HEAD'))
+let g:head = 'HEAD'
+def! s:git_head(): string
+    g:head = s:chomp(system('git rev-parse --abbrev-ref HEAD'))
+    retu g:head
 enddef
+
+def! s:git_log(usehead: string)
+    let head = usehead == g:head ? s:git_head() : usehead
+    s:opentab('LOG:' .. head)
+    s:write(['TREE      COMMIT    %-81s AUTHOR', head])
+    s:write([repeat('-', 130)])
+
+    s:write_shell(["git log -n75 --pretty=format:'%s' %s"
+                \, '\%<(8)\%t  \%<(8)\%h  \%<(80,trunc)\%s  \%<(16)\%an  \%as'
+                \, head])
+
+    s:write([''])
+    s:write(['TREE      COMMIT    TAG/REMOTE'])
+    s:write([repeat('-', 130)])
+
+    let refs = s:hell_list(['git rev-parse --short --tags --branches --remotes HEAD'])
+    sort(refs)
+    uniq(refs)
+
+    "for ref in refs
+    "     let msg = s:hell(["git log -n1 --pretty=format:'%s' %s", '%<(8)%t  %<(8)%h  %<(80,trunc)%D  %<(16)%an  %as', ref])
+    "     s:write([msg])
+    "endfor
+    norm gg
+    norm 21|
+    setl colorcolumn=
+    s:git_colors()
+
+    "nnoremap <silent><buffer><2-LeftMouse> :cal <SID>git_log_nav()<CR>
+    "nnoremap <silent><buffer><F4> :cal <SID>git_log_nav()<CR>
+    exe printf("nnoremap <silent><buffer><F7> :cal <SID>git_log('%s')<CR>", head)
+enddef
+nnoremap <silent><F7> :cal <SID>git_log(g:head)<CR>
 
 def! s:git_status()
     s:git_head()
