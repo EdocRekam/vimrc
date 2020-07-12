@@ -1,228 +1,239 @@
 
 
-function! s:Callback(winid, result)
-    if a:winid == s:wid
-        unlet s:wid
+def! s:callback(winid: number, result: number): number
+    if result == -1
+        return 1
     endif
+    let ask: string
+    let path: string
+    let id = s:GetCmdId(result)
+    if id == 1
+        ask = input('Align on: ', '=')
+        s:align(ask)
+    elseif id == 2
+        s:dotnet_build()
+    elseif id == 3
+        s:dotnet_restore()
+    elseif id == 4
+        s:lower()
+    elseif id == 5
+        s:upper()
+    elseif id == 6
+        s:notabs()
+    elseif id == 7
+        s:tocrlf()
+    elseif id == 8
+        s:tolf()
+    elseif id == 9
+        ask = input('Start: ', '0')
+        s:enum(str2nr(ask))
+    elseif id == 10
+        g:ZoomOut()
+    elseif id == 11
+        g:ZoomIn()
+    elseif id == 12
+        s:hell_tab('GIT' ['git add .'])
+    elseif id == 13
+        exe 'Gcommit'
+    elseif id == 14
+        s:hell_tab('GIT', ['git diff'])
+    elseif id == 15
+        ask = input('Remote: ', 'vso')
+        s:git_fetch(ask)
+    elseif id == 16
+        s:git_status()
+    elseif id == 17
+        exe 'silent !gitk&'
+    elseif id == 18
+        exe 'silent !git gui&'
+    elseif id == 19
+        s:git_log()
+    elseif id == 20
+        ask = input('Remote: ', 'vso')
+        s:git_prune(ask)
+    elseif id == 21
+        s:csharp_use()
+    elseif id == 22
+        s:unique()
+    elseif id == 23
+        s:notrails()
+    elseif id == 24
+        s:ort()
+    elseif id == 25
+        s:orti()
+    elseif id == 26
+        s:sortd()
+    elseif id == 27
+        s:sortdi()
+    elseif id == 28
+        GotoDefinition()
+    elseif id == 29
+        s:dotnet_test()
+    elseif id == 30
+        s:dotnet_test(expand('<cword>'))
+    elseif id == 31
+        " TEST THIS FILE
+    elseif id == 32
+        so $VIMRUNTIME/syntax/hitest.vim
+    elseif id == 33
+        tabclose
+    elseif id == 34
+        tabnew
+    elseif id == 35
+        path = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
+        if filereadable(path)
+            sil exe 'tabnew ' .. path
+        endif
+    elseif id == 36
+        silent exe 'options'
+    elseif id == 37
+        silent exe 'set guifont=*'
+    elseif id == 38
+        s:csharp_startserver()
+    elseif id == 39
+        s:csharp_fold()
+    elseif id == 40
+        s:csharp_nofold()
+    elseif id == 41
+        path = printf('%skeys.html', s:vim_dir())
+        if filereadable(path)
+            sil exe printf("!firefox --new-window '%s'&", path)
+        endif
+    elseif id == 42
+        setl wrap!
+    elseif id == 43
+        s:git_log_file(expand('<cfile>'))
+    elseif id == 44
+        s:git_checkout(expand('<cfile>:t'))
+    elseif id == 45
+        s:git_branch()
+    endif
+    return 1
+enddef
 
-    if a:result == -1
+def! s:filter(winid: number, key: string): number
+
+    if key == "\<F1>"
+        popup_close(winid, -1)
         return 1
     endif
 
-    let l:id = s:GetCmdId(a:result)
-    if l:id == 1
-        let l:ask = input('Align on: ', '=')
-        call s:align(l:ask)
-    elseif l:id == 2
-        call s:dotnet_build()
-    elseif l:id == 3
-        call s:dotnet_restore()
-    elseif l:id == 4
-        call s:lower()
-    elseif l:id == 5
-        call s:upper()
-    elseif l:id == 6
-        call s:notabs()
-    elseif l:id == 7
-        call s:tocrlf()
-    elseif l:id == 8
-        call s:tolf()
-    elseif l:id == 9
-        let l:ask = input('Start: ', '0')
-        call s:enum(str2nr(l:ask))
-    elseif l:id == 10
-        call ZoomOut()
-    elseif l:id == 11
-        call ZoomIn()
-    elseif l:id == 12
-        call s:hell_tab('GIT', 'git add .')
-    elseif l:id == 13
-        exe 'Gcommit'
-    elseif l:id == 14
-        call s:hell_tab('GIT', 'git diff')
-    elseif l:id == 15
-        let l:ask = input('Remote: ', 'vso')
-        call s:git_fetch(l:ask)
-    elseif l:id == 16
-        call s:git_status()
-    elseif l:id == 17
-        exe 'silent !gitk&'
-    elseif l:id == 18
-        exe 'silent !git gui&'
-    elseif l:id == 19
-        call s:git_log()
-    elseif l:id == 20
-        let l:ask = input('Remote: ', 'vso')
-        call s:git_prune(l:ask)
-    elseif l:id == 21
-        call s:csharp_use()
-    elseif l:id == 22
-        call s:unique()
-    elseif l:id == 23
-        call s:notrails()
-    elseif l:id == 24
-        call s:ort()
-    elseif l:id == 25
-        call s:orti()
-    elseif l:id == 26
-        call s:sortd()
-    elseif l:id == 27
-        call s:sortdi()
-    elseif l:id == 28
-        call GotoDefinition()
-    elseif l:id == 29
-        call s:dotnet_test()
-    elseif l:id == 30
-        call s:dotnet_test(expand('<cword>'))
-    elseif l:id == 31
-        " TEST THIS FILE
-    elseif l:id == 32
-        so $VIMRUNTIME/syntax/hitest.vim
-    elseif l:id == 33
-        tabclose
-    elseif l:id == 34
-        tabnew
-    elseif l:id == 35
-        let l:path = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
-        if filereadable(l:path)
-            silent exe printf("tabnew %s", l:path)
-        endif
-    elseif l:id == 36
-        silent exe 'options'
-    elseif l:id == 37
-        silent exe 'set guifont=*'
-    elseif l:id == 38
-        call s:csharp_startserver()
-    elseif l:id == 39
-        call s:csharp_fold()
-    elseif l:id == 40
-        call s:csharp_nofold()
-    elseif l:id == 41
-        let l:path = printf('%skeys.html', s:vim_dir())
-        if filereadable(l:path)
-            silent exe printf("!firefox --new-window '%s'&", l:path)
-        endif
-    elseif l:id == 42
-        exe 'setlocal wrap!'
-    elseif l:id == 43
-        call s:git_log_file(expand('<cfile>'))
-    elseif l:id == 44
-        call s:git_checkout(expand('<cfile>:t'))
-    elseif l:id == 45
-        call s:git_branch()
-    endif
-    return 1
-endfunction
-
-function! s:Filter(winid, key)
-
-    if a:key == "\<F1>"
-        call popup_close(a:winid, -1)
-
     " PASS
-    elseif a:key == "\<F2>" || a:key == "\<F3>" || a:key == "\<F4>"
-      \ || a:key == "\<F5>" || a:key == "\<F6>" || a:key == "\<F7>"
-      \ || a:key == "\<F8>" || a:key == "\<F9>" || a:key == "\<F10>"
-      \ || a:key == "\<F11>" || a:key == "\<F12>"
-        call popup_close(a:winid, -1)
-        call feedkeys(a:key)
+    if key == "\<F2>" || key == "\<F3>" || key == "\<F4>"
+      \ || key == "\<F5>" || key == "\<F6>" || key == "\<F7>"
+      \ || key == "\<F8>" || key == "\<F9>" || key == "\<F10>"
+      \ || key == "\<F11>" || key == "\<F12>"
+        popup_close(winid, -1)
+        feedkeys(key)
+        return 1
+    endif
 
     " PRINTABLE CHAR
-    elseif 0 == match(a:key, '\p')
-            " IGNORE THESE
-            if a:key == ':'
-                return popup_filter_menu(a:winid, a:key)
-            endif
+    if 0 == match(key, '\p')
+       " IGNORE THESE
+        if key == ':'
+            return popup_filter_menu(winid, key)
+        endif
 
-            " ACCUMULATE
-            call popup_close(a:winid, -1)
-            let s:opts.title = s:opts.title . a:key
-            call s:FilterBuffer(s:menuId[1])
-            let s:accum +=1
-            let s:wid = popup_create(s:menuId[1], s:opts)
+        " ACCUMULATE
+        popup_close(winid, -1)
+        s:opts.title = s:opts.title .. key
+        s:FilterBuffer(s:menuId[1])
+        s:accum += 1
+        s:wid = popup_create(s:menuId[1], s:opts)
+        return 1
+    endif
 
     " NONPRINTABLE
-    else
-        if a:key == "\<BS>"
-            " NOTHING TO DO
-            if s:accum < 1
-                call popup_close(a:winid, -1)
-                return 1
-            endif
-
-            " REGRESS
-            call popup_close(a:winid, -1)
-            call s:RestoreBuffer()
-            let s:opts.title = s:chomp(s:opts.title)
-            call s:FilterBuffer(s:menuId[1])
-            let s:accum -=1
-            let s:wid = popup_create(s:menuId[1], s:opts)
-        else
-            return popup_filter_menu(a:winid, a:key)
+    if key == "\<BS>"
+        " NOTHING TO DO
+        if s:accum < 1
+            popup_close(winid, -1)
+            return 1
         endif
+
+        " REGRESS
+        popup_close(winid, -1)
+        s:RestoreBuffer()
+        s:opts.title = s:chomp(s:opts.title)
+        s:FilterBuffer(s:menuId[1])
+        s:accum -= 1
+        s:wid = popup_create(s:menuId[1], s:opts)
+    else
+        return popup_filter_menu(winid, key)
     endif
 
     return 1
-endfunction
+enddef
 
-function! s:FilterBuffer(buf)
-    let l:t = tolower(s:opts.title)
-    let l:idx = 1
-    for l:i in getbufline(a:buf, 0, '$')
-        if stridx(tolower(l:i), l:t) != -1
-            let l:idx +=1
+def! s:mnu_init()
+    s:accum = -1
+    s:menuId  = []
+    s:wid = -1
+    s:opts = #{
+        callback: s:callback,
+        cursorline: 1,
+        filter: s:filter,
+        filtermode: 'a',
+        line: 2,
+        mapping: 0,
+        maxheight: 25,
+        maxwidth: 36,
+        padding: [1, 1, 0, 1],
+        title: '',
+        wrap: 0,
+    }
+enddef
+call s:mnu_init()
+
+def! s:FilterBuffer(buf: number): void
+    let t = tolower(s:opts.title)
+    let idx = 1
+    for i in getbufline(buf, 0, '$')
+        if stridx(tolower(i), t) != -1
+            idx += 1
         else
-            call deletebufline(a:buf, l:idx)
+            deletebufline(buf, idx)
         endif
     endfor
-endfunction
+enddef
 
-function! s:GetCmdId(result)
-    let l:l = getbufline(s:menuId[1], a:result)[0]
-    let l:nr = strcharpart(l:l, 39, 4)
-    return str2nr(l:nr)
-endfunction
+def! s:GetCmdId(result: number): number
+    let l = getbufline(s:menuId[1], result)[0]
+    let nr = strcharpart(l, 39, 4)
+    return str2nr(nr)
+enddef
 
-function! s:RestoreBuffer()
-    if !exists('s:menuId')
-        let s:menuId = [bufadd(printf('%smenu.txt', s:vim_dir()))
-                     \ ,bufadd('ea9b0bea-e515-40ed-b1a0-f58281ff9629')]
-
-        silent call bufload(s:menuId[0])
-        silent call setbufvar(s:menuId[0], '&buftype', 'nofile')
-        silent call setbufvar(s:menuId[0], '&swapfile', '0')
-
-        silent call bufload(s:menuId[1])
-        silent call setbufvar(s:menuId[1], '&buftype', 'nofile')
-        silent call setbufvar(s:menuId[1], '&swapfile', '0')
-    endif
-
-    let l:items = getbufline(s:menuId[0], 0, '$')
-    silent call deletebufline(s:menuId[1], 1, '$')
-    silent call appendbufline(s:menuId[1], 0, l:items)
-    silent call deletebufline(s:menuId[1], '$')
-endfunction
+def! s:RestoreBuffer()
+    let items = getbufline(s:menuId[0], 0, '$')
+    deletebufline(s:menuId[1], 1, '$')
+    appendbufline(s:menuId[1], 0, items)
+    deletebufline(s:menuId[1], '$')
+enddef
 
 " THE ONE AND ONLY WAY INTO MENU
-function! s:menu()
-    if !exists('s:accum')
-        let s:accum = 0
-        call s:RestoreBuffer()
-    endif
-    if !exists('s:wid')
-        let s:wid = popup_create(s:menuId[1], s:opts)
-    endif
-endfunction
+def! s:menu()
+    if s:accum == -1
+        s:accum = 0
+        add(s:menuId, bufadd(printf('%smenu.txt', s:vim_dir())))
+        add(s:menuId, bufadd('ea9b0bea-e515-40ed-b1a0-f58281ff9629'))
 
-let s:opts = {
-    \  'callback'   : function('s:Callback')
-    \, 'cursorline' : 1
-    \, 'filter'     : function('s:Filter')
-    \, 'filtermode' : 'a'
-    \, 'line'       : 2
-    \, 'mapping'    : 0
-    \, 'maxheight'  : 25
-    \, 'maxwidth'   : 36
-    \, 'padding'    : [1, 1, 0, 1]
-    \, 'title'      : ''
-    \, 'wrap'       : 0}
+        bufload(s:menuId[0])
+        setbufvar(s:menuId[0], '&buftype', 'nofile')
+        setbufvar(s:menuId[0], '&swapfile', '0')
+
+        bufload(s:menuId[1])
+        setbufvar(s:menuId[1], '&buftype', 'nofile')
+        setbufvar(s:menuId[1], '&swapfile', '0')
+    endif
+
+    if s:wid == -1
+        s:RestoreBuffer()
+        s:wid = popup_create(s:menuId[1], s:opts)
+    endif
+enddef
+
+" LIST FUNCTIONS                                        F1
+nnoremap <silent><F1> :call <SID>menu()<CR>
+vnoremap <silent><F1> :call <SID>menu()<CR>
+

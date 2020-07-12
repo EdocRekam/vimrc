@@ -48,7 +48,6 @@ set ruler
 set shiftwidth=4
 set softtabstop=4
 set spell spelllang=en_us
-set statusline=%!Vimrc_get_statusline()
 set tabstop=4
 
 " TURN ON FILE TYPE INSPECTION TO RECEIVE FILETYPE EVENTS
@@ -62,3 +61,15 @@ colorscheme Dark+
 
 " TURN ON SYNTAX HIGHLIGHTING
 syntax on
+
+" THINGS I CANNOT LOCALIZE
+def! g:GetStatus(): string
+    let c = strchars(getreg('*'))
+    let sel = c > 1 ? '  SEL:' .. c : ''
+    let head = exists('g:head') ? g:head .. '  ' : ''
+    let enc = strlen(&fenc) ? '  ' .. toupper(&fenc) : '  PLAIN'
+    let bom = &bomb ? '  with BOM' : ''
+    let le = &ff == 'unix' ? '  LF' : '  CRLF'
+    return head .. '%M%<%f%=' .. sel .. '  Col %c' .. enc .. bom .. le .. '  %Y'
+enddef
+set statusline=%!g:GetStatus()

@@ -1,8 +1,4 @@
 
-
-" VISUAL STUDIO CODE DEFAULT KEYBOARD SHORTCUTS
-" mapclear
-
 " MOVE LINE DOWN                                        ALT + DOWN
 inoremap <A-DOWN> <ESC>:m+<CR>:startinsert<CR>
 nnoremap <A-DOWN> :m+<CR>==
@@ -18,11 +14,6 @@ vnoremap <A-UP> :m '<-2<CR>gv=gv
 nnoremap <silent><C-LEFT> :tabprev<CR>
 nnoremap <silent><C-RIGHT> :tabnext<CR>
 
-" DECREASE FONT                                         CTRL + SHIFT + LEFT
-" INCREASE FONT                                         CTRL + SHIFT + RIGHT
-nnoremap <silent><C-S-LEFT> :call ZoomOut()<CR>
-nnoremap <silent><C-S-RIGHT> :call ZoomIn()<CR>
-
 " RESIZE SPLIT                                          ALT + LEFT
 "                                                       ALT + RIGHT
 nnoremap <A-LEFT> 20<C-w><
@@ -32,7 +23,7 @@ nnoremap <A-RIGHT> 20<C-w>>
 nnoremap <silent><C-UP> :NERDTreeToggle<CR>
 
 " SAVE FILE                                             CTRL + S
-inoremap <C-S> <ESC>:w<CR>i
+inoremap <C-S> <ESC> :w<CR>i
 nnoremap <C-S> :w<CR>
 
 " SORT BLOCK                                            CTRL + S
@@ -47,7 +38,7 @@ inoremap <silent><S-END> <ESC>v<END>
 nnoremap <silent><S-END> <ESC>v<END>
 
 " SELECT ALL                                            CTRL + A
-nnoremap <silent><C-A> :normal GVgg<CR>
+nnoremap <silent><C-A> :norm GVgg<CR>
 
 " COPY                                                  CTRL + C
 vnoremap <C-C> "+y
@@ -64,40 +55,12 @@ nnoremap <silent>p "+p
 nnoremap <silent>P "+P
 inoremap <silent><c-v> <c-r>+
 
-" LIST FUNCTIONS                                        F1
-nnoremap <silent><F1> :call <SID>menu()<CR>
-vnoremap <silent><F1> :call <SID>menu()<CR>
-
-" RENAME SYMBOL                                         F2
-nnoremap <silent><F2> :call <SID>rename()<CR>
-
 " RESERVED (CODE HELPER)                                F3
 nnoremap <silent><F3> :bd<CR>
 nnoremap <silent><S-F3> :bd!<CR>
 
-" GOTO FILE > DEFINITION                                F4
-nnoremap <silent><F4> :call GotoDefinition()<CR>
-nnoremap <silent><S-F4> :call FindInFiles('<cword>')<CR>
-
-function! s:source_file()
-    exe 'w'
-    exe 'so %'
-endfunction
-
-" SOURCE CURRENT FILE                                   F5
-nnoremap <F5> :call <SID>source_file()<CR>
-
-" RESERVED                                              F6
-nnoremap <silent><F6> :silent !git gui&<CR>
-
-" GIT GUI                                               F7
-nnoremap <silent><F7> :silent call <SID>git_log()<CR>
-
-" GIT STATUS                                            F8
-nnoremap <silent><F8> :call <SID>git_status()<CR>
-
 " LAUNCH NEW INSTANCE                                   F9
-nnoremap <silent><F9> :silent !gvim&<CR>
+nnoremap <silent><F9> :sil !gvim&<CR>
 
 " ROTATE WINDOWS RIGHT/LEFT                             F10
 nnoremap <F10> <C-W>x
@@ -110,9 +73,6 @@ nnoremap <silent><S-F11> :bnext!<CR>
 
 " SPLIT WINDOW LEFT|RIGHT                               F12
 nnoremap <silent><F12> :vsplit<CR>
-
-" TOGGLE SPLIT UP DOWN | LEFT RIGHT                     SHIFT + F12
-nnoremap <silent><S-F12> :call <SID>rotate()<CR>
 
 " BLOCK VISUAL                                          SHIFT + ALT + UP
 "                                                       SHIFT + ALT + DOWN

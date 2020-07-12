@@ -1,478 +1,396 @@
 
-function! s:git_branch(...)
-    cal s:git_head()
-    let l:tnr = get(a:, 1, -1)
-    if -1 == l:tnr
-        let l:tnr = s:buf_tab('GIT')
-    else
-        sil exe 'tabn '.l:tnr
-        sil exe "norm \<c-w>k"
-        norm ggvGD
-    endif
-
-    " LOCAL BRANCHES
-    let l:fmt = '%-10s  %-30s  %s'
-    cal s:write(l:fmt, 'COMMIT', 'BRANCH', 'SUBJECT'.repeat(' ', 75).'AUTHOR')
-    cal s:write(repeat('-', 160))
-    let l:lines = systemlist("git show-ref --abbrev --heads")
-    for l:line in l:lines
-        let l:ref = split(l:line)
-        let l:name = substitute(l:ref[1], 'refs/heads/', '', '')
-        let l:subj = s:chomp(system("git log -n1 --pretty='%<(80,trunc)%s  %an' ".l:ref[0]))
-        cal s:write(l:fmt, l:ref[0], l:name, l:subj)
+def! s:git_branch(): void
+    s:git_head()
+    s:opentab('GIT')
+    let rs: list<list<string>>
+    let hs = systemlist("git branch -a --format='%(objectname:short) %(refname)'")
+    for h in hs
+        let p = split(h)
+        # p[1] = substitute(p[1], 'refs/remotes/', '', '')
+        # p[1] = substitute(p[1], 'refs/heads/', '', '')
+        let r = []
+        add(r, p[0])
+        add(r, p[1])
+        p = split(s:chomp(system("git log -n1 --pretty='%as  %an  %s' " .. p[0])), '  ')
+        add(r, p[2])
+        add(r, p[0])
+        add(r, p[1])
+        add(rs, r)
     endfor
-
-    " REMOTES
-    cal s:write('')
-    cal s:write('')
-    cal s:write(l:fmt, 'COMMIT', 'REMOTE BRANCH', 'SUBJECT'.repeat(' ', 75).'AUTHOR')
-    cal s:write(repeat('-', 160))
-    let l:lines = systemlist("git branch -r --format='%(objectname:short) %(refname)'")
-    for l:line in l:lines
-        let l:ref = split(l:line)
-        let l:name = substitute(l:ref[1], 'refs/remotes/', '', '')
-        let l:subj = s:chomp(system("git log -n1 --pretty='%<(80,trunc)%s  %an' ".l:ref[0]))
-        cal s:write(l:fmt, l:ref[0], l:name, l:subj)
+    let cl = s:longest(rs, 0, 7, 100)
+    let bl = s:longest(rs, 1, 10, 100)
+    let sl = s:longest(rs, 2, 7, 100)
+    let f = '%-' .. cl .. 's  %-' .. bl .. 's  %-' .. sl .. 's  %-11s %-20s'
+    let h = printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR')
+    let hl = strchars(h)
+    s:write([h])
+    s:write([repeat('-', hl)])
+    for r in rs
+        s:write([f, r[0], r[1], r[2], r[3], r[4] ])
     endfor
-
-    cal s:write('')
-    cal s:write('')
-    cal s:write('BRANCH: %s', g:head)
-    cal s:write('')
-    cal s:write_shell("git log -n1 %s HEAD", "--pretty=\\%b")
-    cal setline('.', ['',''
-    \,'Press <F4> to view git log of commit under cursor'
-    \,'Press <F4> to checkout branch under cursor'
-    \,'Press <F5> to refresh'
-    \,'Press <F6> to force clean'
-    \,'Press <F7> to hard reset to branch under cursor'
-    \,'Press <DEL> to delete branch under cursor''])
-
+    setline('$', [''
+    \, '<INS> ADD BRANCH   <HOME> CLEAN'
+    \, '<DEL> DEL BRANCH   <END>  RESET (HARD)'
+    \, '<F4>  CHECKOUT     <F5>   REFRESH', '', repeat('-', hl), ''])
+    norm G
+    s:write(['BRANCH: %s', g:head])
+    s:write([''])
+    s:write_shell(["git log -n5 HEAD"])
+    sil exe '%s/\s\+$//e'
+    exe printf('norm %s|', cl + 3)
     exe '3'
-    norm 13|
-    cal s:git_colors()
+    s:git_colors()
+    setl colorcolumn=
+    nnoremap <silent><buffer><INS> :cal <SID>git_branch_new()<CR>
+    nnoremap <silent><buffer><DEL> :cal <SID>git_branch_del()<CR>
+    nnoremap <silent><buffer><HOME> :cal <SID>git_branch_clean()<CR>
+    nnoremap <silent><buffer><END> :cal <SID>git_branch_reset()<CR>
+    nnoremap <silent><buffer><F4> :cal <SID>git_branch_nav()<CR>
+    nnoremap <silent><buffer><F5> :cal <SID>git_branch()<CR>
+enddef
+
+def! s:git_branch_clean(): void
+    s:hell_win('BRANCH', ['git clean -xdf'])
+    s:git_branch()
+enddef
+
+def! s:git_branch_nav(): void
+    let col = col('.')
+    if col > 0 && col < 12
+        s:git_log(expand('<cword>'))
+    elseif col > 10 && col < 80
+        s:hell_win('BRANCH', ['git checkout %s', expand('<cfile>:t')])
+        s:git_branch()
+    endif
+enddef
+
+def! s:git_branch_new(): void
+    s:hell_win('BRANCH', ['git branch %s', expand('<cfile>')])
+    s:git_branch()
+enddef
+
+def! s:git_branch_reset(): void
+    s:hell_win('BRANCH', ['git reset --hard %s', expand('<cfile>')])
+    s:git_branch()
+enddef
+
+def! s:git_branch_del(): void
+    s:hell_win('BRANCH', ['git branch -d %s', expand('<cfile>')])
+    s:git_branch()
+enddef
+
+nnoremap <silent><F5> :cal <SID>git_branch()<CR>
+
+def! s:git_checkout(ref: string): void
+    s:git_head()
+    s:hell(['git checkout %s', ref])
+enddef
+
+
+def! s:git_diff(ref: string): void
+    s:MakeTabBuffer(printf('SUMMARY: %s', ref))
     setl colorcolumn=
 
-    sil exe printf('nnoremap <silent><buffer><F4> :cal <SID>git_branch_nav(%d)<CR>', l:tnr)
-endfunction
+    s:git_head()
+    s:write(['FILES %-84s %-8s  %-8s  %-8s  %-14s %s', ref, 'BEFORE', 'AFTER', g:head, 'COMPARE', 'SIDE BY SIDE'])
+    s:write([repeat('-', 160)])
 
-function! s:git_branch_clean(tnr)
-    cal s:hell_win('BRANCH', 'git clean -xdf')
-    cal s:git_branch(a:tnr)
-endfunction
+    let after: string
+    let before: string
+    let deled: number
+    let fil: string
+    let foo: number
+    let his: list<string>
+    let lhist: number
+    let stats: list<string>
+    let items: list<string>
 
-function! s:git_branch_nav(tnr)
-    let l:col = col('.')
-    if l:col > 0 && l:col < 12
-        cal s:git_log(expand('<cword>'))
-    elseif l:col > 10 && l:col < 80
-        cal s:hell_win('BRANCH', 'git checkout %s', expand('<cfile>:t'))
-        cal s:git_branch(a:tnr)
-    endif
-endfunction
+    items = s:hell_list(['git diff --numstat %s~1 %s', ref, ref])
+    for item in items
+        stats = matchlist(item, '\(\d\+\)\s\(\d\+\)\s\(.*\)')
+        foo = str2nr(stats[1])
+        deled = str2nr(stats[2])
+        fil = stats[3]
+        his = s:hell_list(["git log -n3 --pretty=%s %s -- '%s'", '%h', ref, fil])
+        lhist = len(his)
 
-function! s:git_branch_reset(tnr)
-    cal s:hell_win('BRANCH', 'git reset --hard %s', expand('<cfile>'))
-    cal s:git_branch(a:tnr)
-endfunction
+        if lhist == 1
+            before = 'ADDED'
+            after = ref
 
-function! s:git_branch_del(tnr)
-    cal s:hell_win('BRANCH', 'git branch -d %s', expand('<cfile>'))
-    cal s:git_branch(a:tnr)
-endfunction
+        elseif lhist == 2
+            before = his[1]
+            "if foo > 1
+                after = ref
+            "else
+                s:hell(["git show '%s:%s'", ref, fil])
+                after = v:shell_error ? 'DELETED' : ref
+            "endif
 
-function! s:git_checkout(ref)
-    cal s:git_head()
-    cal s:shell('git checkout %s', a:ref)
-endfunction
-
-function! s:git_branch2(...)
-    cal s:git_head()
-    let l:tnr = get(a:, 1, -1)
-    if -1 == l:tnr
-        let l:tnr = s:buf_tab('GIT')
-    else
-        sil exe 'tabn '.l:tnr
-        sil exe "norm \<c-w>k"
-        norm ggvGD
-    endif
-
-    cal s:write('  BRANCH                        COMMIT  SUBJECT')
-    cal s:write(repeat('-', 100))
-    cal s:write_shell('git branch -av')
-    cal s:write('')
-    cal s:write('Press <F4> to checkout branch under cursor')
-    cal s:write('Press <F5> to refresh')
-    cal s:write('Press <F6> to force clean')
-    cal s:write('Press <F7> to hard reset to branch under cursor')
-    cal s:write('Press <DEL> to delete branch under cursor')
-    exe '3'
-    norm 3|
-    cal s:git_colors()
-    setl colorcolumn=
-
-    noremap <silent><buffer><2-LeftMouse> :cal <SID>git_branch_nav()<CR>
-    sil exe printf('nnoremap <silent><buffer><F4> :cal <SID>git_branch_nav(%d)<CR>', l:tnr)
-    sil exe printf('nnoremap <silent><buffer><F5> :cal <SID>git_branch(%d)<CR>', l:tnr)
-    sil exe printf('nnoremap <silent><buffer><F6> :cal <SID>git_branch_clean(%d)<CR>', l:tnr)
-    sil exe printf('nnoremap <silent><buffer><F7> :cal <SID>git_branch_reset(%d)<CR>', l:tnr)
-    sil exe printf('nnoremap <silent><buffer><DEL> :cal <SID>git_branch_del(%d)<CR>', l:tnr)
-endfunction
-
-function! s:git_colors()
-    syn case ignore
-    syn keyword Comment boron carbon dublin ede havana herne hilla hobart
-    syn keyword Comment hofu freetown master ibaraki
-    syn keyword DiffAdd added
-    syn keyword DiffDelete deleted
-    syn keyword Function arch architect edoc happy head hector jjoker rekam
-    syn keyword Statement hub origin remotes usb vso
-    syn keyword String x86 x64 anycpu
-    syn keyword Good modified
-    syn region String start="`" end="`" contains=@NoSpell oneline
-    syn region String start='"' end='"' contains=@NoSpell oneline
-    syn match String "\d\+\.\d\+"
-    syn match String "\d\+\.\d\+\.\d\+"
-    syn match String "\d\+\.\d\+\.\d\+\.\d\+"
-    syn match String "\d\+\.\d\+\.\d\+\.\d\+\.\d\+"
-    syn match Identifier "#\=\d\{5}"
-    syn match Keyword "[0-9a-f]\{7,8}" contains=@NoSpell
-    syn match Function '^<.*' contains=@NoSpell
-    hi Bad  guifg=#ee3020
-    hi Good guifg=#00b135
-endfunction
-
-function! s:git_diff(ref)
-    cal s:MakeTabBuffer(printf('SUMMARY: %s', a:ref))
-    setlocal colorcolumn=
-
-    cal s:git_head()
-    cal s:write('FILES %-84s %-8s  %-8s  %-8s  %-14s %s', a:ref, 'BEFORE', 'AFTER', g:head, 'COMPARE', 'SIDE BY SIDE')
-    cal s:write(repeat('-', 160))
-
-    let l:items = s:shell_list('git diff --numstat %s~1 %s', a:ref,a:ref)
-    for l:item in l:items
-        let l:stats = matchlist(l:item, '\(\d\+\)\s\(\d\+\)\s\(.*\)')
-        let l:add = str2nr(stats[1])
-        let l:del = str2nr(stats[2])
-        let l:file = stats[3]
-
-        let l:hist = s:shell_list("git log -n3 --pretty=%s %s -- '%s'", '%h', a:ref, l:file)
-        if len(l:hist) == 1
-            let l:before = 'ADDED'
-            let l:after = a:ref
-        elseif len(l:hist) == 2
-            let l:before = l:hist[1]
-            if l:add > 1
-                let l:after = a:ref
-            else
-                cal s:shell("git show '%s:%s'", a:ref, l:file)
-                if v:shell_error
-                    let l:after = 'DELETED'
-                else
-                    let l:after = a:ref
-                endif
-            endif
         else
-            let l:before = l:hist[1]
-            if l:add > 1
-                let l:after = a:ref
+            before = his[1]
+            if foo > 1
+                after = ref
             else
-                cal s:shell("git show '%s:%s'", a:ref, l:file)
-                if v:shell_error
-                    let l:after = 'DELETED'
-                else
-                    let l:after = a:ref
-                endif
+                s:hell(["git show '%s:%s'", ref, fil])
+                after = v:shell_error ? 'DELETED' : ref
             endif
         endif
 
-        " HEAD
-        if filereadable(l:file)
-            let l:current = g:head
-        else
-            let l:current = 'DELETED'
-        endif
-
-        cal s:write('%-90s %-8s  %-8s  %-8s  B:A  B:H  A:H  B-A  B-H  A-H', l:file, l:before, l:after, l:current)
+        let current = filereadable(fil) ? g:head : 'DELETED'
+        s:write(['%-90s %-8s  %-8s  %-8s  B:A  B:H  A:H  B-A  B-H  A-H', fil, before, after, current])
     endfor
-    cal s:write('')
-
+    s:write([''])
     exe '3'
-    cal s:git_colors()
+    s:git_colors()
     syn region String start="\%>2l" end="\%90c" contains=@NoSpell oneline
 
     noremap <silent><buffer><2-LeftMouse> :cal <SID>git_diff_nav()<CR>
     nnoremap <silent><buffer><F4> :cal <SID>git_diff_nav()<CR>
-    exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_diff('%s')<CR>", a:ref)
-endfunction
+    exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_diff('%s')<CR>", ref)
+enddef
 
-function! s:git_diff_nav()
-    let l:col = col('.')
-    let l:lnr = line('.')
-    let l:lin = getline(l:lnr)
+def! s:git_diff_nav(): void
+    let col = col('.')
+    let lnr = line('.')
+    let lin = getline(lnr)
 
-    " FILE
-    let l:file = trim(strcharpart(l:lin, 0, 90))
-    if l:col > 0 && l:col < 92
-        if filereadable(l:file)
-            silent exe printf('tabnew %s', l:file)
+    let before: string
+    let after: string
+    let head: string
+    let syntax: string
+
+    # FILE
+    let file = trim(strcharpart(lin, 0, 90))
+    if col > 0 && col < 92
+        if filereadable(file)
+            sil exe printf('tabnew %s', file)
         endif
 
-    " BEFORE
-    elseif l:col > 91 && l:col < 102
-        let l:before = trim(strcharpart(l:lin, 91, 8))
-        cal s:git_show(l:before, l:file)
+    # BEFORE
+    elseif col > 91 && col < 102
+        before = trim(strcharpart(lin, 91, 8))
+        s:git_show(before, file)
 
-    " AFTER
-    elseif l:col > 101 && l:col < 112
-        let l:after  = trim(strcharpart(l:lin, 101, 8))
-        cal s:git_show(l:after, l:file)
+    # AFTER
+    elseif col > 101 && col < 112
+        after = trim(strcharpart(lin, 101, 8))
+        s:git_show(after, file)
 
-    " HEAD
-    elseif l:col > 111 && l:col < 121
-        let l:head = trim(strcharpart(l:lin, 111, 8))
-        cal s:git_show(l:head, l:file)
+   # HEAD
+   elseif col > 111 && col < 121
+        head = trim(strcharpart(lin, 111, 8))
+        s:git_show(head, file)
 
     " BEFORE AFTER
-    elseif l:col > 121 && l:col < 127
-        let l:after = trim(strcharpart(l:lin, 101, 8))
-        let l:before = trim(strcharpart(l:lin, 91, 8))
+    elseif col > 121 && col < 127
+        after = trim(strcharpart(lin, 101, 8))
+        before = trim(strcharpart(lin, 91, 8))
 
-        if l:before == 'DELETED' || l:after == 'DELETED'
-            return
-        endif
+       if before == 'DELETED' || after == 'DELETED'
+           return
+       endif
 
-        sil cal s:git_show(l:after, l:file)
-        let l:syntax = &syntax
-        exe 'vsplit'
-        cal s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        cal s:write_shell("git show '%s:%s'", l:before, l:file)
-        if l:syntax
-            exe printf('setf %s', l:syntax)
-        endif
-        exe 'windo diffthis'
-        normal gg
+       s:git_show(after, file)
+       syntax = &syntax
+       exe 'vsplit'
+       s:NewOrReplaceBuffer(printf('%s:%s', before, file))
+       s:write_shell(["git show '%s:%s'", before, file])
+       if syntax
+           exe printf('setf %s', syntax)
+       endif
+       exe 'windo diffthis'
+       norm gg
 
-    " BEFORE HEAD
-    elseif l:col > 126 && l:col < 131
-        let l:before = trim(strcharpart(l:lin, 91, 8))
-        let l:head = trim(strcharpart(l:lin, 111, 8))
-        if l:before == 'DELETED' || l:head == 'DELETED'
-            return
-        endif
+    # BEFORE HEAD
+    #    elseif col > 126 && col < 131
+    #        before = trim(strcharpart(lin, 91, 8))
+    #        head = trim(strcharpart(lin, 111, 8))
+    #        if before == 'DELETED' || head == 'DELETED'
+    #            retu
+    #        endif
+    #
+    #        exe printf('tabnew %s', file)
+    #        syntax = &syntax
+    #        exe 'vsplit'
+    #        s:NewOrReplaceBuffer(printf('%s:%s', before, file))
+    #        s:write_shell(["git show '%s:%s'", before, file])
+    #        exe printf('setf %s', syntax)
+    #        exe 'windo diffthis'
+    #        norm gg
 
-        exe printf('tabnew %s', l:file)
-        let l:syntax = &syntax
-        exe 'vsplit'
-        cal s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        cal s:write_shell("git show '%s:%s'", l:before, l:file)
-        exe printf('setf %s', l:syntax)
-        exe 'windo diffthis'
-        normal gg
+    # AFTER HEAD
+    #    elseif col > 131 && col < 136
+    #        after = trim(strcharpart(lin, 101, 8))
+    #        head = trim(strcharpart(lin, 111, 8))
+    #        if after == 'DELETED' || head == 'DELETED'
+    #            return
+    #        endif
+    #
+    #        exe printf('tabnew %s', file)
+    #        syntax = &syntax
+    #        exe 'vsplit'
+    #        s:NewOrReplaceBuffer(printf('%s:%s', after, file))
+    #        s:write_shell(["git show '%s:%s'", after, file])
+    #        exe printf('setf %s', syntax)
+    #        exe 'windo diffthis'
+    #        norm gg
 
-    " AFTER HEAD
-    elseif l:col > 131 && l:col < 136
-        let l:after = trim(strcharpart(l:lin, 101, 8))
-        let l:head = trim(strcharpart(l:lin, 111, 8))
-        if l:after == 'DELETED' || l:head == 'DELETED'
-            return
-        endif
+    # SXS - BEFORE AFTER
+    #    elseif col > 136 && col < 141
+    #        after = trim(strcharpart(lin, 101, 8))
+    #        before = trim(strcharpart(lin, 91, 8))
+    #
+    #        if before == 'DELETED' || after == 'DELETED'
+    #            return
+    #        endif
+    #
+    #        s:git_show(after, file)
+    #        syntax = &syntax
+    #        exe 'vsplit'
+    #        s:NewOrReplaceBuffer(printf('%s:%s', before, file))
+    #        s:write_shell(["git show '%s:%s'", before, file])
+    #        if syntax
+    #            exe printf('setf %s', syntax)
+    #        endif
+    #        norm gg
 
-        exe printf('tabnew %s', l:file)
-        let l:syntax = &syntax
-        exe 'vsplit'
-        cal s:NewOrReplaceBuffer(printf('%s:%s', l:after, l:file))
-        cal s:write_shell("git show '%s:%s'", l:after, l:file)
-        exe printf('setf %s', l:syntax)
-        exe 'windo diffthis'
-        normal gg
+    # SXS - BEFORE HEAD
+    #    elseif col > 141 && col < 146
+    #        before = trim(strcharpart(lin, 91, 8))
+    #        head = trim(strcharpart(lin, 111, 8))
+    #        if before == 'DELETED' || head == 'DELETED'
+    #            return
+    #        endif
+    #
+    #        exe printf('tabnew %s', file)
+    #        syntax = &syntax
+    #        exe 'vsplit'
+    #        s:NewOrReplaceBuffer(printf('%s:%s', before, file))
+    #        s:write_shell(["git show '%s:%s'", before, file])
+    #        exe printf('setf %s', syntax)
+    #        exe 'windo diffthis'
+    #        norm gg
 
-    " SXS - BEFORE AFTER
-    elseif l:col > 136 && l:col < 141
-        let l:after = trim(strcharpart(l:lin, 101, 8))
-        let l:before = trim(strcharpart(l:lin, 91, 8))
-
-        if l:before == 'DELETED' || l:after == 'DELETED'
-            return
-        endif
-
-        cal s:git_show(l:after, l:file)
-        let l:syntax = &syntax
-        exe 'vsplit'
-        cal s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        cal s:write_shell("git show '%s:%s'", l:before, l:file)
-        if l:syntax
-            exe printf('setf %s', l:syntax)
-        endif
-        normal gg
-
-    " SXS - BEFORE HEAD
-    elseif l:col > 141 && l:col < 146
-        let l:before = trim(strcharpart(l:lin, 91, 8))
-        let l:head = trim(strcharpart(l:lin, 111, 8))
-        if l:before == 'DELETED' || l:head == 'DELETED'
-            return
-        endif
-
-        exe printf('tabnew %s', l:file)
-        let l:syntax = &syntax
-        exe 'vsplit'
-        cal s:NewOrReplaceBuffer(printf('%s:%s', l:before, l:file))
-        cal s:write_shell("git show '%s:%s'", l:before, l:file)
-        exe printf('setf %s', l:syntax)
-        exe 'windo diffthis'
-        normal gg
-
-    " SXS - AFTER HEAD
+    # SXS - AFTER HEAD
     else
-        let l:after = trim(strcharpart(l:lin, 101, 8))
-        let l:head = trim(strcharpart(l:lin, 111, 8))
-        if l:after == 'DELETED' || l:head == 'DELETED'
-            return
-        endif
-
-        exe printf('tabnew %s', l:file)
-        let l:syntax = &syntax
-        exe 'vsplit'
-        cal s:NewOrReplaceBuffer(printf('%s:%s', l:after, l:file))
-        cal s:write_shell("git show '%s:%s'", l:after, l:file)
-        exe printf('setf %s', l:syntax)
-        normal gg
+        #        after = trim(strcharpart(lin, 101, 8))
+        #        head = trim(strcharpart(lin, 111, 8))
+        #        if after == 'DELETED' || head == 'DELETED'
+        #            return
+        #        endif
+        #
+        #        exe printf('tabnew %s', file)
+        #        syntax = &syntax
+        #        exe 'vsplit'
+        #        s:NewOrReplaceBuffer(printf('%s:%s', after, file))
+        #        s:write_shell(["git show '%s:%s'", after, file])
+        #        exe printf('setf %s', syntax)
+        #        norm gg
     endif
-endfunction
+enddef
 
-function! s:git_fetch(remote)
-    cal s:hell_tab('FETCH', 'git fetch %s', a:remote)
-    setlocal colorcolumn=
-    cal s:git_colors()
+def! s:git_fetch(remote: string): void
+    s:hell_tab('FETCH', ['git fetch %s', remote])
+    setl colorcolumn=
+    s:git_colors()
     syn case ignore
     syn match Bad "forced update"
     syn match Good "[new branch]"
     hi Bad guifg=#ee3020
     hi Good guifg=#00b135
-endfunction
+enddef
 
-function! s:git_head()
-    let g:head = get(a:, 1, s:chomp(system('git rev-parse --abbrev-ref HEAD')))
-endfunction
 
 "
 " DISPLAY GIT LOG HISTORY AND BRANCHES IN A NEW TAB
 "
-function! s:git_log(...)
-    cal s:git_head()
+def! s:git_log(head: any = g:head): void
+    s:git_head()
+    s:MakeTabBuffer(printf('LOG: %s', head))
+    s:write(['TREE      COMMIT    %-81s AUTHOR', head])
+    s:write([repeat('-', 130)])
 
-    let l:head = get(a:, 1, g:head)
+    s:write_shell(["git log -n75 --pretty=format:'%s' %s"
+                \, '\%<(8)\%t  \%<(8)\%h  \%<(80,trunc)\%s  \%<(16)\%an  \%as'
+                \, head])
 
-    cal s:MakeTabBuffer(printf('LOG: %s', l:head))
-    cal s:write('TREE      COMMIT    %-81s AUTHOR', l:head)
-    cal s:write(repeat('-', 130))
+    s:write([''])
+    s:write(['TREE      COMMIT    TAG/REMOTE'])
+    s:write([repeat('-', 130)])
 
-    cal s:write_shell("git log -n75 --pretty=format:'%s' %s"
-                \ ,'\%<(8)\%t  \%<(8)\%h  \%<(80,trunc)\%s  \%<(16)\%an  \%as'
-                \ ,l:head)
+    let refs = s:hell_list(['git rev-parse --short --tags --branches --remotes HEAD'])
+    sort(refs)
+    uniq(refs)
 
-    cal s:write('')
-    cal s:write('TREE      COMMIT    TAG/REMOTE')
-    cal s:write(repeat('-', 130))
-
-    let l:refs = s:shell_list('git rev-parse --short --tags --branches --remotes HEAD')
-    cal sort(l:refs)
-    cal uniq(l:refs)
-
-    for l:ref in l:refs
-         let l:msg = s:shell("git log -n1 --pretty=format:'%s' %s", '%<(8)%t  %<(8)%h  %<(80,trunc)%D  %<(16)%an  %as', l:ref)
-         cal s:write(l:msg)
+    for ref in refs
+         let msg = s:hell(["git log -n1 --pretty=format:'%s' %s", '%<(8)%t  %<(8)%h  %<(80,trunc)%D  %<(16)%an  %as', ref])
+         s:write([msg])
     endfor
 
     normal gg
     normal 21|
-    setlocal colorcolumn=
-    cal s:git_colors()
+    setl colorcolumn=
+    s:git_colors()
 
     noremap <silent><buffer><2-LeftMouse> :cal <SID>git_log_nav()<CR>
     nnoremap <silent><buffer><F4> :cal <SID>git_log_nav()<CR>
-    exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_log('%s')<CR>", l:head)
-endfunction
+    exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_log('%s')<CR>", head)
+enddef
 
-function! s:git_log_file(path)
-    cal s:MakeTabBuffer('TRACE')
-    cal s:write('COMMIT   %-80s DATE       AUTHOR', a:path)
-    cal s:write(repeat('-', 130))
-    cal s:write_shell("git log --pretty=format:'%s' -- '%s'"
+def! s:git_log_file(path: string): void
+    s:MakeTabBuffer('TRACE')
+    s:write(['COMMIT   %-80s DATE       AUTHOR', path])
+    s:write([repeat('-', 130)])
+    s:write_shell(["git log --pretty=format:'%s' -- '%s'"
                     \,'\%<(8)\%h \%<(80,trunc)\%s \%cs \%an'
-                    \,a:path)
+                    \,path])
 
     exe '3'
     normal 1|
-    setlocal colorcolumn=
-    cal s:git_colors()
+    setl colorcolumn=
+    s:git_colors()
 
-    exe printf("noremap <silent><buffer><2-LeftMouse> :cal <SID>git_trace_nav('%s')<CR>", a:path)
-    exe printf("nnoremap <silent><buffer><F4> :cal <SID>git_trace_nav('%s')<CR>", a:path)
-    exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_log_file('%s')<CR>", a:path)
-endfunction
+    exe printf("noremap <silent><buffer><2-LeftMouse> :cal <SID>git_trace_nav('%s')<CR>", path)
+    exe printf("nnoremap <silent><buffer><F4> :cal <SID>git_trace_nav('%s')<CR>", path)
+    exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_log_file('%s')<CR>", path)
+enddef
 
-function! s:git_trace_nav(path)
-    cal s:git_show(expand('<cword>'), a:path)
-endfunction
+def! s:git_trace_nav(path: string): void
+    s:git_show(expand('<cword>'), path)
+enddef
 
 " JUMP TO A NEW LOCATION BASED ON CURSOR IN GITLIST
-function! s:git_log_nav()
-    let l:col = col('.')
-    if l:col > 0 && l:col < 11
-        cal s:git_diff(expand('<cword>'))
-    elseif l:col > 10 && l:col < 21
-        cal s:git_diff(expand('<cword>'))
+def! s:git_log_nav(): void
+    let col = col('.')
+    if col > 0 && col < 11
+        s:git_diff(expand('<cword>'))
+    elseif col > 10 && col < 21
+        s:git_diff(expand('<cword>'))
     else
-        cal s:git_log(expand('<cfile>'))
+        s:git_log(expand('<cfile>'))
     endif
-endfunction
+enddef
 
-function! s:git_prune(remote)
-    cal s:hell_tab('PRUNE', 'git remote prune %s', a:remote)
-endfunction
+def! s:git_prune(remote: string): void
+    s:hell_tab('PRUNE', ['git remote prune %s', remote])
+enddef
 
-function! s:git_show(ref, file)
-    if a:ref == 'DELETED' || a:ref == 'ADDED'
+def! s:git_show(ref: string, file: string): void
+    if ref == 'DELETED' || ref == 'ADDED'
         return
     endif
 
-    let l:cmd = printf("git show '%s:%s'", a:ref, a:file)
-    sil cal s:hell_tab(printf('%s:%s', a:ref, a:file), l:cmd)
-endfunction
+    let cmd = printf("git show '%s:%s'", ref, file)
+    sil s:hell_tab(printf('%s:%s', ref, file), [cmd])
+enddef
 
-function! s:get_tab(...)
-    let l:tnr = get(a:, 1, -1)
-    let l:title = get(a:, 2, '')
-    if -1 == l:tnr
-        let l:tnr = s:buf_tab(l:title)
-    else
-        sil exe 'tabn '.l:tnr
-        sil exe "norm \<c-w>k"
-        norm ggvGD
-    endif
-    return l:tnr
-endfunction
 
-function! s:git_status()
-    cal s:git_head()
-    cal s:opentab('STATUS')
-    cal s:write_shell('git status')
-    cal setline('$',[''
-    \,'<INS> ADD ALL    <PGUP> PUSH'
-    \,'<END> COMMIT     <PGDN> FETCH'
-    \,'<F6>  GIT GUI    <F7>   GIT LOG (COMMIT UNDER CURSOR)'
-    \,'<F8>  REFRESH','','',repeat('-',80),''])
-    norm G
-    cal s:write_shell('git log -n5')
-    cal s:git_colors()
-    setl colorcolumn=
-    norm gg
-    nnoremap <silent><buffer><END> :sil Gcommit<CR>
-    nnoremap <silent><buffer><INS> :cal <SID>hell_win('SO', 'git add .') <bar> cal <SID>git_status()<CR>
-    nnoremap <silent><buffer><PageDown> :cal <SID>hell_win('SO', 'git fetch') <bar> cal <SID>git_status()<CR>
-    nnoremap <silent><buffer><PageUp> :cal <SID>hell_win('SO', 'git push') <bar> cal <SID>git_status()<CR>
-    nnoremap <silent><buffer><F7> :cal <SID>git_log(expand('<cword>'))<CR>
-endfunction
+
+" RESERVED                                              F6
+nnoremap <silent><F6> :sil !git gui&<CR>
+
+" GIT GUI                                               F7
+nnoremap <silent><F7> :cal <SID>git_log()<CR>
+
+" GIT STATUS                                            F8

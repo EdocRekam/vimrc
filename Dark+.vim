@@ -85,6 +85,8 @@ hi Keyword          gui=NONE      guibg=#1e1e1e guifg=#569cd6 cterm=NONE ctermbg
 hi StorageClass     gui=NONE      guibg=#1e1e1e guifg=#569cd6 cterm=NONE ctermbg=0  ctermfg=6
 hi Type             gui=NONE      guibg=#1e1e1e guifg=#569cd6 cterm=NONE ctermbg=0  ctermfg=6
 
+" LIGHT BLUE #9cdcfe
+
 " GREEN #6A9955
 hi Comment          gui=NONE      guibg=#1e1e1e guifg=#6a9955 cterm=NONE ctermbg=0  ctermfg=2
 

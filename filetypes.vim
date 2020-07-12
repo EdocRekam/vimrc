@@ -1,5 +1,4 @@
 
-
 function! s:LoadCSharp()
     setf cs
 
