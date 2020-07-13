@@ -315,7 +315,7 @@ def! GitStatus()
     nnoremap <silent><buffer><INS> :cal <SID>GitStatusAdd()<CR>
     nnoremap <silent><buffer><PageDown> :cal <SID>GitStatusFetch()<CR>
     nnoremap <silent><buffer><PageUp> :cal <SID>GitStatusPush()<CR>
-    # nnoremap <silent><buffer><F7> :cal <SID>GitLog(expand('<cword>'))<CR>
+    nnoremap <silent><buffer><F7> :cal <SID>GitLog(expand('<cword>'))<CR>
 enddef
 nnoremap <silent><F8> :cal <SID>GitStatus()<CR>
 
