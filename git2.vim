@@ -7,6 +7,10 @@ def! GitHead(): string
     retu g:head
 enddef
 
+def! GitPrune(remote: string)
+    OpenWinShell('PRUNE', ['git remote prune %s', remote])
+enddef
+
 def! GitShow(commit: string, path: string)
     if commit == 'DELETED' || commit == 'ADDED'
         retu
@@ -273,6 +277,24 @@ def! GitLog(commit: string = 'AUTO')
     nnoremap <silent><buffer><F7> :cal <SID>GitLog(expand('<cfile>'))<CR>
 enddef
 nnoremap <silent><F7> :cal <SID>GitLog(g:head)<CR>
+
+def! GitLogPath(path: string)
+    OpenTab('TRACE')
+    Write(['COMMIT   %-80s DATE       AUTHOR', path])
+    Write([repeat('-', 130)])
+    WriteShell(["git log --pretty=format:'%s' -- '%s'",
+        '\%<(8)\%h \%<(80,trunc)\%s \%cs \%an',
+        path])
+
+    exe '3'
+    normal 1|
+    setl colorcolumn=
+    GitColors()
+
+    exe printf("noremap <silent><buffer><2-LeftMouse> :cal <SID>git_trace_nav('%s')<CR>", path)
+    exe printf("nnoremap <silent><buffer><F4> :cal <SID>git_trace_nav('%s')<CR>", path)
+    exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_log_file('%s')<CR>", path)
+enddef
 
 def! GitLogNav()
     let col = col('.')
