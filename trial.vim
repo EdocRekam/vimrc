@@ -66,6 +66,8 @@ def! OpenWin(title: string): number
     let ids = win_findbuf(bufnr(title))
     if empty(ids)
         exe 'sil new ' .. title
+        exe "norm gg\<c-w>J"
+        resize 20
         setl buftype=nofile
         setl noswapfile
     else
@@ -91,7 +93,6 @@ enddef
 def! OpenWinShell(title: string, args: list<any>)
     OpenWin(title)
     exe 'sil -1read !' .. call('printf', args)
-    exe "sil norm gg\<c-w>J"
 enddef
 
 def! Shell(args: list<string>): string

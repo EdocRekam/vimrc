@@ -68,7 +68,7 @@ def! GitBranch()
         let p = split(h)
         let commit = p[0]
         let ref = substitute(p[1], 'refs/remotes/', '', '')
-        ref = substitute(p[1], 'refs/heads/', '', '')
+        ref = substitute(ref, 'refs/heads/', '', '')
         let r = []
         add(r, commit)
         add(r, ref)
@@ -97,7 +97,7 @@ def! GitBranch()
     Write(['BRANCH: %s', g:head])
     Write([''])
     WriteShell(["git log -n5 HEAD"])
-    exe '%s/\s\+$//e'
+    exe 'sil %s/\s\+$//e'
     exe printf('norm %s|', cl + 3)
     exe '3'
     GitColors()
@@ -111,37 +111,22 @@ enddef
 nnoremap <silent><F5> :cal <SID>GitBranch()<CR>
 
 def! GitBranchClean(): void
-    OpenWin('BRANCH')
-    WriteShell(['git clean -xdf'])
+    OpenWinShell('BRANCH', ['git clean -xdf'])
     GitBranch()
 enddef
 
 def! GitBranchDel()
-    OpenWin('BRANCH')
-    WriteShell(['git branch -d %s', expand('<cfile>')])
+    OpenWinShell('BRANCH', ['git branch -d %s', expand('<cfile>')])
     GitBranch()
 enddef
 
-def! GitBranchNav()
-    let col = col('.')
-    if col > 0 && col < 12
-        call <SID>GitLog(expand('<cword>'))
-    elseif col > 10 && col < 80
-        OpenWin('BRANCH')
-        WriteShell(['git checkout %s', expand('<cfile>:t')])
-        GitBranch()
-    endif
-enddef
-
 def! GitBranchNew()
-    OpenWin('BRANCH')
-    WriteShell(['git branch %s', expand('<cfile>')])
+    OpenWinShell('BRANCH', ['git branch %s', expand('<cfile>')])
     GitBranch()
 enddef
 
 def! GitBranchReset()
-    OpenWin('BRANCH')
-    WriteShell(['git reset --hard %s', expand('<cfile>')])
+    OpenWinShell('BRANCH', ['git reset --hard %s', expand('<cfile>')])
     GitBranch()
 enddef
 
@@ -297,6 +282,17 @@ def! GitLogNav()
         GitDiff(expand('<cword>'))
     else
         GitLog(expand('<cfile>'))
+    endif
+enddef
+
+def! GitBranchNav()
+    if col('.') < 10
+        echom expand('<cword>')
+        GitLog(expand('<cword>'))
+    else
+        let cmd = 'git checkout ' .. expand('<cfile>:t')
+        OpenWinShell('BRANCH', [cmd])
+        GitBranch()
     endif
 enddef
 
