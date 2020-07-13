@@ -1,3 +1,5 @@
+vim9script
+
 " NO VI COMPATIBILITY
 set nocp
 set encoding=utf-8
@@ -70,6 +72,6 @@ def! g:GetStatus(): string
     let enc = strlen(&fenc) ? '  ' .. toupper(&fenc) : '  PLAIN'
     let bom = &bomb ? '  with BOM' : ''
     let le = &ff == 'unix' ? '  LF' : '  CRLF'
-    return head .. '%M%<%f%=' .. sel .. '  Col %c' .. enc .. bom .. le .. '  %Y'
+    retu head .. '%M%<%f%=' .. sel .. '  Col %c' .. enc .. bom .. le .. '  %Y'
 enddef
 set statusline=%!g:GetStatus()

@@ -1,69 +1,69 @@
 
-def! s:chomp(msg: string): string
+def! Chomp(msg: string): string
     retu strcharpart(msg, 0, strchars(msg) - 1)
 enddef
 
-def! s:findfile(val: string)
-    exe printf('grep! -rn  %s *', val)
+def! FindInFile(val: string)
+    exe printf("sil grep! -rn  '%s' *", val)
     copen 35
 enddef
-command! -nargs=1 Find cal <SID>findfile('<args>')
+command! -nargs=1 Find :cal <SID>FindInFile('<args>')
 
-def! s:notabs()
+def! NoTabs()
     update
     setl expandtab
     retab
     update
 enddef
 
-def! s:lower()
+def! Lower()
     norm gvugv
 enddef
 
-def! s:ource_file()
+def! SourceFile()
     exe 'w'
-    exe 'so %'
+    exe 'sil so %'
 enddef
-nnoremap <silent><S-F5> :cal <SID>ource_file()<CR>
+nnoremap <silent><S-F5> :cal <SID>SourceFile()<CR>
 
-def! s:rename(): void
+def! Rename(): void
     let val = input('Value: ')
-    exe '%s//' .. val .. '/g'
+    exe '%s/' .. expand('<cword>') .. '/' .. val .. '/g'
 enddef
-nnoremap <silent><F2> :cal <SID>rename()<CR>
+nnoremap <silent><F2> :cal <SID>Rename()<CR>
 
 let s:orient = 'H'
-def! s:rotate()
+def! Rotate()
     s:orient = s:orient == 'H' ? 'K' : 'H'
     exe 'wincmd ' .. s:orient
 enddef
-nnoremap <silent><S-F12> :cal <SID>rotate()<CR>
+nnoremap <silent><S-F12> :cal <SID>Rotate()<CR>
 
-def! s:tartup()
+def! Startup()
     if filereadable('session.vim')
         exe 'so session.vim'
     endif
 enddef
-au VimEnter * ++once :cal <SID>tartup()
+au VimEnter * ++once : cal Startup()
 
-def! s:tocrlf()
+def! ToCrlf()
    :up
    :e ++ff=unix
    setl ff=dos
    :up
 enddef
 
-def! s:tolf()
+def! ToLf()
     :up
     :e ++ff=dos
     setl ff=unix
     :up
 enddef
 
-def! s:upper()
+def! Upper()
     norm gvUgv
 enddef
 
-def! s:vim_dir(): string
+def! VimDir(): string
     retu has('linux') ? $HOME .. '/.vim/' : $HOME .. '/vimfiles/'
 enddef

@@ -2,7 +2,7 @@
 
 def! s:callback(winid: number, result: number): number
     if result == -1
-        return 1
+        retu 1
     endif
     let ask: string
     let path: string
@@ -108,14 +108,14 @@ def! s:callback(winid: number, result: number): number
     elseif id == 45
         s:git_branch()
     endif
-    return 1
+    retu 1
 enddef
 
 def! s:filter(winid: number, key: string): number
 
     if key == "\<F1>"
         popup_close(winid, -1)
-        return 1
+        retu 1
     endif
 
     " PASS
@@ -125,14 +125,14 @@ def! s:filter(winid: number, key: string): number
       \ || key == "\<F11>" || key == "\<F12>"
         popup_close(winid, -1)
         feedkeys(key)
-        return 1
+        retu 1
     endif
 
     " PRINTABLE CHAR
     if 0 == match(key, '\p')
        " IGNORE THESE
         if key == ':'
-            return popup_filter_menu(winid, key)
+            retu popup_filter_menu(winid, key)
         endif
 
         " ACCUMULATE
@@ -141,7 +141,7 @@ def! s:filter(winid: number, key: string): number
         s:FilterBuffer(s:menuId[1])
         s:accum += 1
         s:wid = popup_create(s:menuId[1], s:opts)
-        return 1
+        retu 1
     endif
 
     " NONPRINTABLE
@@ -149,21 +149,21 @@ def! s:filter(winid: number, key: string): number
         " NOTHING TO DO
         if s:accum < 1
             popup_close(winid, -1)
-            return 1
+            retu 1
         endif
 
         " REGRESS
         popup_close(winid, -1)
         s:RestoreBuffer()
-        s:opts.title = s:chomp(s:opts.title)
+        s:opts.title = Chomp(s:opts.title)
         s:FilterBuffer(s:menuId[1])
         s:accum -= 1
         s:wid = popup_create(s:menuId[1], s:opts)
     else
-        return popup_filter_menu(winid, key)
+        retu popup_filter_menu(winid, key)
     endif
 
-    return 1
+    retu 1
 enddef
 
 def! s:mnu_init()
@@ -201,7 +201,7 @@ enddef
 def! s:GetCmdId(result: number): number
     let l = getbufline(s:menuId[1], result)[0]
     let nr = strcharpart(l, 39, 4)
-    return str2nr(nr)
+    retu str2nr(nr)
 enddef
 
 def! s:RestoreBuffer()

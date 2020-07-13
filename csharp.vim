@@ -33,14 +33,14 @@ endfunction
 
 function! Csharp_get_indent()
     if getline(v:lnum)[0] == 'n'
-        return ">1"
+        retu ">1"
     else
-        return 1
+        retu 1
     endif
 endfunction
 
 function! Csharp_get_foldtext()
-    return getline(v:foldstart)
+    retu getline(v:foldstart)
 endfunction
 
 function! s:csharp_fold()

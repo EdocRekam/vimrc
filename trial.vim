@@ -1,5 +1,5 @@
 
-def! s:align(criteria: string)
+def! Align(criteria: string)
     let nr = line("'<")
     let colAlign = 0
     for line in getline(nr, "'>")
@@ -23,7 +23,7 @@ def! s:align(criteria: string)
     norm gv
 enddef
 
-def! s:enum(base: number = 0)
+def! Enum(base: number = 0)
     let nr = line("'<")
     let cnt = base
     for line in getline(nr, "'>")
@@ -35,7 +35,21 @@ def! s:enum(base: number = 0)
     norm gv
 enddef
 
-def! s:opentab(title: string): number
+def! Longest(rows: list<list<string>>, col: number, min: number, max: number ): number
+    let c = min
+    for r in rows
+        let len = strchars(r[col])
+        if len > c
+            c = len
+            if c > max
+                retu max
+            endif
+        endif
+    endfor
+    retu c
+enddef
+
+def! OpenTab(title: string): number
     let ids = win_findbuf(bufnr(title))
     if empty(ids)
         exe 'sil tabe ' .. title
@@ -48,7 +62,7 @@ def! s:opentab(title: string): number
     retu tabpagenr()
 enddef
 
-def! s:openwin(title: string): number
+def! OpenWin(title: string): number
     let ids = win_findbuf(bufnr(title))
     if empty(ids)
         exe 'sil new ' .. title
@@ -61,22 +75,39 @@ def! s:openwin(title: string): number
     retu tabpagenr()
 enddef
 
-def! s:openwin_shell(title: string, args: list<any>)
-    s:openwin(title)
-    exe 'sil -1read !' .. call('printf', args)
-    exe "norm gg\<c-w>J"
+def! OpenWinVert(title: string): number
+    let ids = win_findbuf(bufnr(title))
+    if empty(ids)
+        exe 'sil vnew ' .. title
+        setl buftype=nofile
+        setl noswapfile
+    else
+        win_gotoid(get(ids, 0))
+        exe 'sil norm ggvGD'
+    endif
+    retu tabpagenr()
 enddef
 
-def! s:hell_list(args: list<string>): list<string>
+def! OpenWinShell(title: string, args: list<any>)
+    OpenWin(title)
+    exe 'sil -1read !' .. call('printf', args)
+    exe "sil norm gg\<c-w>J"
+enddef
+
+def! Shell(args: list<string>): string
+    retu system(call('printf', args))
+enddef
+
+def! ShellList(args: list<string>): list<string>
     retu systemlist(call('printf', args))
 enddef
 
-def! s:write(args: list<any>)
+def! Write(args: list<any>)
     setline('.', [ call('printf', args), '' ])
     norm G
 enddef
 
-def! s:write_shell(args: list<any>)
+def! WriteShell(args: list<any>)
     exe 'sil -1read !' .. call('printf', args)
     norm G
 enddef
