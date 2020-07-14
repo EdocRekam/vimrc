@@ -3,16 +3,8 @@ def! Chomp(msg: string): string
     retu strcharpart(msg, 0, strchars(msg) - 1)
 enddef
 
-def! CutOff(value: string, max: number, sign: string = '+' ): string
-    let val = value
-    if strchars(value) > max
-        val = strcharpart(value, 0, max - strchars(sign)) .. sign
-    endif
-    retu val
-enddef
-
 def! FindInFile(val: string)
-    exe printf("sil grep! -rn  '%s' *", val)
+    exe printf("sil grep! -rni  '%s' *", val)
     copen 35
 enddef
 command! -nargs=1 Find :cal <SID>FindInFile('<args>')

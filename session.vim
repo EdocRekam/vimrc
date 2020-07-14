@@ -1,3 +1,3 @@
-exe 'e git.vim'
-exe 'tabnew ~/.vimrc'
-
+e pop.vim
+vsplit test.vim
+split menu.vim
