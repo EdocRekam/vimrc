@@ -7,6 +7,12 @@ def! GitHead(): string
     retu g:head
 enddef
 
+def! GitAsyncWin(cmd: string, title: string, msg: string)
+    OpenWin(title)
+    setline('$', [msg, cmd])
+    WriteShellAsync(cmd)
+enddef
+
 def! GitShow(commit: string, path: string)
     if commit == 'DELETED' || commit == 'ADDED'
         retu
@@ -139,51 +145,33 @@ def! GitBranch()
 enddef
 nnoremap <silent><F5> :cal <SID>GitBranch()<CR>
 
-def! s:GitBranchCallback(chan: number, msg: string)
-    OpenWin('BRANCH', 0)
-    append('$', msg)
-enddef
-
 def! GitFetchTags()
-    let cmd = 'git fetch --tags ' .. expand('<cword>')
-    OpenWin('BRANCH')
-    setline('$', ['FETCHING TAGS', cmd])
-    job_start(cmd, #{out_cb: function('s:GitBranchCallback')})
+    GitAsyncWin('git fetch --tags ' .. expand('<cword>'),
+        'BRANCH', 'FETCHING TAGS')
 enddef
 
 def! GitBranchPrune()
-    let cmd = 'git remote prune ' .. expand('<cword>')
-    OpenWin('BRANCH')
-    setline('$', ['PRUNING', cmd])
-    job_start(cmd, #{out_cb: function('s:GitBranchCallback')})
+    GitAsyncWin('git remote prune ' .. expand('<cword>'),
+        'BRANCH', 'PRUNING')
 enddef
 
 def! GitBranchClean()
-    let cmd = 'git clean -xdf'
-    OpenWin('BRANCH')
-    setline('$', ['CLEANING', cmd])
-    job_start(cmd, #{out_cb: function('s:GitBranchCallback')})
+    GitAsyncWin('git clean -xdf', 'BRANCH', 'CLEANING')
 enddef
 
 def! GitBranchDel()
-    let cmd = 'git branch -d ' .. expand('<cfile>')
-    OpenWin('BRANCH')
-    setline('$', ['DELETE BRANCH' cmd])
-    job_start(cmd, #{out_cb: function('s:GitBranchCallback')})
+    GitAsyncWin('git branch -d ' .. expand('<cfile>'),
+        'BRANCH', 'DELETE BRANCH')
 enddef
 
 def! GitBranchNew()
-    let cmd = 'git branch %s ' .. expand('<cfile>')
-    OpenWin('BRANCH')
-    setline('$', ['NEW BRANCH', cmd])
-    job_start(cmd, #{out_cb: function('s:GitBranchCallback')})
+    GitAsyncWin('git branch ' .. expand('<cfile>'),
+        'BRANCH', 'NEW BRANCH')
 enddef
 
 def! GitBranchReset()
-    let cmd = 'git reset --hard ' .. expand('<cfile>')
-    OpenWin('BRANCH')
-    setline('$', ['RESET BRANCH', cmd])
-    job_start(cmd, #{out_cb: function('s:GitBranchCallback')})
+    GitAsyncWin('git reset --hard ' .. expand('<cfile>'),
+        'BRANCH', 'RESET BRANCH')
 enddef
 
 def! GitDiff(commit: string)
@@ -447,26 +435,17 @@ enddef
 nnoremap <silent><F8> :cal <SID>GitStatus()<CR>
 
 def! GitStatusAdd()
-    let cmd = 'git add .'
-    OpenWin('SO')
-    setline('$', ['ADDING ALL FILES', cmd])
-    WriteShellAsync(cmd)
+    GitAsyncWin('git add .', 'SO', 'ADDING ALL FILES')
     GitStatus()
 enddef
 
 def! GitStatusFetch()
-    let cmd = 'git fetch'
-    OpenWin('SO')
-    setline('$', ['FETCHING', cmd])
-    WriteShellAsync(cmd)
+    GitAsyncWin('git fetch', 'SO', 'FETCHING')
     GitStatus()
 enddef
 
 def! GitStatusPush()
-    let cmd = 'git push'
-    OpenWin('SO')
-    setline('$', ['PUSHING', cmd])
-    WriteShellAsync(cmd)
+    GitAsyncWin('git push', 'SO', 'PUSHING')
     GitStatus()
 enddef
 
