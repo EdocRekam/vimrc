@@ -451,7 +451,7 @@ def! GitStatusAdd()
     OpenWin('SO')
     setline('$', ['ADDING ALL FILES', cmd])
     WriteShellAsync(cmd)
-    " GitStatus()
+    GitStatus()
 enddef
 
 def! GitStatusFetch()
@@ -459,11 +459,14 @@ def! GitStatusFetch()
     OpenWin('SO')
     setline('$', ['FETCHING', cmd])
     WriteShellAsync(cmd)
-    " GitStatus()
+    GitStatus()
 enddef
 
 def! GitStatusPush()
-    OpenWinShell('SO', ['git push'])
+    let cmd = 'git push'
+    OpenWin('SO')
+    setline('$', ['PUSHING', cmd])
+    WriteShellAsync(cmd)
     GitStatus()
 enddef
 
