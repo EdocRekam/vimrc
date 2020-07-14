@@ -127,5 +127,6 @@ def! s:WriteShellCallback(bufnr: number, chan: number, msg: string)
 enddef
 
 def! WriteShellAsync(cmd: string)
-    job_start(cmd, #{out_cb: funcref("s:WriteShellCallback", [bufnr()])})
+    let f = funcref("s:WriteShellCallback", [bufnr()])
+    job_start(cmd, #{out_cb: f, err_cb: f})
 enddef
