@@ -1,9 +1,6 @@
 
 
 def! s:callback(winid: number, result: number): number
-    if result == -1
-        retu 1
-    endif
     let ask: string
     let path: string
     let id = s:GetCmdId(result)
@@ -113,55 +110,9 @@ enddef
 
 def! s:filter(winid: number, key: string): number
 
-    if key == "\<F1>"
-        popup_close(winid, -1)
-        retu 1
-    endif
 
-    " PASS
-    if key == "\<F2>" || key == "\<F3>" || key == "\<F4>"
-      \ || key == "\<F5>" || key == "\<F6>" || key == "\<F7>"
-      \ || key == "\<F8>" || key == "\<F9>" || key == "\<F10>"
-      \ || key == "\<F11>" || key == "\<F12>"
-        popup_close(winid, -1)
-        feedkeys(key)
-        retu 1
-    endif
 
-    " PRINTABLE CHAR
-    if 0 == match(key, '\p')
-       " IGNORE THESE
-        if key == ':'
-            retu popup_filter_menu(winid, key)
-        endif
 
-        " ACCUMULATE
-        popup_close(winid, -1)
-        s:opts.title = s:opts.title .. key
-        s:FilterBuffer(s:menuId[1])
-        s:accum += 1
-        s:wid = popup_create(s:menuId[1], s:opts)
-        retu 1
-    endif
-
-    " NONPRINTABLE
-    if key == "\<BS>"
-        " NOTHING TO DO
-        if s:accum < 1
-            popup_close(winid, -1)
-            retu 1
-        endif
-
-        " REGRESS
-        popup_close(winid, -1)
-        s:RestoreBuffer()
-        s:opts.title = Chomp(s:opts.title)
-        s:FilterBuffer(s:menuId[1])
-        s:accum -= 1
-        s:wid = popup_create(s:menuId[1], s:opts)
-    else
-        retu popup_filter_menu(winid, key)
-    endif
 
     retu 1
 enddef
@@ -186,17 +137,6 @@ def! s:mnu_init()
 enddef
 call s:mnu_init()
 
-def! s:FilterBuffer(buf: number): void
-    let t = tolower(s:opts.title)
-    let idx = 1
-    for i in getbufline(buf, 0, '$')
-        if stridx(tolower(i), t) != -1
-            idx += 1
-        else
-            deletebufline(buf, idx)
-        endif
-    endfor
-enddef
 
 def! s:GetCmdId(result: number): number
     let l = getbufline(s:menuId[1], result)[0]
