@@ -62,7 +62,7 @@ def! OpenTab(title: string): number
     retu tabpagenr()
 enddef
 
-def! OpenWin(title: string): number
+def! OpenWin(title: string, blank = 1): number
     let ids = win_findbuf(bufnr(title))
     if empty(ids)
         exe 'sil new ' .. title
@@ -72,7 +72,9 @@ def! OpenWin(title: string): number
         setl noswapfile
     else
         win_gotoid(get(ids, 0))
-        exe 'sil norm ggvGD'
+        if blank
+            exe 'sil norm ggvGD'
+        endif
     endif
     retu tabpagenr()
 enddef
@@ -113,3 +115,10 @@ def! WriteShell(args: list<any>)
     norm G
 enddef
 
+def! s:WriteShellCallback(bufnr: number, chan: number, msg: string)
+    appendbufline(bufnr, '$', '# ' .. msg)
+enddef
+
+def! WriteShellAsync(cmd: string)
+    job_start(cmd, #{out_cb: funcref("s:WriteShellCallback", [bufnr()])})
+enddef
