@@ -1,7 +1,14 @@
 vim9script
 
 def! s:WriteShellCallback(bufnr: number, chan: number, msg: string)
-    appendbufline(bufnr, '$', '# ' .. msg)
+    let inf = getbufinfo(bufnr)
+    let lnr = inf[0].linecount
+    if lnr > 1
+        appendbufline(bufnr, lnr - 1, msg)
+    else
+        appendbufline(bufnr, 1, '')
+        setbufline(bufnr, 1, msg)
+    endif
 enddef
 
 def! WriteShellAsync(cmd: string)
@@ -9,5 +16,8 @@ def! WriteShellAsync(cmd: string)
 enddef
 
 messages clear
-call WriteShellAsync('git log')
+
+tabnew
+call WriteShellAsync("git show 470d9b4:git.vim")
+
 

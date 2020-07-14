@@ -116,7 +116,14 @@ def! WriteShell(args: list<any>)
 enddef
 
 def! s:WriteShellCallback(bufnr: number, chan: number, msg: string)
-    appendbufline(bufnr, '$', '# ' .. msg)
+    let inf = getbufinfo(bufnr)
+    let lnr = inf[0].linecount
+    if lnr > 1
+        appendbufline(bufnr, lnr - 1, msg)
+    else
+        appendbufline(bufnr, 1, '')
+        setbufline(bufnr, 1, msg)
+    endif
 enddef
 
 def! WriteShellAsync(cmd: string)

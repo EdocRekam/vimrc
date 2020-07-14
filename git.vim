@@ -13,7 +13,8 @@ def! GitShow(commit: string, path: string)
     endif
     let title = printf('%s:%s', commit, path)
     OpenTab(title)
-    WriteShell(["git show '%s:%s'", commit, path])
+    let cmd = printf('git show %s:%s', commit, path)
+    WriteShellAsync(cmd)
 enddef
 
 def! GitShowTwo(commitLeft: string, pathLeft: string, commitRight: string, pathRight: string)
@@ -403,47 +404,62 @@ def! GitBranchNav()
     if col('.') < 10
         GitLog()
     else
-        let hint = expand('<cfile>:t')
-        let cmd = 'git checkout ' .. hint
+        let cmd = 'git checkout ' .. expand('<cfile>:t')
         OpenWin('BRANCH')
-        Write(['SWITCHING TO %s', hint])
-        Write([cmd])
-        WriteShell([cmd])
-        GitBranch()
+        setline('$', ['SWITCHING BRANCH', cmd])
+        WriteShellAsync(cmd)
     endif
 enddef
 
 def! GitStatus()
+    let startTime = reltime()
+
     GitHead()
     OpenTab('GIT')
     WriteShell(['git status'])
-    setline('$', ['',
+    append('$', [
     '<INS> ADD ALL    <PGUP>     PUSH',
     '<END> COMMIT     <PGDN>     FETCH',
     '<F6>  GIT GUI    <F7>       GIT LOG (COMMIT UNDER CURSOR)',
     '<F8>  REFRESH    <SHIFT+F7> GIK (UNDER CURSOR)',
-    '', '', repeat('-', 80), ''])
+    '', repeat('-', 80), ''])
+
     norm G
     WriteShell(['git log -n5'])
     exe '%s/\s\+$//e'
-    GitColors()
-    setl colorcolumn=
+
+    # POSITION
     norm gg
+
+    # SYNTAX
+    setl colorcolumn=
+    GitColors()
+
+    # LOCAL KEY BINDS
     nnoremap <silent><buffer><END> :Gcommit<CR>
     nnoremap <silent><buffer><INS> :cal <SID>GitStatusAdd()<CR>
     nnoremap <silent><buffer><PageDown> :cal <SID>GitStatusFetch()<CR>
     nnoremap <silent><buffer><PageUp> :cal <SID>GitStatusPush()<CR>
+
+    # PERFORMANCE
+    append('$' ['', 'Time:' .. reltimestr(reltime(startTime, reltime()))])
 enddef
 nnoremap <silent><F8> :cal <SID>GitStatus()<CR>
 
 def! GitStatusAdd()
-    OpenWinShell('SO', ['git add .'])
-    GitStatus()
+    let cmd = 'git add .'
+    OpenWin('SO')
+    setline('$', ['ADDING ALL FILES', cmd])
+    WriteShellAsync(cmd)
+    " GitStatus()
 enddef
 
 def! GitStatusFetch()
-    OpenWinShell('SO', ['git fetch'])
-    GitStatus()
+    let cmd = 'git fetch'
+    OpenWin('SO')
+    setline('$', ['FETCHING', cmd])
+    WriteShellAsync(cmd)
+    " GitStatus()
 enddef
 
 def! GitStatusPush()
