@@ -18,14 +18,6 @@
         s:git_prune(ask)
     elseif id == 21
         s:csharp_use()
-    elseif id == 24
-        s:ort()
-    elseif id == 25
-        s:orti()
-    elseif id == 26
-        s:sortd()
-    elseif id == 27
-        s:sortdi()
     elseif id == 28
         GotoDefinition()
     elseif id == 29
@@ -40,11 +32,6 @@
         s:csharp_fold()
     elseif id == 40
         s:csharp_nofold()
-    elseif id == 41
-        path = printf('%skeys.html', s:vim_dir())
-        if filereadable(path)
-            sil exe printf("!firefox --new-window '%s'&", path)
-        endif
     elseif id == 43
         s:git_log_file(expand('<cfile>'))
     elseif id == 44

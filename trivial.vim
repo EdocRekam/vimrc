@@ -39,6 +39,30 @@ def! Rotate()
 enddef
 nnoremap <silent><S-F12> :cal <SID>Rotate()<CR>
 
+def! Sort()
+    norm gv
+    :'<,'>sort
+    norm gv
+enddef
+
+def! SortD()
+    norm gv
+    :'<,'>sort!
+    norm gv
+enddef
+
+def! SortDI()
+    norm gv
+    :'<,'>sort! i
+    norm gv
+enddef
+
+def! SortI()
+    norm gv
+    :'<,'>sort i
+    norm gv
+enddef
+
 def! Startup()
     if filereadable('session.vim')
         exe 'so session.vim'

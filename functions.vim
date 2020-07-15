@@ -67,28 +67,5 @@ function! s:notrails()
 endfunction
 
 
-def! s:ortd()
-    norm gv
-    :'<,'>sort!
-    norm gv
-enddef
-
-def! s:ortdi()
-    norm gv
-    :'<,'>sort! i
-    norm gv
-enddef
-
-def! s:ort()
-    norm gv
-    :'<,'>sort
-    norm gv
-enddef
-
-def! s:orti()
-    norm gv
-    :'<,'>sort i
-    norm gv
-enddef
 
 

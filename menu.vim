@@ -115,6 +115,14 @@ def! MnuCallback(winid: number, result: number): number
         Unique()
     # elseif 23 == id
     #    Notrails()
+    elseif 24 == id
+        Sort()
+    elseif 25 == id
+        SortI()
+    elseif 26 == id
+        SortD()
+    elseif 27 == id
+        SortDI()
     elsei 32 == id
         :so $VIMRUNTIME/syntax/hitest.vim
     elsei 33 == id
@@ -130,6 +138,11 @@ def! MnuCallback(winid: number, result: number): number
         :options
     elsei 37 == id
         set guifont=*
+    elseif 41 == id
+        path = VimDir() .. 'keys.html'
+        if filereadable(path)
+            exe printf("!firefox --new-window '%s'&", path)
+        endif
     elsei 42 == id
         setl wrap!
     elsei 45
