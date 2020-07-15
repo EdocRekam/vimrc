@@ -43,7 +43,6 @@ cat "${CWD}/trial.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/git.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/menu.vim" >> "${HOME}/.vimrc"
 # cat "${CWD}/filetypes.vim" >> "${HOME}/.vimrc"
-# cat "${CWD}/pop.vim" >> "${HOME}/.vimrc"
 # cat "${CWD}/csharp.vim" >> "${HOME}/.vimrc"
 
 sed -i /^.*#\\s/d "${HOME}/.vimrc"

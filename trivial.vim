@@ -60,6 +60,12 @@ def! ToLf()
     :up
 enddef
 
+def! Unique()
+    norm gv
+    :'<,'>%!uniq
+    norm gv
+enddef
+
 def! Upper()
     norm gvUgv
 enddef

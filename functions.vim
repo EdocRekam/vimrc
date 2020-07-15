@@ -91,9 +91,4 @@ def! s:orti()
     norm gv
 enddef
 
-def! s:unique(): void
-    norm gv
-    :'<,'>%!uniq
-    norm gv
-enddef
 
