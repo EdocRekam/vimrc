@@ -156,7 +156,7 @@ def! GitBranchPrune()
 enddef
 
 def! GitBranchClean()
-    GitAsyncWin('git clean -xdf', 'BRANCH', 'CLEANING')
+    GitAsyncWin('git clean -xdf -e *.swp', 'BRANCH', 'CLEANING')
 enddef
 
 def! GitBranchDel()

@@ -5,6 +5,7 @@ def! g:Trace(msg: string)
         bufload(h)
         setbufvar(h, '&buftype', 'nofile')
         setbufvar(h, '&swapfile', '0')
+        setbufvar(h, '&buflisted', '1')
     else
         h = bufnr('TRACE')
     endif
