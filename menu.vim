@@ -88,23 +88,27 @@ def! MnuCallback(winid: number, result: number): number
     if 1 == id
         ask = input('ALIGN ON: ', '=')
         Align(ask)
-    elsei 4 == id
-        Lower()
-    elsei 5 == id
-        Upper()
-    elsei 6 == id
-        NoTabs()
-    elsei 7 == id
-        ToCrlf()
-    elsei 8 == id
-        ToLf()
-    elsei 9 == id
-        ask = input('START: ', '0')
-        Enum(str2nr(ask))
-    elseif 10 == id
-        g:ZoomOut()
-    elseif 11 == id
-        g:ZoomIn()
+    # elseif 2 == id
+    #    s:dotnet_build()
+    # elseif 3 == id
+    #    s:dotnet_restore()
+    # elsei 4 == id
+    #    Lower()
+    # elsei 5 == id
+    #    Upper()
+    # elsei 6 == id
+    #     NoTabs()
+    # elsei 7 == id
+    #    ToCrlf()
+    # elsei 8 == id
+    #    ToLf()
+        # elsei 9 == id
+        # ask = input('START: ', '0')
+        # Enum(str2nr(ask))
+    # elseif 10 == id
+    # g:ZoomOut()
+    # elseif 11 == id
+    #    g:ZoomIn()
     elseif 12 == id
         GitAsyncWin('git add .', 'SO', 'ADDING')
     elseif 13 == id
@@ -114,29 +118,39 @@ def! MnuCallback(winid: number, result: number): number
     elseif 15 == id
         ask = input('Remote: ', 'vso')
         GitAsyncWin('git fetch ' .. ask, 'SO', 'FETCHING')
-    elsei 16 == id
-        GitStatus()
+    # elsei 16 == id
+    # GitStatus()
     elsei 17 == id
         GitK()
     elseif 18 == id
         exe '!git gui&'
-    elsei 19 == id
-        GitLog()
+    # elsei 19 == id
+    # GitLog()
     elseif 20 == id
         ask = input('REMOTE: ', 'vso')
         GitAsyncWin('git remote prune ' .. ask, 'SO', 'PRUNING')
-    elseif 22 == id
-        Unique()
+    # elseif 21 == id
+    #    s:csharp_use()
+    # elseif 22 == id
+    #    Unique()
     # elseif 23 == id
     #    Notrails()
-    elseif 24 == id
-        Sort()
-    elseif 25 == id
-        SortI()
-    elseif 26 == id
-        SortD()
-    elseif 27 == id
-        SortDI()
+    # elseif 24 == id
+    #    Sort()
+    # elseif 25 == id
+    #    SortI()
+    # elseif 26 == id
+    #     SortD()
+    # elseif 27 == id
+    #    SortDI()
+    # elseif 28 == id
+    #    GotoDefinition()
+    # elseif 29 == id
+    #    s:dotnet_test()
+    # elseif 30 == id
+    #    s:dotnet_test(expand('<cword>'))
+    # elseif 31 == id
+    #    TEST THIS FILE
     elsei 32 == id
         :so $VIMRUNTIME/syntax/hitest.vim
     elsei 33 == id
@@ -152,6 +166,12 @@ def! MnuCallback(winid: number, result: number): number
         :options
     elsei 37 == id
         set guifont=*
+    # elseif 38 == id
+    #     s:csharp_startserver()
+    # elseif 39 == id
+    #    s:csharp_fold()
+    # elseif 40 == id
+    #    s:csharp_nofold()
     elseif 41 == id
         path = VimDir() .. 'keys.html'
         if filereadable(path)
@@ -159,8 +179,8 @@ def! MnuCallback(winid: number, result: number): number
         endif
     elsei 42 == id
         setl wrap!
-    elsei 45
-        GitBranch()
+    # elsei 45
+    #   GitBranch()
     endif
 
     MnuWid = 0

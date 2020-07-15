@@ -1,2 +1,2 @@
-e pop.vim
+e git.vim
 vsplit menu.vim
