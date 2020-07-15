@@ -105,12 +105,26 @@ def! MnuCallback(winid: number, result: number): number
         g:ZoomOut()
     elseif 11 == id
         g:ZoomIn()
+    elseif 12 == id
+        GitAsyncWin('git add .', 'SO', 'ADDING')
+    elseif 13 == id
+        exe 'Gcommit'
+    elseif 14 == id
+        GitAsyncWin('git diff' .. ask, 'DIFF', '')
+    elseif 15 == id
+        ask = input('Remote: ', 'vso')
+        GitAsyncWin('git fetch ' .. ask, 'SO', 'FETCHING')
     elsei 16 == id
         GitStatus()
     elsei 17 == id
         GitK()
+    elseif 18 == id
+        exe '!git gui&'
     elsei 19 == id
         GitLog()
+    elseif 20 == id
+        ask = input('REMOTE: ', 'vso')
+        GitAsyncWin('git remote prune ' .. ask, 'SO', 'PRUNING')
     elseif 22 == id
         Unique()
     # elseif 23 == id
