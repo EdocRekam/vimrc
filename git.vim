@@ -8,7 +8,7 @@ def! GitHead(): string
 enddef
 
 def! GitAsyncWin(cmd: string, title: string, msg: string)
-    OpenWin(title)
+    OpenWin(title, 0)
     setline('$', [msg, cmd])
     WriteShellAsync(cmd)
 enddef
