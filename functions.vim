@@ -66,35 +66,39 @@ def! OpenTab(title: string): number
 enddef
 
 def! OpenWin(title: string, blank = 1): number
-    let bnr = bufnr(title)
-    let ids = win_findbuf(bnr)
+    let h = bufnr(title)
+    let ids = win_findbuf(h)
     if empty(ids)
         exe 'sil new ' .. title
         exe "norm gg\<c-w>J"
         resize 20
-        bnr = bufnr(title)
-        setbufvar(bnr, '&buftype', 'nofile')
-        setbufvar(bnr, '&swapfile', '0')
+        h = bufnr(title)
+        setbufvar(h, '&buftype', 'nofile')
+        setbufvar(h, '&swapfile', '0')
     else
         win_gotoid(get(ids, 0))
         if blank
             exe 'sil norm ggvGD'
         endif
     endif
-    retu bnr
+    retu h
 enddef
 
-def! OpenWinVert(title: string): number
+def! OpenWinVert(title: string, blank = 1): number
+    let h = bufnr(title)
     let ids = win_findbuf(bufnr(title))
     if empty(ids)
         exe 'sil vnew ' .. title
-        setl buftype=nofile
-        setl noswapfile
+        h = bufnr(title)
+        setbufvar(h, '&buftype', 'nofile')
+        setbufvar(h, '&swapfile', '0')
     else
         win_gotoid(get(ids, 0))
-        exe 'sil norm ggvGD'
+        if blank
+            exe 'sil norm ggvGD'
+        endif
     endif
-    retu tabpagenr()
+    retu h
 enddef
 
 def! OpenWinShell(title: string, args: list<any>)
@@ -122,14 +126,12 @@ enddef
 
 def! WriteBuffer(h: number, msg: any)
     let i = getbufinfo(h)
-    let lc = i[0].linecount
-    appendbufline(h, lc - 1, msg)
+    appendbufline(h, i[0].linecount - 1, msg)
 enddef
 
-def! s:WriteShellCallback(bufnr: number, chan: number, msg: string)
-    let inf = getbufinfo(bufnr)
-    let lnr = inf[0].linecount
-    appendbufline(bufnr, lnr - 1, msg)
+def! s:WriteShellCallback(h: number, chan: number, msg: string)
+    let i = getbufinfo(h)
+    appendbufline(h, i[0].linecount - 1, msg)
 enddef
 
 def! WriteShellAsync(cmd: string)
