@@ -29,9 +29,9 @@ def! CsUse()
 enddef
 
 def! DotnetAsyncWin(cmd: string, title: string, msg: string)
-    let bnr = OpenWin(title, 0)
-    appendbufline(bnr, 0, [msg, cmd])
-    setbufvar(bnr, '&colorcolumn', '0')
+    let h = OpenWin(title, 0)
+    WriteBuffer(h, [msg, cmd])
+    setbufvar(h, '&colorcolumn', '0')
     WriteShellAsync(cmd)
 enddef
 
