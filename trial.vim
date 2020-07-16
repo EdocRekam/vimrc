@@ -121,6 +121,12 @@ def! WriteShell(args: list<any>)
     norm G
 enddef
 
+def! WriteBuffer(h: number, msg: any)
+    let i = getbufinfo(h)
+    let lc = i[0].linecount
+    appendbufline(h, lc - 1, msg)
+enddef
+
 def! s:WriteShellCallback(bufnr: number, chan: number, msg: string)
     let inf = getbufinfo(bufnr)
     let lnr = inf[0].linecount
