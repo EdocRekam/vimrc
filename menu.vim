@@ -41,7 +41,6 @@ def! MnuBackspace(winid: number)
 enddef
 
 def! MnuPrintableChar(winid: number, key: string)
-    Trace('PRINTABLE CHAR ' .. key)
     let lines = getbufline(MnuBuf[1], 1)
     let title = printf('%s%s', lines[0], tolower(key))
     setbufline(MnuBuf[1], 1, title)
@@ -49,16 +48,13 @@ def! MnuPrintableChar(winid: number, key: string)
 enddef
 
 def! MnuIgnore(winid: number)
-    Trace('popup_close(winid, -1)')
     popup_close(winid, -1)
 enddef
 
 def! MnuFilter(winid: number, key: string): number
-    Trace(printf('MnuFilter winid = %d key %s', winid, strtrans(key)))
     let rc = 1
 
     if key == "\<F1>" || key == "\<ESC>"
-        Trace('popup_close(winid, -1)')
         popup_close(winid, -1)
 
     # BACKUP
@@ -75,7 +71,6 @@ def! MnuFilter(winid: number, key: string): number
      \ || key == "\<F5>" || key == "\<F6>" || key == "\<F7>"
      \ || key == "\<F8>" || key == "\<F9>" || key == "\<F10>"
      \ || key == "\<F11>" || key == "\<F12>"
-        Trace('popup_close(winid, -1)')
         popup_close(winid, -1)
         feedkeys(key)
 

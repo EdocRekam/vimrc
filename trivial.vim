@@ -26,7 +26,9 @@ enddef
 
 def! Rename(): void
     let val = input('Value: ')
-    exe '%s/' .. expand('<cword>') .. '/' .. val .. '/g'
+    if '' != val
+        exe '%s/' .. expand('<cword>') .. '/' .. val .. '/g'
+    endif
 enddef
 nnoremap <silent><F2> :cal <SID>Rename()<CR>
 
@@ -38,8 +40,8 @@ enddef
 nnoremap <silent><S-F12> :cal <SID>Rotate()<CR>
 
 def! SourceFile()
-    exe 'w'
-    exe 'so %'
+    up
+    so %
 enddef
 nnoremap <silent><S-F5> :cal <SID>SourceFile()<CR>
 
@@ -69,23 +71,23 @@ enddef
 
 def! Startup()
     if filereadable('session.vim')
-        exe 'so session.vim'
+        so session.vim
     endif
 enddef
 au VimEnter * ++once : cal Startup()
 
 def! ToCrlf()
-   :up
+   up
    :e ++ff=unix
    setl ff=dos
-   :up
+   up
 enddef
 
 def! ToLf()
-    :up
+    up
     :e ++ff=dos
     setl ff=unix
-    :up
+    up
 enddef
 
 def! Unique()

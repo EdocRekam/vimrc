@@ -37,6 +37,7 @@ read -p "Press [Enter] key to install files into HOME directory at . . ."
 
 printf "Building .vimrc . . .\n"
 cat "${CWD}/vimrc.vim" > "${HOME}/.vimrc"
+cat "${CWD}/nerdtree.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/keymap.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/trivial.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/functions.vim" >> "${HOME}/.vimrc"
