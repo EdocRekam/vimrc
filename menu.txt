@@ -41,3 +41,5 @@ Vim: Tab: Close                        33
 Vim: Tab: New                          34
 Vim: View Options                      36
 Vim: View Syntax                       35
+Vim: Open .vimrc                       44
+

@@ -95,9 +95,6 @@ enddef
 def! CsStartServer()
 enddef
 
-def! Goto()
-enddef
-
 " XML
 autocmd! filetypedetect BufNewFile,BufRead *.csproj setf xml
 autocmd! filetypedetect BufNewFile,BufRead *.props setf xml

@@ -208,7 +208,7 @@ def! MnuCallback(winid: number, result: number): number
     elseif 27 == id
         SortDI()
     elseif 28 == id
-        Goto()
+        GotoDef()
     elseif 29 == id
         DotnetTest()
     elseif 30 == id
@@ -235,6 +235,8 @@ def! MnuCallback(winid: number, result: number): number
         MnuCheatsheet()
     elsei 42 == id
         setl wrap!
+    elsei 44 == id
+        tabnew ~/.vimrc
     elsei 45 == id
         GitBranch()
     endif
