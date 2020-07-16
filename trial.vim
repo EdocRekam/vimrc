@@ -1,16 +1,20 @@
 
-def! Align(criteria: string)
+def! Align(value: string)
+    if '' == value
+        retu
+    endif
+
     let nr = line("'<")
     let colAlign = 0
     for line in getline(nr, "'>")
-        let col = stridx(line, criteria)
+        let col = stridx(line, value)
         if col > colAlign
             colAlign = col + 1
         endif
     endfor
     let cnt = 0
     for line in getline(nr, "'>")
-        let col = stridx(line, criteria)
+        let col = stridx(line, value)
         let diff = colAlign - col
         let fmt = '%s%' .. printf('%d', diff) .. 's%s'
         let front = strcharpart(line, 0, col)
@@ -63,20 +67,22 @@ def! OpenTab(title: string): number
 enddef
 
 def! OpenWin(title: string, blank = 1): number
-    let ids = win_findbuf(bufnr(title))
+    let bnr = bufnr(title)
+    let ids = win_findbuf(bnr)
     if empty(ids)
         exe 'sil new ' .. title
         exe "norm gg\<c-w>J"
         resize 20
-        setl buftype=nofile
-        setl noswapfile
+        bnr = bufnr(title)
+        setbufvar(bnr, '&buftype', 'nofile')
+        setbufvar(bnr, '&swapfile', '0')
     else
         win_gotoid(get(ids, 0))
         if blank
             exe 'sil norm ggvGD'
         endif
     endif
-    retu tabpagenr()
+    retu bnr
 enddef
 
 def! OpenWinVert(title: string): number
@@ -118,12 +124,7 @@ enddef
 def! s:WriteShellCallback(bufnr: number, chan: number, msg: string)
     let inf = getbufinfo(bufnr)
     let lnr = inf[0].linecount
-    if lnr > 1
-        appendbufline(bufnr, lnr - 1, msg)
-    else
-        appendbufline(bufnr, 1, '')
-        setbufline(bufnr, 1, msg)
-    endif
+    appendbufline(bufnr, lnr - 1, msg)
 enddef
 
 def! WriteShellAsync(cmd: string)

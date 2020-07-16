@@ -1,8 +1,4 @@
 
-" ------------------------------------------------------------------------
-" C# SPECIFIC CONFIGURATION
-" ------------------------------------------------------------------------
-
 " OMNISHARP - GENERAL
 let g:OmniSharp_server_path='/usr/local/bin/omnisharp'
 let g:OmniSharp_server_install='/usr/local/lib64/omnisharp-roslyn'
@@ -21,78 +17,88 @@ let g:OmniSharp_highlight_groups={
 \}
 
 " POPUP FUNCTIONS
-function! s:csharp_use()
-    setlocal expandtab
-    setlocal shiftwidth=4
-    setlocal softtabstop=4
-    setlocal tabstop=4
-    setlocal fileencoding=utf-8
-    setlocal nobomb
+def! CsUse()
     setf cs
-endfunction
+    setl expandtab
+    setl ff=unix
+    setl fileencoding=utf-8
+    setl nobomb
+    setl shiftwidth=4
+    setl softtabstop=4
+    setl tabstop=4
+enddef
 
-function! Csharp_get_indent()
-    if getline(v:lnum)[0] == 'n'
-        retu ">1"
-    else
-        retu 1
-    endif
-endfunction
+def! DotnetAsyncWin(cmd: string, title: string, msg: string)
+    let bnr = OpenWin(title, 0)
+    appendbufline(bnr, 0, [msg, cmd])
+    setbufvar(bnr, '&colorcolumn', '0')
+    WriteShellAsync(cmd)
+enddef
 
-function! Csharp_get_foldtext()
-    retu getline(v:foldstart)
-endfunction
+def! DotnetRestore()
+    DotnetAsyncWin('dotnet restore', 'DOTNET', 'Restoring . . .')
+enddef
 
-function! s:csharp_fold()
-    setlocal foldlevel=1
-    setlocal fillchars+=fold:\ 
-    setlocal foldcolumn=1
-    setlocal foldexpr=Csharp_get_indent()
-    setlocal foldmethod=expr
-    setlocal foldtext=Csharp_get_foldtext()
-    setlocal foldenable
-endfunction
-
-function! s:csharp_nofold()
-    setlocal nofoldenable
-    setlocal foldcolumn=0
-    setlocal foldmethod=manual
-endfunction
-
-function! s:charp_startserver()
-endfunction
-
-function! s:dotnet_build()
-    call s:hell_tab('BUILD', 'dotnet build --nologo')
-    setlocal colorcolumn=
-
+def! DotnetBuild()
+    DotnetAsyncWin('dotnet build', 'DOTNET', 'Building . . .')
     syn case ignore
     syn match Caution "\d\+\sWarn.*"
     syn match Bad "\d\+\sError.*"
-
     hi Caution guifg=#eed320
     hi Bad guifg=#ee3020
-endfunction
+enddef
 
-function! s:dotnet_restore()
-    call s:hell_tab('RESTORE', 'dotnet restore --nologo')
-    setlocal colorcolumn=
-endfunction
-
-function! s:dotnet_test(...)
-    let l:filter = get(a:, 1, '')
-    if l:filter == ''
-        let l:cmd = 'dotnet test --nologo'
+def! DotnetTest(filter: string = '')
+    let cmd: string
+    if filter == ''
+        cmd = 'dotnet test'
     else
-        let l:cmd = printf("dotnet test --nologo --filter '%s'", l:filter)
+        cmd = printf("dotnet test --filter '%s'", filter)
     endif
-    call s:hell_tab('TEST', l:cmd)
-    setlocal colorcolumn=
+    DotnetAsyncWin(cmd, 'DOTNET', 'Testing . . .')
     syn case ignore
     syn match Bad "Failed:\s\d\+"
     syn match Good "Passed:\s\d\+"
     hi Bad guifg=#ee3020
     hi Good guifg=#00b135
-endfunction
+enddef
 
+def! CsNoFold()
+    setl nofoldenable
+    setl foldcolumn=0
+    setl foldmethod=manual
+enddef
 
+def! g:CsFoldText(): string
+    retu getline(v:foldstart)
+enddef
+
+def! g:CsIndent(n: number): any
+    let l = getline(n)
+    Trace(l)
+    if char2nr('n') == strgetchar(l, 0)
+        retu '>1'
+    endif
+    retu 1
+enddef
+
+def! CsFold()
+    setl foldlevel=1
+    setl fillchars+=fold:\ 
+    setl foldcolumn=1
+    setl foldmethod=expr
+    setl foldexpr=CsIndent(v:lnum)
+    setl foldtext=CsFoldText()
+    setl foldenable
+enddef
+
+def! CsStartServer()
+enddef
+
+def! Goto()
+enddef
+
+" XML
+autocmd! filetypedetect BufNewFile,BufRead *.csproj setf xml
+autocmd! filetypedetect BufNewFile,BufRead *.props setf xml
+autocmd! filetypedetect BufNewFile,BufRead *.targets setf xml

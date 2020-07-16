@@ -8,8 +8,8 @@ def! GitHead(): string
 enddef
 
 def! GitAsyncWin(cmd: string, title: string, msg: string)
-    OpenWin(title, 0)
-    setline('$', [msg, cmd])
+    let bnr = OpenWin(title, 0)
+    appendbufline(bnr, 0, [msg, cmd])
     WriteShellAsync(cmd)
 enddef
 

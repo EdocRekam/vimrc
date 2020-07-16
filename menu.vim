@@ -8,9 +8,8 @@ let MnuOpt["line"] = 2
 let MnuOpt["mapping"] = 0
 let MnuOpt["maxheight"] = 25
 let MnuOpt["maxwidth"] = 36
-let MnuOpt["title"] = ''
 let MnuOpt["wrap"] = 0
-let MnuOpt["padding"] = [1, 1, 0, 1]
+let MnuOpt["padding"] = [0, 1, 0, 1]
 
 def! MnuFilterBuf(buf: number)
     let lines = getbufline(buf, 1)
@@ -26,7 +25,6 @@ def! MnuFilterBuf(buf: number)
 enddef
 
 def! MnuResetBuf()
-    Trace('MnuResetBuf()')
     deletebufline(MnuBuf[1], 1, '$')
     appendbufline(MnuBuf[1], 1, getbufline(MnuBuf[0], 0, '$'))
     deletebufline(MnuBuf[1], '$')
@@ -35,14 +33,10 @@ enddef
 def! MnuBackspace(winid: number)
     let lines = getbufline(MnuBuf[1], 1)
     let title = strcharpart(lines[0], 0, strchars(lines[0]) - 1)
-    if strchars(title) > 0
+    if strchars(title) >= 0
         MnuResetBuf()
         setbufline(MnuBuf[1], 1, title)
         MnuFilterBuf(MnuBuf[1])
-    else
-        MnuResetBuf()
-        setbufline(MnuBuf[1], 1, '')
-        popup_close(winid, -1)
     endif
 enddef
 
@@ -105,112 +99,145 @@ def! MnuGetCmd(result: number): number
     retu str2nr(nr)
 enddef
 
+def! MnuEnum()
+    let ask = input('START: ', '0')
+    if '' != ask
+        Enum(str2nr(ask))
+    endif
+enddef
+
+def! MnuZoom(val: number)
+    if !has('gui')
+        retu
+    endif
+
+    if val == 1
+        g:ZoomOut()
+    else
+        g:ZoomIn()
+    endif
+enddef
+
+def! MnuFetch()
+    let ask = input('Remote: ', 'vso')
+    if '' != ask
+        GitAsyncWin('git fetch ' .. ask, 'SO', 'FETCHING')
+    endif
+enddef
+
+def! MnuPrune()
+    let ask = input('REMOTE: ', 'vso')
+    if '' != ask
+        GitAsyncWin('git remote prune ' .. ask, 'SO', 'PRUNING')
+    endif
+enddef
+
+def! MnuSyntax()
+    let path = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
+    if filereadable(path)
+        exe 'tabnew ' .. path
+    endif
+enddef
+
+def! MnuCheatsheet()
+    let path = VimDir() .. 'keys.html'
+    if filereadable(path)
+        exe printf("!firefox --new-window '%s'&", path)
+    endif
+enddef
+
 def! MnuCallback(winid: number, result: number): number
-    Trace(printf('MnuCallback winid = %d result = %d', winid, result))
     let id = 0
     if result > 0
         id = MnuGetCmd(result)
     endif
 
-    # let ask: string
-    # let path: string
-    # if 1 == id
-    #    ask = input('ALIGN ON: ', '=')
-    #    Align(ask)
-    # elseif 2 == id
-    #    s:dotnet_build()
-    # elseif 3 == id
-    #    s:dotnet_restore()
-    # elsei 4 == id
-    #    Lower()
-    # elsei 5 == id
-    #    Upper()
-    # elsei 6 == id
-    #     NoTabs()
-    # elsei 7 == id
-    #    ToCrlf()
-    # elsei 8 == id
-    #    ToLf()
-        # elsei 9 == id
-        # ask = input('START: ', '0')
-        # Enum(str2nr(ask))
-    # elseif 10 == id
-    # g:ZoomOut()
-    # elseif 11 == id
-    #    g:ZoomIn()
-    # elseif 12 == id
-    #    GitAsyncWin('git add .', 'SO', 'ADDING')
-    # elseif 13 == id
-    #    exe 'Gcommit'
-    # elseif 14 == id
-    #    GitAsyncWin('git diff' .. ask, 'DIFF', '')
-    # elseif 15 == id
-    #    ask = input('Remote: ', 'vso')
-    #    GitAsyncWin('git fetch ' .. ask, 'SO', 'FETCHING')
-    # elsei 16 == id
-    # GitStatus()
-    # elsei 17 == id
-    #    GitK()
-    # elseif 18 == id
-    #    exe '!git gui&'
-    # elsei 19 == id
-    # GitLog()
-    # elseif 20 == id
-    #    ask = input('REMOTE: ', 'vso')
-    #    GitAsyncWin('git remote prune ' .. ask, 'SO', 'PRUNING')
-    # elseif 21 == id
-    #    s:csharp_use()
-    # elseif 22 == id
-    #    Unique()
-    # elseif 23 == id
-    #    Notrails()
-    # elseif 24 == id
-    #    Sort()
-    # elseif 25 == id
-    #    SortI()
-    # elseif 26 == id
-    #     SortD()
-    # elseif 27 == id
-    #    SortDI()
-    # elseif 28 == id
-    #    GotoDefinition()
-    # elseif 29 == id
-    #    s:dotnet_test()
-    # elseif 30 == id
-    #    s:dotnet_test(expand('<cword>'))
-    # elseif 31 == id
-    #    TEST THIS FILE
-    # elsei 32 == id
-    #    :so $VIMRUNTIME/syntax/hitest.vim
-    # elsei 33 == id
-    #    :tabclose
-    # elsei 34 == id
-    #    :tabnew
-    # elseif 35 == id
-    #    path = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
-    #    if filereadable(path)
-    #        exe 'tabnew ' .. path
-    #    endif
-    # elsei 36 == id
-    #    :options
-    # elsei 37 == id
-    #    set guifont=*
-    # elseif 38 == id
-    #     s:csharp_startserver()
-    # elseif 39 == id
-    #    s:csharp_fold()
-    # elseif 40 == id
-    #    s:csharp_nofold()
-    # elseif 41 == id
-    #    path = VimDir() .. 'keys.html'
-    #    if filereadable(path)
-    #        exe printf("!firefox --new-window '%s'&", path)
-    #    endif
-    # elsei 42 == id
-    #    setl wrap!
-    # elsei 45
-    #   GitBranch()
-    # endif
+    if 1 == id
+        let ask = input('ALIGN ON: ', '=')
+        Align(ask)
+    elseif 2 == id
+        DotnetBuild()
+    elseif 3 == id
+        DotnetRestore()
+    elsei 4 == id
+        Lower()
+    elsei 5 == id
+        Upper()
+    elsei 6 == id
+        NoTabs()
+    elsei 7 == id
+        ToCrlf()
+    elsei 8 == id
+        ToLf()
+    elsei 9 == id
+        MnuEnum()
+    elseif 10 == id
+        MnuZoom(1)
+    elseif 11 == id
+        MnuZoom(0)
+    elseif 12 == id
+        GitAsyncWin('git add .', 'SO', 'ADDING')
+    elseif 13 == id
+        Gcommit
+    elseif 14 == id
+        GitAsyncWin('git diff', 'DIFF', '')
+    elseif 15 == id
+        MnuFetch()
+    elsei 16 == id
+        GitStatus()
+    elsei 17 == id
+        GitK()
+    elseif 18 == id
+        exe '!git gui&'
+    elsei 19 == id
+        InnerGitLog(GitHead())
+    elsei 20 == id
+        MnuPrune()
+    elseif 21 == id
+        CsUse()
+    elseif 22 == id
+        Unique()
+    elseif 23 == id
+        NoTrails()
+    elseif 24 == id
+        Sort()
+    elseif 25 == id
+        SortI()
+    elseif 26 == id
+        SortD()
+    elseif 27 == id
+        SortDI()
+    elseif 28 == id
+        Goto()
+    elseif 29 == id
+        DotnetTest()
+    elseif 30 == id
+        DotnetTest(expand('<cword>'))
+    elsei 32 == id
+        :so $VIMRUNTIME/syntax/hitest.vim
+    elsei 33 == id
+        :tabclose
+    elsei 34 == id
+        :tabnew
+    elseif 35 == id
+        MnuSyntax()
+    elsei 36 == id
+        :options
+    elsei 37 == id
+        set guifont=*
+    elseif 38 == id
+        CsStartServer()
+    elseif 39 == id
+        CsFold()
+    elseif 40 == id
+        CsNoFold()
+    elseif 41 == id
+        MnuCheatsheet()
+    elsei 42 == id
+        setl wrap!
+    elsei 45 == id
+        GitBranch()
+    endif
 
     MnuWid = 0
     retu 1
@@ -218,9 +245,8 @@ enddef
 let MnuOpt["callback"] = funcref('MnuCallback')
 
 def! MnuLoad()
-    Trace('MnuLoad()')
     add(MnuBuf, bufadd(VimDir() .. 'menu.txt'))
-    add(MnuBuf, bufadd('ea9b0bea-e515-40ed-b1a0-f58281ff9629'))
+    add(MnuBuf, bufadd('ea9b0beae51540edb1a0'))
 
     bufload(MnuBuf[0])
     setbufvar(MnuBuf[0], '&buftype', 'nofile')
@@ -232,12 +258,15 @@ def! MnuLoad()
 enddef
 
 def! MnuOpen()
-    Trace('MnuOpen()')
     if 0 == len(MnuBuf)
         MnuLoad()
         MnuResetBuf()
     endif
-    MnuWid = 0 == MnuWid ? popup_create(MnuBuf[1], MnuOpt) : 0
+
+    if 0 == MnuWid
+        MnuWid = popup_create(MnuBuf[1], MnuOpt)
+        win_execute(MnuWid, '2')
+    endif
 enddef
 nnoremap <silent><F1> :call <SID>MnuOpen()<CR>
 vnoremap <silent><F1> :call <SID>MnuOpen()<CR>

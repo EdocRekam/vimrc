@@ -16,15 +16,13 @@ def! NoTabs()
     update
 enddef
 
+def! NoTrails()
+    :%s/\s\+$//e
+enddef
+
 def! Lower()
     norm gvugv
 enddef
-
-def! SourceFile()
-    exe 'w'
-    exe 'so %'
-enddef
-nnoremap <silent><S-F5> :cal <SID>SourceFile()<CR>
 
 def! Rename(): void
     let val = input('Value: ')
@@ -38,6 +36,12 @@ def! Rotate()
     exe 'wincmd ' .. s:orient
 enddef
 nnoremap <silent><S-F12> :cal <SID>Rotate()<CR>
+
+def! SourceFile()
+    exe 'w'
+    exe 'so %'
+enddef
+nnoremap <silent><S-F5> :cal <SID>SourceFile()<CR>
 
 def! Sort()
     norm gv

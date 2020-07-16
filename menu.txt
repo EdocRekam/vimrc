@@ -1,5 +1,5 @@
-Build                                  2
 Build: Restore                         3
+Build                                  2
 C#: Disable Code Folding               40
 C#: Enable Code Folding                39
 C#: Start Language Server              38

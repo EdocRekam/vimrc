@@ -12,12 +12,7 @@ def! g:Trace(msg: string)
 
     let inf = getbufinfo(h)
     let lnr = inf[0].linecount
-    if lnr > 1
-        appendbufline(h, lnr - 1, msg)
-    else
-        appendbufline(h, 1, '')
-        setbufline(h, 1, msg)
-    endif
+    appendbufline(h, lnr - 1, msg)
 enddef
 
 def! g:OpenTrace()

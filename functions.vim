@@ -58,13 +58,6 @@ def! s:NewOrReplaceBuffer(title: string): void
     setl noswapfile
 enddef
 
-function! s:notrails()
-    let _s=@/
-    :%s/\s\+$//e
-    let @/=_s
-    nohl
-    unlet _s
-endfunction
 
 
 
