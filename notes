@@ -1,6 +1,6 @@
 To test vi startup speed
 
-        vim --startuptime vim.log
+        gvim --startuptime vim.log
 
 To clear search highlight
 

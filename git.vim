@@ -406,8 +406,8 @@ def! GitStatus()
     OpenTab('GIT')
     WriteShell(['git status'])
     append('$', [
-    '<INS> ADD ALL    <PGUP>     PUSH',
-    '<END> COMMIT     <PGDN>     FETCH',
+    '<INS> ADD ALL    <HOME>           <PGUP>     PUSH',
+    '<DEL> UNSTAGE    <END>  COMMIT    <PGDN>     FETCH',
     '<F6>  GIT GUI    <F7>       GIT LOG (COMMIT UNDER CURSOR)',
     '<F8>  REFRESH    <SHIFT+F7> GIK (UNDER CURSOR)',
     '', repeat('-', 80), ''])

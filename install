@@ -48,7 +48,7 @@ cat "${CWD}/csharp.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/goto.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/menu.vim" >> "${HOME}/.vimrc"
 
-sed -i /^.*#\\s/d "${HOME}/.vimrc"
+sed -i '/^\s*#\s.*/d' "${HOME}/.vimrc"
 sed -i '/^#.*/d' "${HOME}/.vimrc"
 sed -i '/^\".*/d' "${HOME}/.vimrc"
 sed -i /^$/d "${HOME}/.vimrc"

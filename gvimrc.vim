@@ -1,7 +1,6 @@
 vim9script
 
 # HIDE MENU, HIDE TOOLBAR, AUTO CLIPBOARD, KEEP WINDOW SIZE
-set guioptions +=M
 set guioptions -=m
 set guioptions -=T
 set guioptions +=P
