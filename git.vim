@@ -399,61 +399,6 @@ def! GitBranchNav()
     endif
 enddef
 
-def! GitStatus()
-    let now = reltime()
-
-    GitHead()
-    OpenTab('GIT')
-    WriteShell(['git status'])
-    append('$', [
-    '<INS> ADD ALL    <HOME>           <PGUP>     PUSH',
-    '<DEL> UNSTAGE    <END>  COMMIT    <PGDN>     FETCH',
-    '<F6>  GIT GUI    <F7>       GIT LOG (COMMIT UNDER CURSOR)',
-    '<F8>  REFRESH    <SHIFT+F7> GIK (UNDER CURSOR)',
-    '', repeat('-', 80), ''])
-
-    norm G
-    WriteShell(['git log -n5'])
-    exe '%s/\s\+$//e'
-
-    # POSITION
-    norm gg
-
-    # SYNTAX
-    setl colorcolumn=
-    GitColors()
-
-    # LOCAL KEY BINDS
-    nnoremap <silent><buffer><DEL> :cal <SID>GitStatusUnstage()<CR>
-    nnoremap <silent><buffer><END> :cal <SID>GitCommit()<CR>
-    nnoremap <silent><buffer><INS> :cal <SID>GitStatusAdd()<CR>
-    nnoremap <silent><buffer><PageDown> :cal <SID>GitStatusFetch()<CR>
-    nnoremap <silent><buffer><PageUp> :cal <SID>GitStatusPush()<CR>
-
-    # PERFORMANCE
-    append('$' ['', 'Time:' .. reltimestr(reltime(now, reltime()))])
-enddef
-nnoremap <silent><F8> :cal <SID>GitStatus()<CR>
-
-def! GitStatusUnstage()
-    GitAsyncWin('git restore --staged ' .. expand('<cfile>'), 'SO', 'Unstage')
-enddef
-
-def! GitStatusAdd()
-    GitAsyncWin('git add .', 'SO', 'ADDING ALL FILES')
-    GitStatus()
-enddef
-
-def! GitStatusFetch()
-    GitAsyncWin('git fetch', 'SO', 'FETCHING')
-    GitStatus()
-enddef
-
-def! GitStatusPush()
-    GitAsyncWin('git push', 'SO', 'PUSHING')
-    GitStatus()
-enddef
-
 def! GitK()
     let path = expand('<cfile>')
     if filereadable(path)
