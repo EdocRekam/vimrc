@@ -424,7 +424,7 @@ def! GitStatus()
     GitColors()
 
     # LOCAL KEY BINDS
-    nnoremap <silent><buffer><END> :Gcommit<CR>
+    nnoremap <silent><buffer><END> :cal <SID>GitCommit()<CR>
     nnoremap <silent><buffer><INS> :cal <SID>GitStatusAdd()<CR>
     nnoremap <silent><buffer><PageDown> :cal <SID>GitStatusFetch()<CR>
     nnoremap <silent><buffer><PageUp> :cal <SID>GitStatusPush()<CR>

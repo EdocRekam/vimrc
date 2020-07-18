@@ -173,7 +173,7 @@ def! MnuCallback(winid: number, result: number): number
     elseif 12 == id
         GitAsyncWin('git add .', 'SO', 'ADDING')
     elseif 13 == id
-        Gcommit
+        GitCommit()
     elseif 14 == id
         GitAsyncWin('git diff', 'DIFF', '')
     elseif 15 == id

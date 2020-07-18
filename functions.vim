@@ -126,12 +126,14 @@ enddef
 
 def! WriteBuffer(h: number, msg: any)
     let i = getbufinfo(h)
-    appendbufline(h, i[0].linecount - 1, msg)
+    let c = i[0].linecount
+    appendbufline(h, c - 1, msg)
 enddef
 
 def! s:WriteShellCallback(h: number, chan: number, msg: string)
     let i = getbufinfo(h)
-    appendbufline(h, i[0].linecount - 1, msg)
+    let c = i[0].linecount
+    appendbufline(h, c - 1, msg)
 enddef
 
 def! WriteShellAsync(cmd: string)

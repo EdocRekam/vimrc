@@ -1,0 +1,7 @@
+To test vi startup speed
+
+        vim --startuptime vim.log
+
+To clear search highlight
+
+        :noh

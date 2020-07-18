@@ -1,5 +1,3 @@
-vim9script
-
 " COMMIT TEMPLATE
 let ct = '.git/GITGUI_MSG'
 
@@ -46,8 +44,7 @@ def! GitCommitGo()
     GitCommitMsg(hCommit, 'Switching to read-only mode.')
     GitCommitMsg(hCommit, cmd)
     setbufvar(hMsg, '&modifiable', 0)
-    GitCommitShell(hCommit, 'ls')
-    " GitCommitShell(hCommit, cmd)
+    GitCommitShell(hCommit, cmd)
 enddef
 
 def! GitCommit()
@@ -94,4 +91,3 @@ def! GitCommit()
     GitCommitMsg(hMsg, '# Time:' .. reltimestr(reltime(now, reltime())))
 enddef
 
-cal GitCommit()
