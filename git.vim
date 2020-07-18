@@ -76,7 +76,7 @@ def! GitRemotes(): string
 enddef
 
 def! GitBranch()
-    let startTime = reltime()
+    let now = reltime()
 
     GitHead()
     OpenTab('GIT')
@@ -141,7 +141,7 @@ def! GitBranch()
     nnoremap <silent><buffer><F4> :cal <SID>GitBranchNav()<CR>
 
     # PERFORMANCE
-    append('$' ['', 'Time:' .. reltimestr(reltime(startTime, reltime()))])
+    append('$' ['', 'Time:' .. reltimestr(reltime(now, reltime()))])
 enddef
 nnoremap <silent><F5> :cal <SID>GitBranch()<CR>
 
@@ -286,7 +286,7 @@ def! GitDiffNav()
 enddef
 
 def! InnerGitLog(commit: string)
-    let startTime = reltime()
+    let now = reltime()
 
     OpenTab('LOG:' .. commit)
 
@@ -345,7 +345,7 @@ def! InnerGitLog(commit: string)
     nnoremap <silent><buffer><F4> :cal <SID>GitDiff(expand('<cword>'))<CR>
 
     # PERFORMANCE
-    append('$' ['', 'Time:' .. reltimestr(reltime(startTime, reltime()))])
+    append('$' ['', 'Time:' .. reltimestr(reltime(now, reltime()))])
 enddef
 
 def! GitLog()
@@ -400,7 +400,7 @@ def! GitBranchNav()
 enddef
 
 def! GitStatus()
-    let startTime = reltime()
+    let now = reltime()
 
     GitHead()
     OpenTab('GIT')
@@ -424,15 +424,20 @@ def! GitStatus()
     GitColors()
 
     # LOCAL KEY BINDS
+    nnoremap <silent><buffer><DEL> :cal <SID>GitStatusUnstage()<CR>
     nnoremap <silent><buffer><END> :cal <SID>GitCommit()<CR>
     nnoremap <silent><buffer><INS> :cal <SID>GitStatusAdd()<CR>
     nnoremap <silent><buffer><PageDown> :cal <SID>GitStatusFetch()<CR>
     nnoremap <silent><buffer><PageUp> :cal <SID>GitStatusPush()<CR>
 
     # PERFORMANCE
-    append('$' ['', 'Time:' .. reltimestr(reltime(startTime, reltime()))])
+    append('$' ['', 'Time:' .. reltimestr(reltime(now, reltime()))])
 enddef
 nnoremap <silent><F8> :cal <SID>GitStatus()<CR>
+
+def! GitStatusUnstage()
+    GitAsyncWin('git restore --staged ' .. expand('<cfile>'), 'SO', 'Unstage')
+enddef
 
 def! GitStatusAdd()
     GitAsyncWin('git add .', 'SO', 'ADDING ALL FILES')
