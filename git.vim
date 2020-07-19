@@ -76,103 +76,9 @@ def! GitRemotes(): string
     return printf('Remotes:%s', line)
 enddef
 
-def! GitBranch()
-    let now = reltime()
-
-    GitHead()
-    OpenTab('GIT')
-    let rs: list<list<string>>
-    let hs = systemlist("git branch -a --format='%(objectname:short) %(refname)'")
-    for h in hs
-        let p = split(h)
-        let commit = p[0]
-        let ref = substitute(p[1], 'refs/remotes/', '', '')
-        ref = substitute(ref, 'refs/heads/', '', '')
-        let r = [ commit, ref]
-        let cmd = "git log -n1 --pretty='%<(78,trunc)%s | %as | %an' " .. commit
-        let line = Chomp(system(cmd))
-        extend(r, split(line, ' | '))
-        add(rs, r)
-    endfor
-    let lens = [
-        Longest(rs, 0, 7, 100),
-        Longest(rs, 1, 10, 100),
-        Longest(rs, 2, 7, 100),
-        11,
-        Longest(rs, 4, 7, 100)]
-
-    let f = '%-' .. lens[0] .. 's  %-' .. lens[1] .. 's  %-' .. lens[2] .. 's  %-' .. lens[3] .. 's  %-' .. lens[4] .. 's'
-    let h = printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR')
-    let hl = strchars(h)
-    let sep = repeat('-', hl)
-
-    append('^', [h, sep])
-    for r in rs
-        append(line('$') - 1, printf(f, r[0], r[1], r[2], r[3], r[4]))
-    endfor
-
-    append('$', [
-    '<INS> ADD BRANCH   <HOME> CLEAN',
-    '<DEL> DEL BRANCH   <END>  RESET (HARD)',
-    '<F4>  CHECKOUT     <F5>   REFRESH',
-    '<SHIFT+F7> GITK (UNDER CURSOR)',
-    '', GitRemotes(), '',
-    '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> PULL TAGS', ''
-    'BRANCH: ' .. g:head, sep, ''])
-
-    norm G
-    WriteShell(["git log -n5 HEAD"])
-    exe 'sil %s/\s\+$//e'
-
-    # POSITION
-    exe printf('norm %s|', lens[0] + 3)
-    exe '3'
-
-    # SYNTAX
-    GitColors()
-    setl colorcolumn=
-
-    # LOCAL KEY BINDS
-    nnoremap <silent><buffer><c-t> :cal <SID>GitFetchTags()<CR>
-    nnoremap <silent><buffer><c-p> :cal <SID>GitBranchPrune()<CR>
-    nnoremap <silent><buffer><INS> :cal <SID>GitBranchNew()<CR>
-    nnoremap <silent><buffer><DEL> :cal <SID>GitBranchDel()<CR>
-    nnoremap <silent><buffer><HOME> :cal <SID>GitBranchClean()<CR>
-    nnoremap <silent><buffer><END> :cal <SID>GitBranchReset()<CR>
-    nnoremap <silent><buffer><F4> :cal <SID>GitBranchNav()<CR>
-
-    # PERFORMANCE
-    append('$' ['', 'Time:' .. reltimestr(reltime(now, reltime()))])
-enddef
-nnoremap <silent><F5> :cal <SID>GitBranch()<CR>
-
 def! GitFetchTags()
     GitAsyncWin('git fetch --tags ' .. expand('<cword>'),
         'BRANCH', 'FETCHING TAGS')
-enddef
-
-def! GitBranchPrune()
-    GitAsyncWin('git remote prune ' .. expand('<cword>'),
-        'BRANCH', 'PRUNING')
-enddef
-
-def! GitBranchClean()
-    GitAsyncWin('git clean -xdf -e *.swp', 'BRANCH', 'CLEANING')
-enddef
-
-def! GitBranchDel()
-    GitAsyncWin('git branch -d ' .. expand('<cfile>'),
-        'BRANCH', 'DELETE BRANCH')
-enddef
-
-def! GitBranchNew()
-    GitAsyncWin('git branch ' .. expand('<cfile>'),
-        'BRANCH', 'NEW BRANCH')
-enddef
-
-def! GitBranchReset()
-    GitAsyncWin('git reset --hard ' .. expand('<cfile>'),
-        'BRANCH', 'RESET BRANCH')
 enddef
 
 def! GitDiff(commit: string)
@@ -386,17 +292,6 @@ def! GitLogNav()
         GitDiff(expand('<cword>'))
     else
         GitLog()
-    endif
-enddef
-
-def! GitBranchNav()
-    if col('.') < 10
-        GitLog()
-    else
-        let cmd = 'git checkout ' .. expand('<cfile>:t')
-        OpenWin('BRANCH')
-        setline('$', ['SWITCHING BRANCH', cmd])
-        WriteShellAsync(cmd)
     endif
 enddef
 
