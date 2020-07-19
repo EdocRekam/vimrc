@@ -66,7 +66,6 @@ def! GitStatus()
     bufload(hS)
     setbufvar(hS, '&buflisted', '0')
     setbufvar(hS, '&buftype', 'nofile')
-    setbufvar(hS, '&colorcolumn', '')
     setbufvar(hS, '&swapfile', '0')
     GitStatusRefresh(hS)
 
@@ -75,7 +74,6 @@ def! GitStatus()
     bufload(hM)
     setbufvar(hM, '&buflisted', '0')
     setbufvar(hM, '&buftype', 'nofile')
-    setbufvar(hM, '&colorcolumn', '')
     setbufvar(hM, '&swapfile', '0')
     GitStatusMsg(hM, 'Ready...')
 
@@ -90,11 +88,12 @@ def! GitStatus()
     exe '2resize 20'
 
     # SYNTAX
+    setbufvar(hS, '&colorcolumn', '')
     GitColors()
 
     # LOCAL KEY BINDS
-    exe printf("nnoremap <silent><buffer><F3> :cal <SID>GitStatusQuit(%d, %d)<CR>", hS, hM)
-    exe printf("nnoremap <silent><buffer><F8> :cal <SID>GitStatusRefresh(%d)<CR>", hS)
+    exe printf('nnoremap <silent><buffer><F3> :cal <SID>GitStatusQuit(%d, %d)<CR>', hS, hM)
+    exe printf('nnoremap <silent><buffer><F8> :cal <SID>GitStatusRefresh(%d)<CR>', hS)
     exe printf('nnoremap <silent><buffer><DEL> :cal <SID>GitStatusUnstage(%d)<CR>', hM)
     exe printf('nnoremap <silent><buffer><INS> :cal <SID>GitStatusAdd(%d)<CR>', hM)
     exe printf('nnoremap <silent><buffer><PageDown> :cal <SID>GitStatusFetch(%d)<CR>', hM)
