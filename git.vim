@@ -48,7 +48,6 @@ def! GitColors()
     syn keyword Keyword anna hub origin remotes usb vso
     syn keyword String x86 x64 anycpu
     syn keyword LightBlue commit merge author date branch subject tag tree
-    " syn keyword Good modified
     syn region Good start="^\t" end="$" contains=@NoSpell oneline
     syn region String start="<" end=">" contains=@NoSpell oneline
     syn region String start="`" end="`" contains=@NoSpell oneline
@@ -65,15 +64,6 @@ def! GitColors()
     hi LightBlue guifg=#9cdcfe
     hi Bad  guifg=#ee3020
     hi Good guifg=#00b135
-enddef
-
-def! GitRemotes(): string
-    let line: string
-    let remotes = systemlist('git remote')
-    for remote in remotes
-        line =  printf('%s  %s', line, remote)
-    endfor
-    return printf('Remotes:%s', line)
 enddef
 
 def! GitFetchTags()

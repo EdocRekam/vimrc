@@ -32,7 +32,7 @@ enddef
 
 def! GitStatusShell(h: number, cmd: string)
     GitStatusMsg(h, cmd)
-    win_execute(2, 'norm G')
+    win_execute(win_getid(2), 'norm G')
     let f = funcref("s:GitStatusShellCallback", [h])
     let e = funcref("s:GitStatusShellExit", [h])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
@@ -54,8 +54,8 @@ def! GitStatusUnstage(h: number)
     GitStatusShell(h, 'git restore --staged ' .. expand('<cfile>'))
 enddef
 
-def! GitStatusQuit(hS: number, hM: number)
-    exe 'silent bw! ' .. hS .. ' ' .. hM
+def! GitStatusQuit(hT: number, hB: number)
+    exe 'silent bw! ' .. hT .. ' ' .. hB
 enddef
 
 def! GitStatus()
