@@ -24,8 +24,7 @@ def! GitBranchRefresh(h: number)
         ref = substitute(ref, 'refs/heads/', '', '')
         let r = [ commit, ref]
         let cmd = "git log -n1 --pretty='%<(78,trunc)%s | %as | %an' " .. commit
-        let line = Chomp(system(cmd))
-        extend(r, split(line, ' | '))
+        extend(r, split(Chomp(system(cmd)), ' | '))
         add(rs, r)
     endfor
     let lens = [
@@ -40,12 +39,13 @@ def! GitBranchRefresh(h: number)
     let hl = strchars(hdr)
     let sep = repeat('-', hl)
 
-    GitBranchMsg(h, [hdr, sep])
+    let data: list<string>
+    extend(data, [hdr, sep])
     for r in rs
-        GitBranchMsg(h, printf(f, r[0], r[1], r[2], r[3], r[4]))
+        add(data, printf(f, r[0], r[1], r[2], r[3], r[4]))
     endfor
 
-    GitBranchMsg(h, ['','',
+    extend(data, ['','',
     '<INS> ADD BRANCH   <HOME> CLEAN',
     '<DEL> DEL BRANCH   <END>  RESET (HARD)',
     '<F4>  CHECKOUT     <F5>   REFRESH',
@@ -54,8 +54,9 @@ def! GitBranchRefresh(h: number)
     '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> PULL TAGS', ''
     'BRANCH: ' .. g:head, sep, ''])
 
-    GitBranchMsg(h, systemlist('git log -n5'))
-    GitBranchMsg(h, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
+    extend(data, systemlist('git log -n5'))
+    extend(data, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
+    GitBranchMsg(h, data)
 
     # POSITION
     let winid = win_getid(1)
@@ -75,7 +76,7 @@ enddef
 
 def! GitBranchShell(h: number, cmd: string)
     GitBranchMsg(h, cmd)
-    win_execute(2, 'norm G')
+    win_execute(win_getid(2), 'norm G')
     let f = funcref("s:GitBranchShellCallback", [h])
     let e = funcref("s:GitBranchShellExit", [h])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
