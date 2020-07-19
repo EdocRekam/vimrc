@@ -48,7 +48,8 @@ def! GitColors()
     syn keyword Keyword anna hub origin remotes usb vso
     syn keyword String x86 x64 anycpu
     syn keyword LightBlue commit merge author date branch subject tag tree
-    syn keyword Good modified
+    " syn keyword Good modified
+    syn region Good start="^\t" end="$" contains=@NoSpell oneline
     syn region String start="<" end=">" contains=@NoSpell oneline
     syn region String start="`" end="`" contains=@NoSpell oneline
     syn region String start='"' end='"' contains=@NoSpell oneline
