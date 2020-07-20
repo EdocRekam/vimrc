@@ -16,11 +16,11 @@ def! GStatRefresh(hT: number)
     endfor
     extend(l, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
     Say(hT, l)
+    win_execute(win_getid(1), 'norm gg')
 enddef
 
 def! GStatShellExit(hT: number, hB: number, chan: number, code: number)
     GStatRefresh(hT)
-    win_execute(win_getid(1), 'norm gg')
 enddef
 
 def! GStatShell(hT: number, hB: number, cmd: string)
