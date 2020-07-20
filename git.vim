@@ -3,9 +3,10 @@ nnoremap <silent><F6> :sil !git gui&<CR>
 
 let g:head = ''
 def! GitHead(): string
-    g:head = Chomp(system('git rev-parse --abbrev-ref HEAD'))
+    g:head = trim(system('git rev-parse --abbrev-ref HEAD'))
     retu g:head
 enddef
+
 
 def! GitAsyncWin(cmd: string, title: string, msg: string)
     let h = OpenWin(title, 0)
@@ -218,7 +219,7 @@ def! InnerGitLog(commit: string)
 
     let refs = ShellList(['git rev-parse --short --tags HEAD'])
     for r in refs
-        let line = Chomp(system("git log -n1 --pretty='%t | %h | %<(78,trunc)%D | %as | %an' " .. r))
+        let line = trim(system("git log -n1 --pretty='%t | %h | %<(78,trunc)%D | %as | %an' " .. r))
         let row = split(line, ' | ')
         append(line('$') - 1, printf(fmt, row[0], row[1], row[2], row[3], row[4]))
     endfor

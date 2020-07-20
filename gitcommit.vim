@@ -16,78 +16,70 @@ enddef
 def! GitCommitShell(h: number, cmd: string)
     let f = funcref("s:GitCommitShellCallback", [h])
     let e = funcref("s:GitCommitShellExit", [h])
-    job_start(cmd, #{out_cb: f,
-    err_cb: f,
-    exit_cb: e})
+    job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
-def! GitCommitMsg(h: number, msg: any)
-    let c = get(get(getbufinfo(h), 0), 'linecount')
-    let l = strlen(get(getbufline(h, '$'), 0))
-    appendbufline(h, l > 1 ? c : c - 1, msg)
-enddef
-
-def! GitCommitQuit(hMsg: number, hCommit: number)
-    if 1 == getbufvar(hMsg, '&modifiable')
-        exe printf('au! BufWritePost <buffer=%d>', hMsg)
+def! GitCommitQuit(hT: number, hB: number)
+    if 1 == getbufvar(hT, '&modifiable')
+        exe printf('au! BufWritePost <buffer=%d>', hT)
         exe 'silent g/^#.*/d'
         exe 'silent write ' .. ct
     endif
-    exe 'silent bw! ' .. hMsg .. ' ' .. hCommit
+    exe 'silent bw! ' .. hT .. ' ' .. hB
 enddef
 
 def! GitCommitGo()
-    let hMsg = gettabvar(tabpagenr(), 'hMsg', 0)
-    let hCommit = gettabvar(tabpagenr(), 'hCommit', 0)
+    let hT = gettabvar(tabpagenr(), 'hT', 0)
+    let hB = gettabvar(tabpagenr(), 'hB', 0)
 
     let cmd = 'git commit --cleanup=strip -F ' .. ct
-    GitCommitMsg(hCommit, 'Switching to read-only mode.')
-    GitCommitMsg(hCommit, cmd)
-    setbufvar(hMsg, '&modifiable', 0)
-    GitCommitShell(hCommit, cmd)
+    Say(hB, 'Switching to read-only mode.')
+    Say(hB, cmd)
+    setbufvar(hT, '&modifiable', 0)
+    GitCommitShell(hB, cmd)
 enddef
 
 def! GitCommit()
     let now = reltime()
 
     # TOP ----------------------------------------------------------------
-    let hMsg = bufadd(ct)
-    bufload(hMsg)
-    setbufvar(hMsg, '&syntax', 'gitcommit')
-    exe printf('au! BufWritePost <buffer=%d> ++once :cal GitCommitGo()', hMsg)
+    let hT = bufadd(ct)
+    bufload(hT)
+    setbufvar(hT, '&syntax', 'gitcommit')
+    exe printf('au! BufWritePost <buffer=%d> ++once :cal GitCommitGo()', hT)
 
-    GitCommitMsg(hMsg, [
+    Say(hT, [
     '# Please enter the commit message for your changes. Lines starting',
     "# with '#' will be ignored, and an empty message aborts the commit.",
     '#'])
 
     for l in systemlist('git status')
-        GitCommitMsg(hMsg, printf('#%s%s', '' == l ? '' : ' ', l))
+        Say(hT, printf('#%s%s', '' == l ? '' : ' ', l))
     endfor
-    GitCommitMsg(hMsg, ['#',
+    Say(hT, ['#',
     '# PRESS <F3> TO ABORT OR CLOSE COMMIT WINDOW'])
 
     # BOTTOM -------------------------------------------------------------
-    let hCommit = bufadd('COMMIT')
-    bufload(hCommit)
-    setbufvar(hCommit, '&buflisted', '0')
-    setbufvar(hCommit, '&buftype', 'nofile')
-    setbufvar(hCommit, '&colorcolumn', '')
-    setbufvar(hCommit, '&swapfile', '0')
-    GitCommitMsg(hCommit, 'Waiting for save ...')
+    let hB = bufadd('COMMIT')
+    bufload(hB)
+    setbufvar(hB, '&buflisted', '0')
+    setbufvar(hB, '&buftype', 'nofile')
+    setbufvar(hB, '&colorcolumn', '')
+    setbufvar(hB, '&swapfile', '0')
+    Say(hB, 'Waiting for save ...')
 
     # TAB ----------------------------------------------------------------
     tabnew COMMIT
     let hTab = tabpagenr()
-    settabvar(hTab, 'hCommit', hCommit)
-    settabvar(hTab, 'hMsg', hMsg)
+    settabvar(hTab, 'hB', hB)
+    settabvar(hTab, 'hT', hT)
     settabvar(hTab, 'title', 'COMMIT')
 
     split .git/GITGUI_MSG
-    exe printf("nnoremap <silent><buffer><F3> :cal <SID>GitCommitQuit(%d, %d)<CR>", hMsg, hCommit)
+    exe printf("nnoremap <silent><buffer><F3> :cal <SID>GitCommitQuit(%d, %d)<CR>", hT, hB)
     exe '2resize 20'
 
     # PERFORMANCE
-    GitCommitMsg(hMsg, '# Time:' .. reltimestr(reltime(now, reltime())))
+    Say(hT, '# Time:' .. reltimestr(reltime(now, reltime())))
 enddef
 

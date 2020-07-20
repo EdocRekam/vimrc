@@ -1,8 +1,4 @@
 
-def! Chomp(msg: string): string
-    retu strcharpart(msg, 0, strchars(msg) - 1)
-enddef
-
 def! FindInFile(val: string)
     exe printf("sil grep! -rni  '%s' *", val)
     copen 35
@@ -38,6 +34,12 @@ def! Rotate()
     exe 'wincmd ' .. s:orient
 enddef
 nnoremap <silent><S-F12> :cal <SID>Rotate()<CR>
+
+def! Say(h: number, msg: any)
+    let c = get(get(getbufinfo(h), 0), 'linecount')
+    let l = strlen(get(getbufline(h, '$'), 0))
+    appendbufline(h, l > 1 ? c : c - 1, msg)
+enddef
 
 def! SourceFile()
     up

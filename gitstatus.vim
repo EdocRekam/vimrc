@@ -1,103 +1,99 @@
-def! GitStatusMsg(h: number, msg: any)
-    let c = get(get(getbufinfo(h), 0), 'linecount')
-    let l = strlen(get(getbufline(h, '$'), 0))
-    appendbufline(h, l > 1 ? c : c - 1, msg)
-enddef
 
-def! GitStatusRefresh(h: number)
+def! GStatRefresh(hT: number)
     let now = reltime()
-    deletebufline(h, 1, '$')
-    GitStatusMsg(h, systemlist('git status'))
-    GitStatusMsg(h, ['',
+    deletebufline(hT, 1, '$')
+    let l = systemlist('git status')
+    extend(l, ['',
     '<INS>  ADD ALL   <HOME>  ------  <PGUP>  PUSH',
     '<DEL>  UNSTAGE   <END>   COMMIT  <PGDN>  FETCH',
     '',
     '<F6>   GIT GUI   <F7>    GIT LOG (UNDER CURSOR)',
     '<F8>   REFRESH   <S+F7>  GITK (UNDER CURSOR)',
     '', repeat('-', 75)])
-    GitStatusMsg(h, systemlist('git log -n5'))
-    GitStatusMsg(h, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
+    extend(l, systemlist('git log -n5'))
+    extend(l, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
+    Say(hT, l)
 enddef
 
-def! GitStatusShellCallback(h: number, chan: number, msg: string)
+def! GStatShellCallback(h: number, chan: number, msg: string)
     let c = get(get(getbufinfo(h), 0), 'linecount')
     let l = strlen(get(getbufline(h, '$'), 0))
     appendbufline(h, l > 1 ? c : c - 1, msg)
 enddef
 
-def! GitStatusShellExit(h: number, chan: number, code: number)
-    GitStatusRefresh(gettabvar(tabpagenr(), 'hS'))
-    norm gg
+def! GStatShellExit(hT: number, hB: number, chan: number, code: number)
+    GStatRefresh(hT)
+    win_execute(win_getid(2), 'norm gg')
 enddef
 
-def! GitStatusShell(h: number, cmd: string)
-    GitStatusMsg(h, cmd)
-    win_execute(win_getid(2), 'norm G')
-    let f = funcref("s:GitStatusShellCallback", [h])
-    let e = funcref("s:GitStatusShellExit", [h])
+def! GStatShell(hT: number, hB: number, cmd: string)
+    Say(hT, cmd)
+    let f = funcref("s:GStatShellCallback", [hT, hB])
+    let e = funcref("s:GStatShellExit", [hT, hB])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
-def! GitStatusAdd(h: number)
-    GitStatusShell(h, 'git add .')
+def! GStatAdd(hT: number, hB: number)
+    GStatShell(hT, hB, 'git add .')
 enddef
 
-def! GitStatusFetch(h: number)
-    GitStatusShell(h, 'git fetch')
+def! GStatFetch(hT: number, hB: number)
+    GStatShell(hT, hB, 'git fetch')
 enddef
 
-def! GitStatusPush(h: number)
-    GitStatusShell(h, 'git push')
+def! GStatPush(hT: number, hB: number)
+    GStatShell(hT, hB, 'git push')
 enddef
 
-def! GitStatusUnstage(h: number)
-    GitStatusShell(h, 'git restore --staged ' .. expand('<cfile>'))
+def! GStatUnstage(hT: number, hB: number)
+    GStatShell(hT, hB, 'git restore --staged ' .. expand('<cfile>'))
 enddef
 
-def! GitStatusQuit(hT: number, hB: number)
-    exe 'silent bw! ' .. hT .. ' ' .. hB
+def! GStatQuit(hT: number, hB: number)
+    exe 'sil bw! ' .. hT .. ' ' .. hB
 enddef
 
 def! GitStatus()
     GitHead()
 
     # TOP ----------------------------------------------------------------
-    let hS = bufadd('Git Status')
-    bufload(hS)
-    setbufvar(hS, '&buflisted', '0')
-    setbufvar(hS, '&buftype', 'nofile')
-    setbufvar(hS, '&swapfile', '0')
-    GitStatusRefresh(hS)
+    let hT = bufadd('Git Status')
+    bufload(hT)
+    setbufvar(hT, '&buflisted', '0')
+    setbufvar(hT, '&buftype', 'nofile')
+    setbufvar(hT, '&swapfile', '0')
+    GStatRefresh(hT)
 
     # BOTTOM -------------------------------------------------------------
-    let hM = bufadd('Git Status - Messages')
-    bufload(hM)
-    setbufvar(hM, '&buflisted', '0')
-    setbufvar(hM, '&buftype', 'nofile')
-    setbufvar(hM, '&swapfile', '0')
-    GitStatusMsg(hM, 'Ready...')
+    let hB = bufadd('Git Status - Messages')
+    bufload(hB)
+    setbufvar(hB, '&buflisted', '0')
+    setbufvar(hB, '&buftype', 'nofile')
+    setbufvar(hB, '&swapfile', '0')
+    Say(hB, 'Ready...')
 
     # TAB ----------------------------------------------------------------
     exe 'tabnew Git Status - Messages'
-    let hT = tabpagenr()
-    settabvar(hT, 'hS', hS)
-    settabvar(hT, 'hM', hM)
-    settabvar(hT, 'title', 'STATUS')
+    let hTab = tabpagenr()
+    settabvar(hTab, 'hT', hT)
+    settabvar(hTab, 'hB', hB)
+    settabvar(hTab, 'title', 'STATUS')
 
     exe 'split Git Status'
     exe '2resize 20'
 
     # SYNTAX
-    setbufvar(hS, '&colorcolumn', '')
+    setbufvar(hT, '&colorcolumn', '80')
+    setbufvar(hB, '&colorcolumn', '')
     GitColors()
 
     # LOCAL KEY BINDS
-    exe printf('nnoremap <silent><buffer><F3> :cal <SID>GitStatusQuit(%d, %d)<CR>', hS, hM)
-    exe printf('nnoremap <silent><buffer><F8> :cal <SID>GitStatusRefresh(%d)<CR>', hS)
-    exe printf('nnoremap <silent><buffer><DEL> :cal <SID>GitStatusUnstage(%d)<CR>', hM)
-    exe printf('nnoremap <silent><buffer><INS> :cal <SID>GitStatusAdd(%d)<CR>', hM)
-    exe printf('nnoremap <silent><buffer><PageDown> :cal <SID>GitStatusFetch(%d)<CR>', hM)
-    exe printf('nnoremap <silent><buffer><PageUp> :cal <SID>GitStatusPush(%d)<CR>', hM)
+    exe printf('nnoremap <silent><buffer><F3> :cal <SID>GStatQuit(%d, %d)<CR>', hT, hB)
+    exe printf('nnoremap <silent><buffer><F8> :cal <SID>GStatRefresh(%d)<CR>', hT)
+    exe printf('nnoremap <silent><buffer><DEL> :cal <SID>GStatUnstage(%d, %d)<CR>', hT, hB)
+    exe printf('nnoremap <silent><buffer><INS> :cal <SID>GStatAdd(%d, %d)<CR>', hT, hB)
+    exe printf('nnoremap <silent><buffer><PageDown> :cal <SID>GStatFetch(%d, %d)<CR>', hT, hB)
+    exe printf('nnoremap <silent><buffer><PageUp> :cal <SID>GStatPush(%d, %d)<CR>', hT, hB)
     nnoremap <silent><buffer><END> :cal <SID>GitCommit()<CR>
 enddef
 nnoremap <silent><F8> :cal <SID>GitStatus()<CR>

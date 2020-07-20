@@ -81,6 +81,6 @@ set statusline=%!g:GetStatus()
 
 " CUSTOM TAB LABEL VIA `title` TAB VARIABLE
 def! g:TabLabel(h: number): string
-    return gettabvar(h, 'title', '')
+    retu gettabvar(h, 'title', '')
 enddef
 set guitablabel=%!TabLabel(v:lnum)

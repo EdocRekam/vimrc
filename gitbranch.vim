@@ -6,25 +6,19 @@ def! GitRemotes(): string
     retu 'Remotes:' .. l
 enddef
 
-def! GitBranchMsg(h: number, msg: any)
-    let c = get(get(getbufinfo(h), 0), 'linecount')
-    let l = strlen(get(getbufline(h, '$'), 0))
-    appendbufline(h, l > 1 ? c : c - 1, msg)
-enddef
-
 def! GitBranchRefresh(h: number)
     let now = reltime()
     deletebufline(h, 1, '$')
 
     let rs: list<list<string>>
-    for br in systemlist("git branch -a --format='%(objectname:short) %(refname)'")
-        let p = split(br)
+    for i in systemlist("git branch -a --format='%(objectname:short) %(refname)'")
+        let p = split(i)
         let commit = p[0]
         let ref = substitute(p[1], 'refs/remotes/', '', '')
         ref = substitute(ref, 'refs/heads/', '', '')
         let r = [ commit, ref]
         let cmd = "git log -n1 --pretty='%<(78,trunc)%s | %as | %an' " .. commit
-        extend(r, split(Chomp(system(cmd)), ' | '))
+        extend(r, split(trim(system(cmd)), ' | '))
         add(rs, r)
     endfor
     let lens = [
@@ -34,18 +28,17 @@ def! GitBranchRefresh(h: number)
         11,
         Longest(rs, 4, 7, 100)]
 
-    let f = '%-' .. lens[0] .. 's  %-' .. lens[1] .. 's  %-' .. lens[2] .. 's  %-' .. lens[3] .. 's  %-' .. lens[4] .. 's'
+    let f = '%-' .. lens[0] .. 's  %-' .. lens[1] .. 's  %-' .. lens[2] .. 's  %-' .. lens[3] .. 's  %s'
     let hdr = printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR')
-    let hl = strchars(hdr)
+    let hl = lens[0] + lens[1] + lens[2] + lens[3] + lens[4] + 8
     let sep = repeat('-', hl)
 
-    let data: list<string>
-    extend(data, [hdr, sep])
+    let l = [hdr, sep]
     for r in rs
-        add(data, printf(f, r[0], r[1], r[2], r[3], r[4]))
+        add(l, printf(f, r[0], r[1], r[2], r[3], r[4]))
     endfor
 
-    extend(data, ['','',
+    extend(l, ['','',
     '<INS> ADD BRANCH   <HOME> CLEAN',
     '<DEL> DEL BRANCH   <END>  RESET (HARD)',
     '<F4>  CHECKOUT     <F5>   REFRESH',
@@ -54,9 +47,11 @@ def! GitBranchRefresh(h: number)
     '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> PULL TAGS', ''
     'BRANCH: ' .. g:head, sep, ''])
 
-    extend(data, systemlist('git log -n5'))
-    extend(data, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
-    GitBranchMsg(h, data)
+    for i in systemlist('git log -n5')
+        add(l, substitute(i, '^\s\s\s\s$', '', ''))
+    endfor
+    extend(l, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
+    Say(h, l)
 
     # POSITION
     let winid = win_getid(1)
@@ -75,7 +70,7 @@ def! GitBranchShellExit(h: number, chan: number, code: number)
 enddef
 
 def! GitBranchShell(h: number, cmd: string)
-    GitBranchMsg(h, cmd)
+    Say(h, cmd)
     win_execute(win_getid(2), 'norm G')
     let f = funcref("s:GitBranchShellCallback", [h])
     let e = funcref("s:GitBranchShellExit", [h])
@@ -111,7 +106,7 @@ def! GitBranchReset(h: number)
 enddef
 
 def! GitBranchQuit(hT: number, hB: number)
-    exe 'silent bw! ' .. hT .. ' ' .. hB
+    exe 'sil bw! ' .. hT .. ' ' .. hB
 enddef
 
 def! GitBranch()
@@ -130,7 +125,7 @@ def! GitBranch()
     setbufvar(hB, '&buflisted', '0')
     setbufvar(hB, '&buftype', 'nofile')
     setbufvar(hB, '&swapfile', '0')
-    GitBranchMsg(hB, 'Ready...')
+    Say(hB, 'Ready...')
 
     # TAB ----------------------------------------------------------------
     exe 'tabnew Git Branch - Messages'
