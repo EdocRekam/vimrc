@@ -1,17 +1,30 @@
 
 nnoremap <silent><F6> :sil !git gui&<CR>
 
-let g:head = ''
-def! GitHead(): string
+let g:head = 'HEAD'
+def! GHead(): string
     g:head = trim(system('git rev-parse --abbrev-ref HEAD'))
     retu g:head
 enddef
 
+def! GHide(h: number)
+    setbufvar(h, '&buflisted', '0')
+    setbufvar(h, '&buftype', 'nofile')
+    setbufvar(h, '&swapfile', '0')
+enddef
 
 def! GitAsyncWin(cmd: string, title: string, msg: string)
     let h = OpenWin(title, 0)
     WriteBuffer(h, [msg, cmd])
     WriteShellAsync(cmd)
+enddef
+
+def! GQuit(hT: number, hB: number)
+    exe 'sil bw! ' .. hT .. ' ' .. hB
+enddef
+
+def! SayCallback(h: number, chan: number, msg: string)
+    Say(h, msg)
 enddef
 
 def! GitShow(commit: string, path: string)
@@ -67,13 +80,8 @@ def! GitColors()
     hi Good guifg=#00b135
 enddef
 
-def! GitFetchTags()
-    GitAsyncWin('git fetch --tags ' .. expand('<cword>'),
-        'BRANCH', 'FETCHING TAGS')
-enddef
-
 def! GitDiff(commit: string)
-    GitHead()
+    GHead()
     OpenTab('SUMMARY: ' .. commit)
     setl colorcolumn=
 
@@ -181,109 +189,6 @@ def! GitDiffNav()
     endif
 
     norm gg
-enddef
-
-def! InnerGitLog(commit: string)
-    let now = reltime()
-
-    OpenTab('LOG:' .. commit)
-
-    let rows: list<list<string>>
-    let cmd = "git log -n50 --pretty='%t | %h | %<(78,trunc)%s | %as | %an' " .. commit
-    let log = systemlist(cmd)
-    for entry in log
-        rows->add(split(entry, ' | '))
-    endfor
-
-    let lens = [
-        Longest(rows, 0, 7, 100),
-        Longest(rows, 1, 7, 100),
-        Longest(rows, 2, 7, 100),
-        11,
-        Longest(rows, 4, 7, 100)]
-
-    let fmt = '%-' .. lens[0] .. 's  %-' .. lens[1] .. 's  %-' .. lens[2] .. 's  %-' .. lens[3] .. 's  %-' .. lens[4] .. 's'
-    let hdr = printf(fmt, 'TREE', 'COMMIT', commit, 'DATE', 'AUTHOR')
-    let hdrLen = strchars(hdr)
-    let sep = repeat('-', hdrLen)
-
-    append('^', [hdr, sep])
-    for row in rows
-        append(line('$') - 1, printf(fmt, row[0], row[1], row[2], row[3], row[4]))
-    endfor
-
-    # BRANCHES
-    append('$', [
-    printf(fmt, 'TREE', 'COMMIT', 'TAG', 'DATE', 'AUTHOR'), sep, ''])
-    norm G
-
-    let refs = ShellList(['git rev-parse --short --tags HEAD'])
-    for r in refs
-        let line = trim(system("git log -n1 --pretty='%t | %h | %<(78,trunc)%D | %as | %an' " .. r))
-        let row = split(line, ' | ')
-        append(line('$') - 1, printf(fmt, row[0], row[1], row[2], row[3], row[4]))
-    endfor
-    exe 'sil %s/\s\+$//e'
-
-    setline('$', ['',
-    '<F4>  INSPECT    <F5>       VIEW BRANCHES', 
-    '<F6>  GIT GUI    <F7>       GIT LOG (UNDER CURSOR)',
-    '                 <SHIFT+F7> GITK (UNDER CURSOR)',
-    ''])
-
-    # POSITION
-    norm gg21|
-
-    # SYNTAX
-    setl colorcolumn=
-    GitColors()
-
-    # LOCAL KEY BINDS
-    nnoremap <silent><buffer><2-LeftMouse> :cal <SID>GitLogNav()<CR>
-    nnoremap <silent><buffer><F4> :cal <SID>GitDiff(expand('<cword>'))<CR>
-
-    # PERFORMANCE
-    append('$' ['', 'Time:' .. reltimestr(reltime(now, reltime()))])
-enddef
-
-def! GitLog()
-    GitHead()
-    let hint = expand('<cfile>')
-    if strlen(hint) > 0
-        InnerGitLog(hint)
-    else
-        InnerGitLog(g:head)
-    endif
-enddef
-nnoremap <silent><F7> :cal <SID>GitLog()<CR>
-
-def! GitLogPath(path: string)
-    OpenTab('TRACE')
-    Write(['COMMIT   %-80s DATE       AUTHOR', path])
-    Write([repeat('-', 130)])
-    WriteShell(["git log --pretty=format:'%s' -- '%s'",
-        '\%<(8)\%h \%<(80,trunc)\%s \%cs \%an',
-        path])
-
-    exe '3'
-    normal 1|
-    setl colorcolumn=
-    GitColors()
-
-    exe printf("noremap <silent><buffer><2-LeftMouse> :cal <SID>git_trace_nav('%s')<CR>", path)
-    exe printf("nnoremap <silent><buffer><F4> :cal <SID>git_trace_nav('%s')<CR>", path)
-    exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_log_file('%s')<CR>", path)
-enddef
-
-def! GitLogNav()
-    let col = col('.')
-    if col > 0 && col < 11
-        GitDiff(expand('<cword>'))
-    elseif col > 10 && col < 21
-        GitDiff(expand('<cword>'))
-    else
-        GitLog()
-    endif
 enddef
 
 def! GitK()

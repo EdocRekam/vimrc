@@ -185,7 +185,7 @@ def! MnuCallback(winid: number, result: number): number
     elseif 18 == id
         exe '!git gui&'
     elsei 19 == id
-        InnerGitLog(GitHead())
+        GLog(g:head)
     elsei 20 == id
         MnuPrune()
     elseif 21 == id
