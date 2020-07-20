@@ -25,7 +25,7 @@ enddef
 
 def! GStatShell(hT: number, hB: number, cmd: string)
     Say(hB, cmd)
-    let f = funcref("s:SayCallback", [hT, hB])
+    let f = funcref("s:SayCallback", [hB])
     let e = funcref("s:GStatShellExit", [hT, hB])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
