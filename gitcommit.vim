@@ -62,7 +62,7 @@ def! GitCommit()
     split .git/GITGUI_MSG
     exe '2resize 20'
 
-    exe printf('au! BufWritePost <buffer=%d> ++once :cal GitComGo(%d, %d)', hT, hT, hB)
+    exe printf('au! BufWritePost <buffer=%d> ++once :cal GComGo(%d, %d)', hT, hT, hB)
     exe printf("nnoremap <silent><buffer><F3> :cal <SID>GComQuit(%d, %d)<CR>", hT, hB)
 
     # PERFORMANCE
