@@ -132,7 +132,7 @@ def! GitBranch()
     # SYNTAX
     setbufvar(hT, '&colorcolumn', '')
     setbufvar(hB, '&colorcolumn', '')
-    GitColors()
+    GColor()
 
     # LOCAL KEY BINDS
     let cmd = 'nnoremap <silent><buffer>'
@@ -142,7 +142,7 @@ def! GitBranch()
     exe printf('%s<DEL> :cal <SID>GBranDel(%d, %d)<CR>', cmd, hT, hB)
     exe printf('%s<HOME> :cal <SID>GBranClean(%d, %d)<CR>', cmd, hT, hB)
     exe printf('%s<END> :cal <SID>GBranReset(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<F3> :cal <SID>GQuit(%d, %d)<CR>', cmd, hT, hB)
+    exe printf("%s<F3> :exe 'sil bw! %d %d'<CR> ", cmd, hT, hB)
     exe printf('%s<F4> :cal <SID>GBranNav(%d, %d)<CR>', cmd, hT, hB)
     exe printf('%s<F5> :cal <SID>GBranRefresh(%d, %d)<CR>', cmd, hT, hB)
 enddef

@@ -43,12 +43,17 @@ nnoremap <silent><S-F12> :cal <SID>Rotate()<CR>
 
 def! Say(h: number, msg: any)
     let c = get(get(getbufinfo(h), 0), 'linecount')
-    let l = strlen(get(getbufline(h, '$'), 0))
+    let l = strchars(get(getbufline(h, '$'), 0))
     appendbufline(h, l > 1 ? c : c - 1, msg)
 enddef
 
 def! SayCallback(h: number, chan: number, msg: string)
     Say(h, msg)
+enddef
+
+def! SayShell(h: number, cmd: string)
+    let f = funcref("s:SayCallback", [h])
+    job_start(cmd, #{out_cb: f, err_cb: f})
 enddef
 
 def! SourceFile()

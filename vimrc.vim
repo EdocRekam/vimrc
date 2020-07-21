@@ -72,7 +72,7 @@ def! g:GetStatus(): string
     let c = strchars(getreg('*'))
     let sel = c > 1 ? '  SEL:' .. c : ''
     let head = exists('g:head') ? g:head .. '  ' : ''
-    let enc = strlen(&fenc) ? '  ' .. toupper(&fenc) : '  PLAIN'
+    let enc = strchars(&fenc) ? '  ' .. toupper(&fenc) : '  PLAIN'
     let bom = &bomb ? '  with BOM' : ''
     let le = &ff == 'unix' ? '  LF' : '  CRLF'
     retu head .. '%M%<%f%=' .. sel .. '  Col %c' .. enc .. bom .. le .. '  %Y'

@@ -31,8 +31,8 @@ enddef
 def! DotnetAsyncWin(cmd: string, title: string, msg: string)
     let h = OpenWin(title, 0)
     Say(h, [msg, cmd])
+    SayShell(h, cmd)
     setbufvar(h, '&colorcolumn', '0')
-    WriteShellAsync(cmd)
 enddef
 
 def! DotnetRestore()

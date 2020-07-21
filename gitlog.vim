@@ -7,14 +7,14 @@ def! GitLogPath(pat: string)
         repeat('-', 130)]
     Say(0, l)
 
-    WriteShell(["git log --pretty=format:'%s' -- '%s'",
-        '\%<(8)\%h \%<(80,trunc)\%s \%cs \%an',
-        pat])
+    " SayShell(h, ["git log --pretty=format:'%s' -- '%s'",
+    "     '\%<(8)\%h \%<(80,trunc)\%s \%cs \%an',
+    "     pat])
 
     exe '3'
     normal 1|
     setl colorcolumn=
-    GitColors()
+    GColor()
 
     exe printf("noremap <silent><buffer><2-LeftMouse> :cal <SID>git_trace_nav('%s')<CR>", pat)
     exe printf("nnoremap <silent><buffer><F4> :cal <SID>git_trace_nav('%s')<CR>", pat)
@@ -95,11 +95,11 @@ def! GLog(commit: string)
     # SYNTAX
     setbufvar(hT, '&colorcolumn', '')
     setbufvar(hB, '&colorcolumn', '')
-    GitColors()
+    GColor()
 
     # LOCAL KEY BINDS
     let cmd = 'nnoremap <silent><buffer>'
-    exe printf('%s<F3> :cal <SID>GQuit(%d, %d)<CR>', cmd, hT, hB)
+    exe printf("%s<F3> :exe 'sil bw! %d %d'<CR> ", cmd, hT, hB)
     exe printf('%s<F4> :cal <SID>GLogNav()<CR>', cmd)
     exe printf("%s<F7> :cal <SID>GLogRefresh(%d, '%s')<CR>", cmd, hT, commit)
     " nnoremap <silent><buffer><2-LeftMouse> :cal <SID>GitLogNav()<CR>

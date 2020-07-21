@@ -201,13 +201,13 @@ def! GitInspect(obj: string)
     # SYNTAX
     setbufvar(hT, '&colorcolumn', '')
     setbufvar(hB, '&colorcolumn', '')
-    GitColors()
+    GColor()
     " syn region String start="\%>2l" end="\%90c" contains=@NoSpell oneline
 
     # LOCAL KEY BINDS
     let cmd = 'nnoremap <silent><buffer>'
     exe printf("%s<2-LeftMouse> :cal <SID>GInsNav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
-    exe printf('%s<F3> :cal <SID>GQuit(%d, %d)<CR>', cmd, hT, hB)
+    exe printf("%s<F3> :exe 'sil bw! %d %d'<CR> ", cmd, hT, hB)
     exe printf("%s<F6> :cal <SID>GInsRefresh(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
 enddef
 nnoremap <silent><F6> :cal <SID>GitInspect('392bef0')<CR>

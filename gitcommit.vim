@@ -1,23 +1,19 @@
 " COMMIT TEMPLATE
 let ct = '.git/GITGUI_MSG'
 
-def! GitComShellCallback(h: number, chan: number, msg: string)
-    Say(h, msg)
-enddef
-
-def! GitComShellExit(h: number, chan: number, code: number)
+def! GComShellExit(h: number, chan: number, code: number)
     if 0 == code && filereadable(ct)
         delete(ct)
     endif
 enddef
 
-def! GitComShell(h: number, cmd: string)
-    let f = funcref("s:GitComShellCallback", [h])
-    let e = funcref("s:GitComShellExit", [h])
+def! GComShell(h: number, cmd: string)
+    let f = funcref("s:SayCallback", [h])
+    let e = funcref("s:GComShellExit", [h])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
-def! GitComQuit(hT: number, hB: number)
+def! GComQuit(hT: number, hB: number)
     if 1 == getbufvar(hT, '&modifiable')
         exe printf('au! BufWritePost <buffer=%d>', hT)
         exe 'sil g/^#.*/d'
@@ -26,12 +22,12 @@ def! GitComQuit(hT: number, hB: number)
     exe 'sil bw! ' .. hT .. ' ' .. hB
 enddef
 
-def! GitComGo(hT: number, hB: number)
+def! GComGo(hT: number, hB: number)
     let cmd = 'git commit --cleanup=strip -F ' .. ct
     Say(hB, 'Switching to read-only mode.')
     Say(hB, cmd)
     setbufvar(hT, '&modifiable', 0)
-    GitComShell(hB, cmd)
+    GComShell(hB, cmd)
 enddef
 
 def! GitCommit()
@@ -67,7 +63,7 @@ def! GitCommit()
     exe '2resize 20'
 
     exe printf('au! BufWritePost <buffer=%d> ++once :cal GitComGo(%d, %d)', hT, hT, hB)
-    exe printf("nnoremap <silent><buffer><F3> :cal <SID>GitComQuit(%d, %d)<CR>", hT, hB)
+    exe printf("nnoremap <silent><buffer><F3> :cal <SID>GComQuit(%d, %d)<CR>", hT, hB)
 
     # PERFORMANCE
     Say(hT, '# Time:' .. reltimestr(reltime(now, reltime())))

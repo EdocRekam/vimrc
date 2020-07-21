@@ -3,9 +3,7 @@ def! g:Trace(msg: string)
     if !bufexists('TRACE')
         h = bufadd('TRACE')
         bufload(h)
-        setbufvar(h, '&buftype', 'nofile')
-        setbufvar(h, '&swapfile', '0')
-        setbufvar(h, '&buflisted', '1')
+        Hide(h)
     else
         h = bufnr('TRACE')
     endif

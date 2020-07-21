@@ -74,11 +74,11 @@ def! GitStatus()
     # SYNTAX
     setbufvar(hT, '&colorcolumn', '80')
     setbufvar(hB, '&colorcolumn', '')
-    GitColors()
+    GColor()
 
     # LOCAL KEY BINDS
     let cmd = 'nnoremap <silent><buffer>'
-    exe printf('%s<F3> :cal <SID>GQuit(%d, %d)<CR>', cmd, hT, hB)
+    exe printf("%s<F3> :exe 'sil bw! %d %d'<CR> ", cmd, hT, hB)
     exe printf('%s<F8> :cal <SID>GStatRefresh(%d)<CR>', cmd, hT)
     exe printf('%s<DEL> :cal <SID>GStatUnstage(%d, %d)<CR>', cmd, hT, hB)
     exe printf('%s<INS> :cal <SID>GStatAdd(%d, %d)<CR>', cmd, hT, hB)

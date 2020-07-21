@@ -17,7 +17,7 @@ def! Align(value: string)
         let diff = colAlign - col
         let fmt = '%s%' .. printf('%d', diff) .. 's%s'
         let front = strcharpart(line, 0, col)
-        let back = strcharpart(line, col, strlen(line))
+        let back = strcharpart(line, col, strchars(line))
         line = printf(fmt, front, ' ', back)
         setline(nr, line)
         nr += 1
@@ -52,19 +52,6 @@ def! Widest(rows: list<list<string>>, col: number, min: number, max: number ): n
     retu c
 enddef
 
-def! OpenTab(title: string): number
-    let ids = win_findbuf(bufnr(title))
-    if empty(ids)
-        exe 'sil tabe ' .. title
-        setl buftype=nofile
-        setl noswapfile
-    else
-        win_gotoid(get(ids, 0))
-        exe 'sil norm ggvGD'
-    endif
-    retu tabpagenr()
-enddef
-
 def! OpenWin(title: string, blank = 1): number
     let h = bufnr(title)
     let ids = win_findbuf(h)
@@ -73,8 +60,7 @@ def! OpenWin(title: string, blank = 1): number
         exe "norm gg\<c-w>J"
         resize 20
         h = bufnr(title)
-        setbufvar(h, '&buftype', 'nofile')
-        setbufvar(h, '&swapfile', '0')
+        Hide(h)
     else
         win_gotoid(get(ids, 0))
         if blank
@@ -84,29 +70,3 @@ def! OpenWin(title: string, blank = 1): number
     retu h
 enddef
 
-def! OpenWinVert(title: string, blank = 1): number
-    let h = bufnr(title)
-    let ids = win_findbuf(bufnr(title))
-    if empty(ids)
-        exe 'sil vnew ' .. title
-        h = bufnr(title)
-        setbufvar(h, '&buftype', 'nofile')
-        setbufvar(h, '&swapfile', '0')
-    else
-        win_gotoid(get(ids, 0))
-        if blank
-            exe 'sil norm ggvGD'
-        endif
-    endif
-    retu h
-enddef
-
-def! WriteShell(args: list<any>)
-    exe 'sil -1read !' .. call('printf', args)
-    norm G
-enddef
-
-def! WriteShellAsync(cmd: string)
-    let f = funcref("s:SayCallback", [bufnr()])
-    job_start(cmd, #{out_cb: f, err_cb: f})
-enddef

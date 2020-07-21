@@ -1,7 +1,7 @@
 
 nnoremap <silent><F6> :sil !git gui&<CR>
 
-def! GitColors()
+def! GColor()
     syn case ignore
     syn keyword Comment boron carbon dublin ede havana herne hilla hobart
     syn keyword Comment hofu freetown master ibaraki
@@ -36,35 +36,17 @@ def! GHead(): string
     retu g:head
 enddef
 
-def! GitAsyncWin(cmd: string, title: string, msg: string)
+def! GWin(cmd: string, title: string, msg: string)
     let h = OpenWin(title, 0)
     Say(h, [msg, cmd])
-    WriteShellAsync(cmd)
-enddef
-
-def! GQuit(hT: number, hB: number)
-    exe 'sil bw! ' .. hT .. ' ' .. hB
-enddef
-
-def! GitShowTwo(commitLeft: string, pathLeft: string, commitRight: string, pathRight: string)
-    let title = printf('%s:%s', commitRight, pathRight)
-    OpenTab(title)
-    if commitRight != 'DELETED' && commitRight != 'ADDED'
-        WriteShell(["git show '%s:%s'", commitRight, pathRight])
-    endif
-
-    title = printf('%s:%s', commitLeft, pathLeft)
-    OpenWinVert(title)
-    if commitLeft != 'DELETED' && commitLeft != 'ADDED'
-        WriteShell(["git show '%s:%s'", commitLeft, pathLeft])
-    endif
+    SayShell(h, cmd)
 enddef
 
 def! GitK()
     let pat = expand('<cfile>')
     if filereadable(pat)
         exe printf("sil !gitk -- '%s'& ", pat)
-    elsei strlen(pat) > 0
+    elsei strchars(pat) > 0
         exe printf("sil !gitk %s&", pat)
     else
         exe "sil !gitk&"

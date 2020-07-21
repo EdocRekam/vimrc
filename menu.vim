@@ -116,14 +116,14 @@ enddef
 def! MnuFetch()
     let ask = input('Remote: ', 'vso')
     if '' != ask
-        GitAsyncWin('git fetch ' .. ask, 'SO', 'FETCHING')
+        GWin('git fetch ' .. ask, 'SO', 'FETCHING')
     endif
 enddef
 
 def! MnuPrune()
     let ask = input('REMOTE: ', 'vso')
     if '' != ask
-        GitAsyncWin('git remote prune ' .. ask, 'SO', 'PRUNING')
+        GWin('git remote prune ' .. ask, 'SO', 'PRUNING')
     endif
 enddef
 
@@ -171,11 +171,11 @@ def! MnuCallback(winid: number, result: number): number
     elseif 11 == id
         MnuZoom(0)
     elseif 12 == id
-        GitAsyncWin('git add .', 'SO', 'ADDING')
+        GWin('git add .', 'SO', 'ADDING')
     elseif 13 == id
         GitCommit()
     elseif 14 == id
-        GitAsyncWin('git diff', 'DIFF', '')
+        GWin('git diff', 'DIFF', '')
     elseif 15 == id
         MnuFetch()
     elsei 16 == id
@@ -246,12 +246,10 @@ def! MnuLoad()
     add(MnuBuf, bufadd('ea9b0beae51540edb1a0'))
 
     bufload(MnuBuf[0])
-    setbufvar(MnuBuf[0], '&buftype', 'nofile')
-    setbufvar(MnuBuf[0], '&swapfile', '0')
+    Hide(MnuBuf[0])
 
     bufload(MnuBuf[1])
-    setbufvar(MnuBuf[1], '&buftype', 'nofile')
-    setbufvar(MnuBuf[1], '&swapfile', '0')
+    Hide(MnuBuf[1])
 enddef
 
 def! MnuOpen()
