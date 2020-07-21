@@ -30,7 +30,7 @@ enddef
 
 def! DotnetAsyncWin(cmd: string, title: string, msg: string)
     let h = OpenWin(title, 0)
-    WriteBuffer(h, [msg, cmd])
+    Say(h, [msg, cmd])
     setbufvar(h, '&colorcolumn', '0')
     WriteShellAsync(cmd)
 enddef

@@ -1,7 +1,7 @@
 def! GotoDef()
-    let path = expand("<cfile>")
-    if filereadable(path)
-        exe 'e! %s' .. path
+    let pat = expand("<cfile>")
+    if filereadable(pat)
+        exe 'e! %s' .. pat
     endif
     # else
     # OmniSharpGotoDefinition()

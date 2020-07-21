@@ -50,24 +50,26 @@ def! GitStatus()
     GHead()
 
     # TOP ----------------------------------------------------------------
-    let hT = bufadd('Git Status')
+    let tT = 'Git Status'
+    let hT = bufadd(tT)
     bufload(hT)
     GStatRefresh(hT)
 
     # BOTTOM -------------------------------------------------------------
-    let hB = bufadd('Git Status - Messages')
+    let tB = tT .. ' - Messages'
+    let hB = bufadd(tB)
     bufload(hB)
     Say(hB, 'Ready...')
 
     # TAB ----------------------------------------------------------------
-    exe 'tabnew Git Status - Messages'
+    exe 'tabnew ' .. tB
     settabvar(tabpagenr(), 'title', 'STATUS')
 
-    exe 'split Git Status'
+    exe 'split ' .. tT
     exe '2resize 20'
 
-    GHide(hT)
-    GHide(hB)
+    Hide(hT)
+    Hide(hB)
 
     # SYNTAX
     setbufvar(hT, '&colorcolumn', '80')

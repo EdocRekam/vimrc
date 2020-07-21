@@ -128,16 +128,16 @@ def! MnuPrune()
 enddef
 
 def! MnuSyntax()
-    let path = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
-    if filereadable(path)
-        exe 'tabnew ' .. path
+    let pat = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
+    if filereadable(pat)
+        exe 'tabnew ' .. pat
     endif
 enddef
 
 def! MnuCheatsheet()
-    let path = VimDir() .. 'keys.html'
-    if filereadable(path)
-        exe printf("!firefox --new-window '%s'&", path)
+    let pat = VimDir() .. 'keys.html'
+    if filereadable(pat)
+        exe printf("!firefox --new-window '%s'&", pat)
     endif
 enddef
 

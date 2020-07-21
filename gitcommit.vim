@@ -55,7 +55,7 @@ def! GitCommit()
     # BOTTOM -------------------------------------------------------------
     let hB = bufadd('COMMIT')
     bufload(hB)
-    GHide(hB)
+    Hide(hB)
     setbufvar(hB, '&colorcolumn', '')
     Say(hB, 'Waiting for save ...')
 

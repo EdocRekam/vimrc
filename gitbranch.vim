@@ -22,11 +22,11 @@ def! GBranRefresh(h: number)
         add(rs, r)
     endfor
     let lens = [
-        Longest(rs, 0, 7, 100),
-        Longest(rs, 1, 10, 100),
-        Longest(rs, 2, 7, 100),
+        Widest(rs, 0, 7, 100),
+        Widest(rs, 1, 10, 100),
+        Widest(rs, 2, 7, 100),
         11,
-        Longest(rs, 4, 7, 100)]
+        Widest(rs, 4, 7, 100)]
 
     let f = '%-' .. lens[0] .. 's  %-' .. lens[1] .. 's  %-' .. lens[2] .. 's  %-' .. lens[3] .. 's  %s'
     let hdr = printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR')
@@ -126,8 +126,8 @@ def! GitBranch()
     exe '2resize 20'
 
     # OPTIONS
-    GHide(hT)
-    GHide(hB)
+    Hide(hT)
+    Hide(hB)
 
     # SYNTAX
     setbufvar(hT, '&colorcolumn', '')

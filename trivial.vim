@@ -5,6 +5,12 @@ def! FindInFile(val: string)
 enddef
 command! -nargs=1 Find :cal <SID>FindInFile('<args>')
 
+def! Hide(h: number)
+    setbufvar(h, '&buflisted', '0')
+    setbufvar(h, '&buftype', 'nofile')
+    setbufvar(h, '&swapfile', '0')
+enddef
+
 def! NoTabs()
     update
     setl expandtab
@@ -39,6 +45,10 @@ def! Say(h: number, msg: any)
     let c = get(get(getbufinfo(h), 0), 'linecount')
     let l = strlen(get(getbufline(h, '$'), 0))
     appendbufline(h, l > 1 ? c : c - 1, msg)
+enddef
+
+def! SayCallback(h: number, chan: number, msg: string)
+    Say(h, msg)
 enddef
 
 def! SourceFile()

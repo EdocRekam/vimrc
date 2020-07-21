@@ -1,20 +1,24 @@
 
-def! GitLogPath(path: string)
-    OpenTab('TRACE')
-    Write(['COMMIT   %-80s DATE       AUTHOR', path])
-    Write([repeat('-', 130)])
+def! GitLogPath(pat: string)
+    " OpenTab('TRACE')
+
+    let l = [
+        printf('COMMIT   %-80s DATE       AUTHOR', pat),
+        repeat('-', 130)]
+    Say(0, l)
+
     WriteShell(["git log --pretty=format:'%s' -- '%s'",
         '\%<(8)\%h \%<(80,trunc)\%s \%cs \%an',
-        path])
+        pat])
 
     exe '3'
     normal 1|
     setl colorcolumn=
     GitColors()
 
-    exe printf("noremap <silent><buffer><2-LeftMouse> :cal <SID>git_trace_nav('%s')<CR>", path)
-    exe printf("nnoremap <silent><buffer><F4> :cal <SID>git_trace_nav('%s')<CR>", path)
-    exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_log_file('%s')<CR>", path)
+    exe printf("noremap <silent><buffer><2-LeftMouse> :cal <SID>git_trace_nav('%s')<CR>", pat)
+    exe printf("nnoremap <silent><buffer><F4> :cal <SID>git_trace_nav('%s')<CR>", pat)
+    exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_log_file('%s')<CR>", pat)
 enddef
 
 def! GLogRefresh(h: number, commit: string)
@@ -26,11 +30,11 @@ def! GLogRefresh(h: number, commit: string)
         add(rs, split(i, ' | '))
     endfor
     let lens = [
-        Longest(rs, 0, 7, 100),
-        Longest(rs, 1, 7, 100),
-        Longest(rs, 2, 50, 100),
+        Widest(rs, 0, 7, 100),
+        Widest(rs, 1, 7, 100),
+        Widest(rs, 2, 50, 100),
         11,
-        Longest(rs, 4, 7, 100)]
+        Widest(rs, 4, 7, 100)]
 
     let f = '%-' .. lens[0] .. 's  %-' .. lens[1] .. 's  %-' .. lens[2] .. 's  %-' .. lens[3] .. 's  %s'
     let hdr = printf(f, 'TREE', 'COMMIT', commit, 'DATE', 'AUTHOR')
@@ -85,8 +89,8 @@ def! GLog(commit: string)
     GLogRefresh(hT, commit)
 
     # OPTIONS
-    GHide(hT)
-    GHide(hB)
+    Hide(hT)
+    Hide(hB)
 
     # SYNTAX
     setbufvar(hT, '&colorcolumn', '')

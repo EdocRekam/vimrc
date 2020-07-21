@@ -38,7 +38,7 @@ def! Enum(base: number = 0)
     norm gv
 enddef
 
-def! Longest(rows: list<list<string>>, col: number, min: number, max: number ): number
+def! Widest(rows: list<list<string>>, col: number, min: number, max: number ): number
     let c = min
     for r in rows
         let len = strchars(r[col])
@@ -101,42 +101,12 @@ def! OpenWinVert(title: string, blank = 1): number
     retu h
 enddef
 
-def! OpenWinShell(title: string, args: list<any>)
-    OpenWin(title)
-    exe 'sil -1read !' .. call('printf', args)
-enddef
-
-def! Shell(args: list<string>): string
-    retu system(call('printf', args))
-enddef
-
-def! ShellList(args: list<string>): list<string>
-    retu systemlist(call('printf', args))
-enddef
-
-def! Write(args: list<any>)
-    setline('.', [ call('printf', args), '' ])
-    norm G
-enddef
-
 def! WriteShell(args: list<any>)
     exe 'sil -1read !' .. call('printf', args)
     norm G
 enddef
 
-def! WriteBuffer(h: number, msg: any)
-    let i = getbufinfo(h)
-    let c = i[0].linecount
-    appendbufline(h, c - 1, msg)
-enddef
-
-def! s:WriteShellCallback(h: number, chan: number, msg: string)
-    let i = getbufinfo(h)
-    let c = i[0].linecount
-    appendbufline(h, c - 1, msg)
-enddef
-
 def! WriteShellAsync(cmd: string)
-    let f = funcref("s:WriteShellCallback", [bufnr()])
+    let f = funcref("s:SayCallback", [bufnr()])
     job_start(cmd, #{out_cb: f, err_cb: f})
 enddef
