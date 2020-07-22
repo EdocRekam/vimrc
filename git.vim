@@ -12,6 +12,7 @@ def! GColor()
     syn keyword Keyword anna hub origin remotes usb vso
     syn keyword String x86 x64 anycpu
     syn keyword LightBlue commit merge author date branch subject tag tree
+    syn keyword Identifier add branch checkout clean close del gitk gui log menu refresh reset status
     syn region Good start="^\t" end="$" contains=@NoSpell oneline
     syn region String start="<" end=">" contains=@NoSpell oneline
     syn region String start="`" end="`" contains=@NoSpell oneline
@@ -24,7 +25,6 @@ def! GColor()
     syn match Keyword "\d\+\.\d\+\.\d\+\.\d\+\.\d\+"
     syn match Identifier "#\=\d\{5}"
     syn match Keyword "[0-9a-f]\{7,8}" contains=@NoSpell
-    syn match Function '^<.*' contains=@NoSpell
     hi LightBlue guifg=#9cdcfe
     hi Bad  guifg=#ee3020
     hi Good guifg=#00b135

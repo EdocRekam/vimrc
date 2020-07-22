@@ -39,10 +39,11 @@ def! GBRef(h: number)
     endfor
 
     extend(l, ['','',
-    '<INS> ADD BRANCH   <HOME> CLEAN',
-    '<DEL> DEL BRANCH   <END>  RESET (HARD)',
-    '<F4>  CHECKOUT     <F5>   REFRESH',
-    '<SHIFT+F7> GITK (UNDER CURSOR)',
+    '<INS>  ADD BRANCH  |  <HOME>  CLEAN  |  <PGDN>  ----------  |',
+    '<DEL>  DEL BRANCH  |  <END>   RESET  |  <PGUP>  ----------  |',
+    '                   |                 |                      |',
+    ' <F1>  MENU        |  <F2>    -----  |  <F3>    CLOSE       |  <F4>  CHECKOUT',
+    ' <F5>  REFRESH     |  <F6>    GUI    |  <F7>    LOG | GITK  |  <F8>  STATUS',
     '', GRemotes(), '',
     '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> PULL TAGS', ''
     'BRANCH: ' .. g:head, sep, ''])
@@ -126,15 +127,15 @@ def! GitBranch()
 
     # LOCAL KEY BINDS
     let m = 'nnoremap <silent><buffer>'
-    exe printf("%s<DEL>  :cal <SID>GBDel(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<END>  :cal <SID>GBRes(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<F3>   :exe 'sil bw! %d %d'<CR>", m, hT, hB)
-    exe printf("%s<F4>   :cal <SID>GBNav(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<F5>   :cal <SID>GBRef(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<DEL> :cal <SID>GBDel(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<END> :cal <SID>GBRes(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<F3> :exe 'sil bw! %d %d'<CR>", m, hT, hB)
+    exe printf("%s<F4> :cal <SID>GBNav(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<F5> :cal <SID>GBRef(%d)<CR>", m, hT)
     exe printf("%s<HOME> :cal <SID>GBCln(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<INS>  :cal <SID>GBNew(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<c-p>  :cal <SID>GBPru(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<c-t>  :cal <SID>GBTag(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<INS> :cal <SID>GBNew(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<c-p> :cal <SID>GBPru(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<c-t> :cal <SID>GBTag(%d, %d)<CR>", m, hT, hB)
 enddef
 nnoremap <silent><F5> :cal <SID>GitBranch()<CR>
 
