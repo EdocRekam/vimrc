@@ -156,8 +156,6 @@ def! MnuCallback(winid: number, result: number): number
         MnuZoom(1)
     elseif 11 == id
         MnuZoom(0)
-    elseif 13 == id
-        GitCommit()
     elseif 14 == id
         GWin('git diff', 'DIFF', '')
     elsei 16 == id

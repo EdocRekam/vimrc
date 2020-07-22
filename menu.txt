@@ -11,12 +11,11 @@ Convert: Line Endings To Unix          8
 Font: Decrease Size                    10
 Font: Increase Size                    11
 Font: Dialog                           37
-Git: Branch                            45
-Git: Commit                            13
 Git: Diff                              14
-Git: Gitk                   SHIFT+F7   17
+Git: Branch                       F5   45
 Git: Gui                          F6   18
 Git: Log                          F7   19
+Git: Gitk                   SHIFT+F7   17
 Git: Status                       F8   16
 Language: C#                           21
 Remove: Duplicates                     22
