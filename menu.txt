@@ -36,8 +36,6 @@ Text: Enumerate                        9
 Text: Toggle Word Wrap                 42
 Vim: Cheat Sheet                       41
 Vim: Show Highlight Colors             32
-Vim: Tab: Close                        33
-Vim: Tab: New                          34
 Vim: View Options                      36
 Vim: View Syntax                       35
 Vim: Open .vimrc                       44

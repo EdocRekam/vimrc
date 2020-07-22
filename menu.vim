@@ -201,10 +201,6 @@ def! MnuCallback(winid: number, result: number): number
         DotnetTest(expand('<cword>'))
     elsei 32 == id
         :so $VIMRUNTIME/syntax/hitest.vim
-    elsei 33 == id
-        :tabclose
-    elsei 34 == id
-        :tabnew
     elseif 35 == id
         MnuSyntax()
     elsei 36 == id
