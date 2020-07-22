@@ -131,10 +131,11 @@ def! GitBranch()
 
     sy region Mnu start="^\s\s<I" end="^Remotes" contains=@NoSpell, MnuCmd, MnuKey
     sy keyword MnuCmd add branch checkout clean close delete gitk gui log menu refresh reset status contained
+    sy region MnuKey start="<" end=">" contained
 
     hi Label guifg=#9cdcfe
     hi MnuCmd guifg=#27d185
-    hi MnuKey guifg=#9cdcfe
+    hi link MnuKey String
 
 
     # LOCAL KEY BINDS
