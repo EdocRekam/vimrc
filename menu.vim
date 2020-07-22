@@ -174,7 +174,7 @@ def! MnuCallback(winid: number, result: number): number
     elsei 17 == id
         GitK()
     elseif 18 == id
-        exe '!git gui&'
+        exe 'sil !git gui&'
     elsei 19 == id
         GLog(g:head)
     elsei 20 == id
