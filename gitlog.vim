@@ -67,42 +67,32 @@ def! GLogRefresh(h: number, commit: string)
     win_execute(winid, '3')
 enddef
 
-def! GLog(commit: string)
-
-    # TOP ----------------------------------------------------------------
-    let tT = commit
-    let hT = bufadd(tT)
-    bufload(hT)
+def! GLog(obj: string)
+    let now = reltime()
 
     # BOTTOM -------------------------------------------------------------
-    let tB = tT .. ' - Messages'
-    let hB = bufadd(tB)
-    bufload(hB)
+    exe 'tabnew Log - ' .. reltimestr(now)
+    settabvar(tabpagenr(), 'title', obj)
+    let hB = bufnr()
     Say(hB, 'Ready...')
-
-    # TAB ----------------------------------------------------------------
-    exe 'tabnew ' .. tB
-    settabvar(tabpagenr(), 'title', tT)
-
-    exe 'split ' .. tT
-    exe '2resize 20'
-    GLogRefresh(hT, commit)
-
-    # OPTIONS
-    Hide(hT)
     Hide(hB)
-
-    # SYNTAX
-    setbufvar(hT, '&colorcolumn', '')
     setbufvar(hB, '&colorcolumn', '')
+
+    # TOP ----------------------------------------------------------------
+    exe 'split ' .. obj .. ' - ' .. reltimestr(now)
+    let hT = bufnr()
+    setbufvar(hT, '&colorcolumn', '')
+    :2resize 20
+    GLogRefresh(hT, obj)
     GColor()
+    Hide(hT)
 
     # LOCAL KEY BINDS
     let cmd = 'nnoremap <silent><buffer>'
     exe printf("%s<F3> :exe 'sil bw! %d %d'<CR> ", cmd, hT, hB)
     exe printf('%s<F4> :cal <SID>GLogNav()<CR>', cmd)
-    exe printf("%s<F7> :cal <SID>GLogRefresh(%d, '%s')<CR>", cmd, hT, commit)
-    " nnoremap <silent><buffer><2-LeftMouse> :cal <SID>GitLogNav()<CR>
+    exe printf("%s<F7> :cal <SID>GLogRefresh(%d, '%s')<CR>", cmd, hT, obj)
+    exe printf("%s<2-LeftMouse> :cal <SID>GLNav()<CR>", cmd)
 enddef
 
 def! GitLog()
