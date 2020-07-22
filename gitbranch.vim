@@ -195,13 +195,13 @@ def! GitBranch()
 
     # LOCAL KEY BINDS
     let m = 'nnoremap <silent><buffer>'
-    exe printf("%s<DEL> :cal <SID>GBDel(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<END> :cal <SID>GBRes(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<s-DEL> :cal <SID>GBDel(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<s-END> :cal <SID>GBRes(%d, %d)<CR>", m, hT, hB)
     exe printf("%s<F3> :exe 'sil bw! %d %d'<CR>", m, hT, hB)
     exe printf("%s<F4> :cal <SID>GBNav(%d, %d)<CR>", m, hT, hB)
     exe printf("%s<F5> :cal <SID>GBRef(%d, 1)<CR>", m, hT)
-    exe printf("%s<HOME> :cal <SID>GBCln(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<INS> :cal <SID>GBNew(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<s-HOME> :cal <SID>GBCln(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<s-INS> :cal <SID>GBNew(%d, %d)<CR>", m, hT, hB)
     exe printf("%s<c-p> :cal <SID>GBPru(%d, %d)<CR>", m, hT, hB)
     exe printf("%s<c-t> :cal <SID>GBTag(%d, %d)<CR>", m, hT, hB)
 enddef
