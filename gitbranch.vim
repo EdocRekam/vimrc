@@ -88,14 +88,19 @@ def! GBRef(h: number, b: number)
     x = rowCount + 3
     y = x + 5
     Region('Mnu', x, y, 'l', 'contains=@NoSpell, MnuCmd, MnuKey')
+
+    x += 8
+    y = x + 1
+    Region('Mnu', x, y, 'l', 'contains=@NoSpell, MnuCmd, MnuKey')
+
     extend(l, ['','',
-    '  <INS>  ADD BRANCH      |  <HOME>  CLEAN          |  <PGDN>  -------------  |',
-    '  <DEL>  DELETE BRANCH   |  <END>   RESET          |  <PGUP>  -------------  |',
+    '  <S+INS>  ADD BRANCH    |  <S+HOME>  CLEAN        |  <PGDN>  -------------  |',
+    '  <S+DEL>  DELETE BRANCH |  <S+END>   RESET        |  <PGUP>  -------------  |',
     '                         |                         |                         |',
     '  <F1>   MENU            |  <F2>    -------------  |  <F3>    CLOSE          |  <F4>  CHECKOUT',
     '  <F5>   REFRESH         |  <F6>    GUI            |  <F7>    LOG/GITK       |  <F8>  STATUS',
     '', GRemotes(), '',
-    '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> PULL TAGS', ''
+    '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> FETCH TAGS', ''
     'BRANCH: ' .. g:head, sep, ''])
 
     for i in systemlist('git log -n5')
@@ -177,11 +182,21 @@ def! GitBranch()
 
     # COLOR
     sy case ignore
-    sy keyword Label author branch commit date remotes subject
+    sy keyword Label author branch date subject
     sy region String start="<" end=">" contains=@NoSpell oneline
 
-    sy keyword MnuCmd add branch checkout clean close delete gitk gui log menu refresh reset status contained
+    sy keyword MnuCmd add branch checkout clean close cursor delete fetch gitk gui log menu prune refresh reset status tags under contained
     sy region MnuKey start="<" end=">" contained
+
+    # REMOTES
+    sy region Keyword start="^Remotes" end="$" oneline contains=@NoSpell
+
+    # COMMENTS
+    sy match Comment "^\s\s\s\s.*$"
+
+    # COMMITS
+    sy match Keyword "^commit.*$"hs=s+7
+    sy match Label "^commit"
 
     hi Label guifg=#9cdcfe
     hi MnuCmd guifg=#27d185
