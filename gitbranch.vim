@@ -11,10 +11,15 @@ enddef
 " h - Buffer number to write to
 " b - Should we clear first 0|1
 def! GBRef(h: number, b: number)
+    def Region(group: string, x: number, y: number, t = 'c', extra = 'contained oneline')
+        let f = 'sy region %s start="%s" end="%s" %s'
+        exe printf(f, group, '\%' .. x .. t, '\%' .. y .. t, extra)
+    enddef
+
     let now = reltime()
     if b
         deletebufline(h, 1, '$')
-        sy clear Mnu Brnch C B S D A
+        sy clear Mnu T C B S D A
     endif
 
     let rs: list<list<string>>
@@ -51,39 +56,38 @@ def! GBRef(h: number, b: number)
     #     S - SUBJECT COLUMN
     #     D - DATE COLUMN
     let rowCount = len(l)
-    let x = 0
-    let y = 0
 
     # COMMIT
-    y = lens[0] + 1
-    exe 'sy region C start="\%1c" end="\%' .. y .. 'c" contained oneline'
+    let x = 1
+    let y = lens[0] + 1
+    Region('C', 1, y)
 
     # BRANCH
     x = y + 2
     y = x + lens[1] + 1
-    exe 'sy region B start="\%' .. x .. 'c" end="\%' .. y .. 'c" contained oneline'
+    Region('B', x, y)
 
     # SUBJECT
     x = y + 1
     y = x + lens[2] + 1
-    exe 'sy region S start="\%' .. x .. 'c" end="\%' .. y .. 'c" contained oneline'
+    Region('S', x, y)
 
     # DATE
     x = y + 1
     y = x + lens[3] + 1
-    exe 'sy region D start="\%' .. x .. 'c" end="\%' .. y .. 'c" contained oneline'
+    Region('D', x, y)
 
     # AUTHOR
     x = y + 1
-    y = x + lens[4] + 1
-    exe 'sy region A start="\%' .. x .. 'c" end="\%' .. y .. 'c" contained oneline'
+    y = x + lens[4]
+    Region('A', x, y)
 
     y = rowCount + 1
-    exe 'sy region Brnch start="\%3l" end="\%' .. y .. 'l" contains=C,B,S,D,A'
+    Region('T', 3, y, 'l', 'contains=C,B,S,D,A')
 
     x = rowCount + 3
     y = x + 5
-    exe 'sy region Mnu start="\%' .. x .. 'l" end="\%' .. y .. 'l" contains=@NoSpell, MnuCmd, MnuKey'
+    Region('Mnu', x, y, 'l', 'contains=@NoSpell, MnuCmd, MnuKey')
     extend(l, ['','',
     '  <INS>  ADD BRANCH      |  <HOME>  CLEAN          |  <PGDN>  -------------  |',
     '  <DEL>  DELETE BRANCH   |  <END>   RESET          |  <PGUP>  -------------  |',
