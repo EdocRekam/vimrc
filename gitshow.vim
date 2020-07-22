@@ -1,8 +1,8 @@
 
 def! GShowExit(h: number, chan: number, code: number)
-    let winid = get(win_findbuf(h), 0)
-    win_gotoid(winid)
-    win_execute(winid, 'norm gg')
+    let id = get(win_findbuf(h), 0)
+    win_gotoid(id)
+    win_execute(id, 'norm gg')
 enddef
 
 def! GShow(h: number, obj: string, pat: string)
@@ -14,39 +14,29 @@ enddef
 def! GitShow(obj: string, pat: string, title: string = ''): number
     let t = '' == title ? obj .. ':' .. pat : title
 
-    let h = bufadd(t)
-    bufload(h)
-    GShow(h, obj, pat)
-
-    exe 'tabnew ' .. t
-    settabvar(tabpagenr(), 'title', t)
+    exe 'tabnew ' .. obj .. ':' .. pat
+    let h = bufnr()
     Hide(h)
+    GShow(h, obj, pat)
+    settabvar(tabpagenr(), 'title', t)
 
     # LOCAL KEY BINDS
-    let cmd = 'nnoremap <silent><buffer>'
-    exe printf("%s<F3> :exe 'sil bw! %d'<CR> ", cmd, h)
+    exe printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d'<CR> ", h)
 
     retu h
 enddef
 
 def! GitShow2(objL: string, patL: string, objR: string, patR: string)
-    let tL = objL .. ':' .. patL
-    let hL = bufadd(tL)
-    bufload(hL)
-
-    let tR = objR .. ':' .. patR
-    let hR = bufadd(tR)
-    bufload(hR)
-
-    exe 'tabnew ' .. tR
-    settabvar(tabpagenr(), 'title', objL .. '-' .. objR)
-    exe 'vsplit ' .. tL
-
-    GShow(hR, objR, patR)
+    exe 'tabnew ' .. objR .. ':' .. patR
+    let hR = bufnr()
     Hide(hR)
+    GShow(hR, objR, patR)
+    settabvar(tabpagenr(), 'title', objL .. '-' .. objR)
 
-    GShow(hL, objL, patL)
+    exe 'vsplit ' .. objL .. ':' .. patL
+    let hL = bufnr()
     Hide(hL)
+    GShow(hL, objL, patL)
 
     # LOCAL KEY BINDS
     let cmd = 'nnoremap <silent><buffer>'
