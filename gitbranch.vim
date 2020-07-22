@@ -6,9 +6,16 @@ def! GRemotes(): string
     retu 'Remotes:' .. l
 enddef
 
-def! GBRef(h: number)
+" REFRESH TOP WINDOW CONTENTS
+" 
+" h - Buffer number to write to
+" b - Should we clear first 0|1
+def! GBRef(h: number, b: number)
     let now = reltime()
-    deletebufline(h, 1, '$')
+    if b
+        deletebufline(h, 1, '$')
+        sy clear Mnu Brnch C B S D A
+    endif
 
     let rs: list<list<string>>
     for i in systemlist("git branch -a --format='%(objectname:short) %(refname)'")
@@ -38,6 +45,45 @@ def! GBRef(h: number)
         add(l, printf(f, r[0], r[1], r[2], r[3], r[4]))
     endfor
 
+    # SYNTAX
+    #     B - BRANCH COLUMN
+    #     C - COMMIT COLUMN
+    #     S - SUBJECT COLUMN
+    #     D - DATE COLUMN
+    let rowCount = len(l)
+    let x = 0
+    let y = 0
+
+    # COMMIT
+    y = lens[0] + 1
+    exe 'sy region C start="\%1c" end="\%' .. y .. 'c" contained oneline'
+
+    # BRANCH
+    x = y + 2
+    y = x + lens[1] + 1
+    exe 'sy region B start="\%' .. x .. 'c" end="\%' .. y .. 'c" contained oneline'
+
+    # SUBJECT
+    x = y + 1
+    y = x + lens[2] + 1
+    exe 'sy region S start="\%' .. x .. 'c" end="\%' .. y .. 'c" contained oneline'
+
+    # DATE
+    x = y + 1
+    y = x + lens[3] + 1
+    exe 'sy region D start="\%' .. x .. 'c" end="\%' .. y .. 'c" contained oneline'
+
+    # AUTHOR
+    x = y + 1
+    y = x + lens[4] + 1
+    exe 'sy region A start="\%' .. x .. 'c" end="\%' .. y .. 'c" contained oneline'
+
+    y = rowCount + 1
+    exe 'sy region Brnch start="\%3l" end="\%' .. y .. 'l" contains=C,B,S,D,A'
+
+    x = rowCount + 3
+    y = x + 5
+    exe 'sy region Mnu start="\%' .. x .. 'l" end="\%' .. y .. 'l" contains=@NoSpell, MnuCmd, MnuKey'
     extend(l, ['','',
     '  <INS>  ADD BRANCH      |  <HOME>  CLEAN          |  <PGDN>  -------------  |',
     '  <DEL>  DELETE BRANCH   |  <END>   RESET          |  <PGUP>  -------------  |',
@@ -61,7 +107,7 @@ def! GBRef(h: number)
 enddef
 
 def! GBExeExit(hT: number, hB: number, chan: number, code: number)
-    GBRef(hT)
+    GBRef(hT, 1)
 enddef
 
 def! GBExe(hT: number, hB: number, cmd: string)
@@ -120,8 +166,9 @@ def! GitBranch()
     exe 'split BranchT' .. now
     let hT = bufnr()
     setbufvar(hT, '&colorcolumn', '')
+    :ownsyntax gitbranch
     :2resize 20
-    GBRef(hT)
+    GBRef(hT, 0)
     Hide(hT)
 
     # COLOR
@@ -129,14 +176,18 @@ def! GitBranch()
     sy keyword Label author branch commit date remotes subject
     sy region String start="<" end=">" contains=@NoSpell oneline
 
-    sy region Mnu start="^\s\s<I" end="^Remotes" contains=@NoSpell, MnuCmd, MnuKey
     sy keyword MnuCmd add branch checkout clean close delete gitk gui log menu refresh reset status contained
     sy region MnuKey start="<" end=">" contained
 
     hi Label guifg=#9cdcfe
     hi MnuCmd guifg=#27d185
     hi link MnuKey String
-
+    hi link Brnch Function
+    hi link B Keyword
+    hi link C Keyword
+    hi link S Comment
+    hi link D String
+    hi link A Function
 
     # LOCAL KEY BINDS
     let m = 'nnoremap <silent><buffer>'
@@ -144,7 +195,7 @@ def! GitBranch()
     exe printf("%s<END> :cal <SID>GBRes(%d, %d)<CR>", m, hT, hB)
     exe printf("%s<F3> :exe 'sil bw! %d %d'<CR>", m, hT, hB)
     exe printf("%s<F4> :cal <SID>GBNav(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<F5> :cal <SID>GBRef(%d)<CR>", m, hT)
+    exe printf("%s<F5> :cal <SID>GBRef(%d, 1)<CR>", m, hT)
     exe printf("%s<HOME> :cal <SID>GBCln(%d, %d)<CR>", m, hT, hB)
     exe printf("%s<INS> :cal <SID>GBNew(%d, %d)<CR>", m, hT, hB)
     exe printf("%s<c-p> :cal <SID>GBPru(%d, %d)<CR>", m, hT, hB)
