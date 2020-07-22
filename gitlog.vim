@@ -30,11 +30,11 @@ def! GLogRefresh(h: number, commit: string)
         add(rs, split(i, ' | '))
     endfor
     let lens = [
-        Widest(rs, 0, 7, 100),
-        Widest(rs, 1, 7, 100),
-        Widest(rs, 2, 50, 100),
+        Widest(rs, 0, 7),
+        Widest(rs, 1, 7),
+        Widest(rs, 2, 50),
         11,
-        Widest(rs, 4, 7, 100)]
+        Widest(rs, 4, 7)]
 
     let f = '%-' .. lens[0] .. 's  %-' .. lens[1] .. 's  %-' .. lens[2] .. 's  %-' .. lens[3] .. 's  %s'
     let hdr = printf(f, 'TREE', 'COMMIT', commit, 'DATE', 'AUTHOR')

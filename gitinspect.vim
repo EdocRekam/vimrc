@@ -142,10 +142,10 @@ def! GInsRefresh(hT: number, hB: number, obj: string)
     endfor
 
     let lens = [
-        Widest(rs, 0, 20, 100),
-        Widest(rs, 1, 8, 10),
-        Widest(rs, 2, 8, 10),
-        Widest(rs, 3, 5, 20),
+        Widest(rs, 0, 20),
+        Widest(rs, 1, 8),
+        Widest(rs, 2, 8),
+        Widest(rs, 3, 5),
         13, 13]
     settabvar(tabpagenr(), 'lens', lens)
 

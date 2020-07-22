@@ -22,11 +22,11 @@ def! GBranRefresh(h: number)
         add(rs, r)
     endfor
     let lens = [
-        Widest(rs, 0, 7, 100),
-        Widest(rs, 1, 10, 100),
-        Widest(rs, 2, 7, 100),
+        Widest(rs, 0, 7),
+        Widest(rs, 1, 10),
+        Widest(rs, 2, 7),
         11,
-        Widest(rs, 4, 7, 100)]
+        Widest(rs, 4, 7)]
 
     let f = '%-' .. lens[0] .. 's  %-' .. lens[1] .. 's  %-' .. lens[2] .. 's  %-' .. lens[3] .. 's  %s'
     let hdr = printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR')
