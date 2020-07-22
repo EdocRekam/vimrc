@@ -39,11 +39,11 @@ def! GBRef(h: number)
     endfor
 
     extend(l, ['','',
-    '<INS>  ADD BRANCH  |  <HOME>  CLEAN  |  <PGDN>  ----------  |',
-    '<DEL>  DEL BRANCH  |  <END>   RESET  |  <PGUP>  ----------  |',
-    '                   |                 |                      |',
-    ' <F1>  MENU        |  <F2>    -----  |  <F3>    CLOSE       |  <F4>  CHECKOUT',
-    ' <F5>  REFRESH     |  <F6>    GUI    |  <F7>    LOG | GITK  |  <F8>  STATUS',
+    '  <INS>  ADD BRANCH      |  <HOME>  CLEAN          |  <PGDN>  -------------  |',
+    '  <DEL>  DELETE BRANCH   |  <END>   RESET          |  <PGUP>  -------------  |',
+    '                         |                         |                         |',
+    '  <F1>   MENU            |  <F2>    -------------  |  <F3>    CLOSE          |  <F4>  CHECKOUT',
+    '  <F5>   REFRESH         |  <F6>    GUI            |  <F7>    LOG/GITK       |  <F8>  STATUS',
     '', GRemotes(), '',
     '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> PULL TAGS', ''
     'BRANCH: ' .. g:head, sep, ''])
@@ -122,8 +122,20 @@ def! GitBranch()
     setbufvar(hT, '&colorcolumn', '')
     :2resize 20
     GBRef(hT)
-    GColor()
     Hide(hT)
+
+    # COLOR
+    sy case ignore
+    sy keyword Label author branch commit date remotes subject
+    sy region String start="<" end=">" contains=@NoSpell oneline
+
+    sy region Mnu start="^\s\s<I" end="^Remotes" contains=@NoSpell, MnuCmd, MnuKey
+    sy keyword MnuCmd add branch checkout clean close delete gitk gui log menu refresh reset status contained
+
+    hi Label guifg=#9cdcfe
+    hi MnuCmd guifg=#27d185
+    hi MnuKey guifg=#9cdcfe
+
 
     # LOCAL KEY BINDS
     let m = 'nnoremap <silent><buffer>'

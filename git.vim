@@ -12,7 +12,7 @@ def! GColor()
     syn keyword Keyword anna hub origin remotes usb vso
     syn keyword String x86 x64 anycpu
     syn keyword LightBlue commit merge author date branch subject tag tree
-    syn keyword Identifier add branch checkout clean close del gitk gui log menu refresh reset status
+    syn keyword Identifier add branch checkout clean close commit del fetch git gitk gui log menu push refresh reset status unstage
     syn region Good start="^\t" end="$" contains=@NoSpell oneline
     syn region String start="<" end=">" contains=@NoSpell oneline
     syn region String start="`" end="`" contains=@NoSpell oneline

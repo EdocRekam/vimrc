@@ -4,11 +4,10 @@ def! GStatRefresh(hT: number)
     deletebufline(hT, 1, '$')
     let l = systemlist('git status')
     extend(l, ['',
-    '<INS>  ADD ALL   <HOME>  ------  <PGUP>  PUSH',
-    '<DEL>  UNSTAGE   <END>   COMMIT  <PGDN>  FETCH',
-    '',
-    '<F6>   GIT GUI   <F7>    GIT LOG (UNDER CURSOR)',
-    '<F8>   REFRESH   <S+F7>  GITK (UNDER CURSOR)',
+    '  <INS>  ADD ALL         |  <HOME>  -------------  |  <PGUP>  PUSH           |',
+    '  <DEL>  UNSTAGE         |  <END>   COMMIT         |  <PGDN>  FETCH          |',
+    '                         |                         |                         |',
+    '  <F5>   BRANCHES        |  <F6>    GIT GUI        |  <F7>  LOG/GITK         |  <F8> REFRESH',
     '', repeat('-', 80)])
 
     for i in systemlist('git log -n5')
