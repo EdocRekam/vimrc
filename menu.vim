@@ -113,13 +113,6 @@ def! MnuZoom(val: number)
     endif
 enddef
 
-def! MnuFetch()
-    let ask = input('Remote: ', 'vso')
-    if '' != ask
-        GWin('git fetch ' .. ask, 'SO', 'FETCHING')
-    endif
-enddef
-
 def! MnuPrune()
     let ask = input('REMOTE: ', 'vso')
     if '' != ask
@@ -176,8 +169,6 @@ def! MnuCallback(winid: number, result: number): number
         GitCommit()
     elseif 14 == id
         GWin('git diff', 'DIFF', '')
-    elseif 15 == id
-        MnuFetch()
     elsei 16 == id
         GitStatus()
     elsei 17 == id

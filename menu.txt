@@ -15,7 +15,6 @@ Git: Add All                           12
 Git: Branch                            45
 Git: Commit                            13
 Git: Diff                              14
-Git: Fetch                             15
 Git: Gitk                   SHIFT+F7   17
 Git: Gui                          F6   18
 Git: Log                          F7   19
