@@ -33,10 +33,24 @@ enddef
 def! GitCommit()
     let now = reltime()
 
+    # BOTTOM -------------------------------------------------------------
+    exe 'tabnew Commit - ' .. reltimestr(now)
+    settabvar(tabpagenr(), 'title', 'COMMIT')
+    let hB = bufnr()
+    Hide(hB)
+    setbufvar(hB, '&colorcolumn', '')
+    Say(hB, 'Waiting for save ...')
+
     # TOP ----------------------------------------------------------------
-    let hT = bufadd(ct)
-    bufload(hT)
+    let pad = filereadable(ct) ? 0 : 1
+    exe 'split ' .. ct
+    let hT = bufnr()
     setbufvar(hT, '&syntax', 'gitcommit')
+    :2resize 20'
+
+    if pad
+        Say(hT, ['', ''])
+    endif
 
     Say(hT, [
     '# Please enter the commit message for your changes. Lines starting',
@@ -47,20 +61,8 @@ def! GitCommit()
         Say(hT, printf('#%s%s', '' == i ? '' : ' ', i))
     endfor
     Say(hT, ['#', '# PRESS <F3> TO ABORT OR CLOSE COMMIT WINDOW'])
-
-    # BOTTOM -------------------------------------------------------------
-    let hB = bufadd('COMMIT')
-    bufload(hB)
-    Hide(hB)
-    setbufvar(hB, '&colorcolumn', '')
-    Say(hB, 'Waiting for save ...')
-
-    # TAB ----------------------------------------------------------------
-    tabnew COMMIT
-    settabvar(tabpagenr(), 'title', 'COMMIT')
-
-    split .git/GITGUI_MSG
-    exe '2resize 20'
+    norm gg
+    :star
 
     exe printf('au! BufWritePost <buffer=%d> ++once :cal GComGo(%d, %d)', hT, hT, hB)
     exe printf("nnoremap <silent><buffer><F3> :cal <SID>GComQuit(%d, %d)<CR>", hT, hB)
