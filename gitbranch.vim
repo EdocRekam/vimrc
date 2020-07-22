@@ -6,7 +6,7 @@ def! GRemotes(): string
     retu 'Remotes:' .. l
 enddef
 
-def! GBranRefresh(h: number)
+def! GBRef(h: number)
     let now = reltime()
     deletebufline(h, 1, '$')
 
@@ -59,48 +59,48 @@ def! GBranRefresh(h: number)
     win_execute(winid, '3')
 enddef
 
-def! GBranShellExit(hT: number, hB: number, chan: number, code: number)
-    GBranRefresh(hT)
+def! GBExeExit(hT: number, hB: number, chan: number, code: number)
+    GBRef(hT)
 enddef
 
-def! GBranShell(hT: number, hB: number, cmd: string)
+def! GBExe(hT: number, hB: number, cmd: string)
     Say(hB, cmd)
     win_execute(win_getid(2), 'norm G')
     let f = funcref("s:SayCallback", [hB])
-    let e = funcref("s:GBranShellExit", [hT, hB])
+    let e = funcref("s:GBExeExit", [hT, hB])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
-def! GBranClean(hT: number, hB: number)
-    GBranShell(hT, hB, 'git clean -xdf -e *.swp')
+def! GBCln(hT: number, hB: number)
+    GBExe(hT, hB, 'git clean -xdf -e *.swp')
 enddef
 
-def! GBranDel(hT: number, hB: number)
-    GBranShell(hT, hB, 'git branch -d ' .. expand('<cfile>'))
+def! GBDel(hT: number, hB: number)
+    GBExe(hT, hB, 'git branch -d ' .. expand('<cfile>'))
 enddef
 
-def! GBranNav(hT: number, hB: number)
+def! GBNav(hT: number, hB: number)
     if col('.') < 10
         GitLog()
     else
-        GBranShell(hT, hB, 'git checkout ' .. expand('<cfile>:t'))
+        GBExe(hT, hB, 'git checkout ' .. expand('<cfile>:t'))
     endif
 enddef
 
-def! GBranNew(hT: number, hB: number)
-    GBranShell(hT, hB, 'git branch ' .. expand('<cfile>'))
+def! GBNew(hT: number, hB: number)
+    GBExe(hT, hB, 'git branch ' .. expand('<cfile>'))
 enddef
 
-def! GBranPrune(hT: number, hB: number)
-    GBranShell(hT, hB, 'git remote prune ' .. expand('<cword>'))
+def! GBPru(hT: number, hB: number)
+    GBExe(hT, hB, 'git remote prune ' .. expand('<cword>'))
 enddef
 
-def! GBranReset(hT: number, hB: number)
-    GBranShell(hT, hB, 'git reset --hard ' .. expand('<cfile>'))
+def! GBRes(hT: number, hB: number)
+    GBExe(hT, hB, 'git reset --hard ' .. expand('<cfile>'))
 enddef
 
-def! GBranTags(hT: number, hB: number)
-    GBranShell(hT, hB, 'git fetch --tags ' .. expand('<cword>'))
+def! GBTag(hT: number, hB: number)
+    GBExe(hT, hB, 'git fetch --tags ' .. expand('<cword>'))
 enddef
 
 def! GitBranch()
@@ -120,21 +120,21 @@ def! GitBranch()
     let hT = bufnr()
     setbufvar(hT, '&colorcolumn', '')
     :2resize 20
-    GBranRefresh(hT)
+    GBRef(hT)
     GColor()
     Hide(hT)
 
     # LOCAL KEY BINDS
-    let cmd = 'nnoremap <silent><buffer>'
-    exe printf('%s<c-t> :cal <SID>GBranTags(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<c-p> :cal <SID>GBranPrune(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<INS> :cal <SID>GBranNew(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<DEL> :cal <SID>GBranDel(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<HOME> :cal <SID>GBranClean(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<END> :cal <SID>GBranReset(%d, %d)<CR>', cmd, hT, hB)
-    exe printf("%s<F3> :exe 'sil bw! %d %d'<CR> ", cmd, hT, hB)
-    exe printf('%s<F4> :cal <SID>GBranNav(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<F5> :cal <SID>GBranRefresh(%d, %d)<CR>', cmd, hT, hB)
+    let m = 'nnoremap <silent><buffer>'
+    exe printf("%s<DEL>  :cal <SID>GBDel(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<END>  :cal <SID>GBRes(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<F3>   :exe 'sil bw! %d %d'<CR>", m, hT, hB)
+    exe printf("%s<F4>   :cal <SID>GBNav(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<F5>   :cal <SID>GBRef(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<HOME> :cal <SID>GBCln(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<INS>  :cal <SID>GBNew(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<c-p>  :cal <SID>GBPru(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<c-t>  :cal <SID>GBTag(%d, %d)<CR>", m, hT, hB)
 enddef
 nnoremap <silent><F5> :cal <SID>GitBranch()<CR>
 
