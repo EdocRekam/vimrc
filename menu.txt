@@ -19,7 +19,6 @@ Git: Gitk                   SHIFT+F7   17
 Git: Gui                          F6   18
 Git: Log                          F7   19
 Git: Status                       F8   16
-Git: Prune Remote                      20
 Language: C#                           21
 Remove: Duplicates                     22
 Remove: Trailing Whitespace            23

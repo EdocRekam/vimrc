@@ -113,13 +113,6 @@ def! MnuZoom(val: number)
     endif
 enddef
 
-def! MnuPrune()
-    let ask = input('REMOTE: ', 'vso')
-    if '' != ask
-        GWin('git remote prune ' .. ask, 'SO', 'PRUNING')
-    endif
-enddef
-
 def! MnuSyntax()
     let pat = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
     if filereadable(pat)
@@ -177,8 +170,6 @@ def! MnuCallback(winid: number, result: number): number
         exe 'sil !git gui&'
     elsei 19 == id
         GLog(g:head)
-    elsei 20 == id
-        MnuPrune()
     elseif 21 == id
         CsUse()
     elseif 22 == id
