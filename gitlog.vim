@@ -68,10 +68,10 @@ def! GLogRefresh(h: number, commit: string)
 enddef
 
 def! GLog(obj: string)
-    let now = reltime()
+    let now = reltimestr(reltime())
 
     # BOTTOM -------------------------------------------------------------
-    exe 'tabnew Log - ' .. reltimestr(now)
+    exe 'tabnew Log - ' .. now
     settabvar(tabpagenr(), 'title', obj)
     let hB = bufnr()
     Say(hB, 'Ready...')
@@ -79,7 +79,7 @@ def! GLog(obj: string)
     setbufvar(hB, '&colorcolumn', '')
 
     # TOP ----------------------------------------------------------------
-    exe 'split ' .. obj .. ' - ' .. reltimestr(now)
+    exe 'split ' .. obj .. ' - ' .. now
     let hT = bufnr()
     setbufvar(hT, '&colorcolumn', '')
     :2resize 20

@@ -104,35 +104,25 @@ def! GBranTags(hT: number, hB: number)
 enddef
 
 def! GitBranch()
+    let now = reltimestr(reltime())
     GHead()
 
-    # TOP ----------------------------------------------------------------
-    let tT = 'Git Branch'
-    let hT = bufadd(tT)
-    bufload(hT)
-    GBranRefresh(hT)
-
     # BOTTOM -------------------------------------------------------------
-    let tB = tT .. ' - Messages'
-    let hB = bufadd(tB)
-    bufload(hB)
-    Say(hB, 'Ready...')
-
-    # TAB ----------------------------------------------------------------
-    exe 'tabnew ' .. tB
+    exe 'tabnew BranchB' .. now
     settabvar(tabpagenr(), 'title', 'BRANCH')
-
-    exe 'split ' .. tT
-    exe '2resize 20'
-
-    # OPTIONS
-    Hide(hT)
+    let hB = bufnr()
+    Say(hB, 'Ready...')
     Hide(hB)
-
-    # SYNTAX
-    setbufvar(hT, '&colorcolumn', '')
     setbufvar(hB, '&colorcolumn', '')
+
+    # TOP ----------------------------------------------------------------
+    exe 'split BranchT' .. now
+    let hT = bufnr()
+    setbufvar(hT, '&colorcolumn', '')
+    :2resize 20
+    GBranRefresh(hT)
     GColor()
+    Hide(hT)
 
     # LOCAL KEY BINDS
     let cmd = 'nnoremap <silent><buffer>'
