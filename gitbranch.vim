@@ -31,6 +31,35 @@ def! GBRef(h: number, b: number)
     let kw = ''
     let authors = ''
 
+    let rs: list<list<string>>
+    for i in systemlist("git branch -a --format='%(objectname:short) | %(refname) | %(subject) | %(authordate:short) | %(authorname)'")
+        let p = split(i, ' | ')
+
+        # HANDLE BAD REF
+        if len(p) != 5
+            :continue
+        endif
+
+        # SHORTEN REF NAME
+        let ref = substitute(p[1], 'refs/remotes/', '', '')
+        ref = substitute(ref, 'refs/heads/', '', '')
+
+        # FIX SUBJECT LENGTH+FORMAT
+        let subj = p[2]->strchars() < 85 ? p[2] : p[2]->strcharpart(0, 85)->tr("\t", " ")
+
+        # SYNTAX: BRANCH KEYWORDS
+        for z in split(ref, '/')
+            kw = Appendif(kw, z)
+        endfor
+
+        # SYNTAX: AUTHOR KEYWORDS
+        for a in split(p[4])
+            authors = Appendif(authors, a)
+        endfor
+
+        add(rs, [ p[0], ref, subj, p[3], p[4]])
+    endfor
+
     let lens = [
         Widest(rs, 0, 7),
         Widest(rs, 1, 10),
@@ -42,27 +71,9 @@ def! GBRef(h: number, b: number)
     let hdr = printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR')
     let hl = lens[0] + lens[1] + lens[2] + lens[3] + lens[4] + 8
     let sep = repeat('-', hl)
-
     let l = [hdr, sep]
-    for i in systemlist("git branch -a --format='%(objectname:short) | %(refname) | %(subject) | %(authordate:short) | %(authorname)'")
-        let p = split(i, ' | ')
-        if len(p) != 5
-            :continue
-        endif
-        let ref = substitute(p[1], 'refs/remotes/', '', '')
-        ref = substitute(ref, 'refs/heads/', '', '')
-
-        # BRANCHES
-        for z in split(ref, '/')
-            kw = Appendif(kw, z)
-        endfor
-
-        # AUTHORS
-        for a in split(p[4])
-            authors = Appendif(authors, a)
-        endfor
-
-        add(l, printf(f, p[0], ref, p[2]->strchars() < 85 ? p[2] : p[2]->strcharpart(0, 85)->tr("\t", " "), p[3], p[4])
+    for i in rs
+        add(l, printf(f, i[0], i[1], i[2], i[3], i[4]))
     endfor
 
     # SYNTAX
