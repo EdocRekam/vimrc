@@ -3,7 +3,11 @@ def! GRemotes(): string
     for r in systemlist('git remote')
         l = printf('%s  %s', l, r)
     endfor
-    retu 'Remotes:' .. l
+    retu 'REMOTE:' .. l
+enddef
+
+def! Appendif(x: string, y: string): string
+    return stridx(x, y) >= 0 ? x : printf('%s %s', x, y)
 enddef
 
 " REFRESH TOP WINDOW CONTENTS
@@ -11,7 +15,7 @@ enddef
 " h - Buffer number to write to
 " b - Should we clear first 0|1
 def! GBRef(h: number, b: number)
-    def Region(group: string, x: number, y: number, t = 'c', extra = 'contained oneline')
+    def Region(group: string, x: number, y: number, t = 'c', extra = 'contained display oneline')
         let f = 'sy region %s start="%s" end="%s" %s'
         exe printf(f, group, '\%' .. x .. t, '\%' .. y .. t, extra)
     enddef
@@ -19,8 +23,12 @@ def! GBRef(h: number, b: number)
     let now = reltime()
     if b
         deletebufline(h, 1, '$')
-        sy clear Mnu T C B S D A
+        sy clear M T C B S D A
     endif
+
+    # KEYWORD LIST
+    let kw = ''
+    let authors = ''
 
     let rs: list<list<string>>
     for i in systemlist("git branch -a --format='%(objectname:short) %(refname)'")
@@ -29,7 +37,10 @@ def! GBRef(h: number, b: number)
         let ref = substitute(p[1], 'refs/remotes/', '', '')
         ref = substitute(ref, 'refs/heads/', '', '')
         let r = [ commit, ref]
-        let cmd = "git log -n1 --pretty='%<(78,trunc)%s | %as | %an' " .. commit
+        for z in split(ref, '/')
+            kw = Appendif(kw, z)
+        endfor
+        let cmd = "git log -n1 --pretty='%s | %as | %an' " .. commit
         extend(r, split(trim(system(cmd)), ' | '))
         add(rs, r)
     endfor
@@ -47,6 +58,9 @@ def! GBRef(h: number, b: number)
 
     let l = [hdr, sep]
     for r in rs
+        for a in split(r[4])
+            authors = Appendif(authors, a)
+        endfor
         add(l, printf(f, r[0], r[1], r[2], r[3], r[4]))
     endfor
 
@@ -65,12 +79,13 @@ def! GBRef(h: number, b: number)
     # BRANCH
     x = y + 2
     y = x + lens[1] + 1
-    Region('B', x, y)
+    exe 'sy keyword B ' .. kw
+    " Region('B', x, y)
 
     # SUBJECT
     x = y + 1
     y = x + lens[2] + 1
-    Region('S', x, y, 'c', 'display contains=P oneline')
+    Region('S', x, y, 'c', 'contained display contains=L,P oneline')
 
     # DATE
     x = y + 1
@@ -80,28 +95,31 @@ def! GBRef(h: number, b: number)
     # AUTHOR
     x = y + 1
     y = x + lens[4]
-    Region('A', x, y)
+    exe 'sy keyword A ' .. authors
 
+    # TOP SECTION
     y = rowCount + 1
     Region('T', 3, y, 'l', 'contains=C,B,S,D,A')
 
+    # MENU
     x = rowCount + 3
     y = x + 5
-    Region('Mnu', x, y, 'l', 'contains=@NoSpell, P, MnuCmd, MnuKey')
+    Region('M', x, y, 'l', 'contains=@NoSpell,P,MC,MK')
 
-    x += 8
+    # REMOTES
+    x = y + 1
     y = x + 1
-    Region('Mnu', x, y, 'l', 'contains=@NoSpell, MnuCmd, MnuKey')
+    Region('R', x, y, 'l', 'contains=@NoSpell display oneline')
 
     extend(l, ['','',
     '  <S+INS>  CREATE        |  <S+HOME>  CLEAN        |  <PGDN>  -------------  |',
     '  <S+DEL>  DELETE        |  <S+END>   RESET        |  <PGUP>  -------------  |',
     '                         |                         |                         |',
-    '  <F1>   MENU            |  <F2>    -------------  |  <F3>    CLOSE          |  <F4>  CHECKOUT',
-    '  <F5>   REFRESH         |  <F6>    GUI            |  <F7>    LOG/GITK       |  <F8>  STATUS',
-    '', GRemotes(), '',
-    '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> FETCH TAGS', ''
-    'BRANCH: ' .. g:head, sep, ''])
+    '  <F1>     MENU          |  <F2>      -----------  |  <F3>    CLOSE          |  <F4>  CHECKOUT',
+    '  <F5>     REFRESH       |  <F6>      GUI          |  <F7>    LOG/GITK       |  <F8>  STATUS',
+    '', GRemotes(),
+    '', '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> FETCH TAGS',
+    '', 'BRANCH: ' .. g:head, sep, ''])
 
     for i in systemlist('git log -n5')
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
@@ -182,36 +200,35 @@ def! GitBranch()
 
     # COLOR
     sy case ignore
-    sy keyword Label author branch commit date subject
+
+    # LABELS
+    sy keyword LBL author branch commit date remote subject
 
     # PAIRS
     sy region P start="<" end=">" contains=@NoSpell display oneline
-    sy region P start="\[" end="\]" contains=@NoSpell display oneline
     sy region P start="`" end="`" contains=@NoSpell display oneline
 
-    # MENU
-    sy keyword MnuCmd add checkout clean close create cursor delete fetch
-    sy keyword MnuCmd gitk gui log menu prune refresh reset status tags
-    sy keyword MnuCmd under contained
-
-    # REMOTES
-    sy region Keyword start="^Remotes" end="$" contains=@NoSpell display oneline
+    # MENU COMMANDS
+    sy keyword MC add checkout clean close create cursor delete fetch gitk gui log menu prune refresh reset status tags under contained
 
     # COMMENTS
-    sy match Comment "^\s\s\s\s.*$"
+    sy match Comment "^\s\s\s\s.*$" contains=L,P
 
-    # COMMITS
-    syn match Keyword "[0-9a-f]\{40}" contains=@NoSpell display
+    # LINKS - SHA OR []
+    syn match L "[0-9a-f]\{40}" contains=@NoSpell display
+    sy region L start="\[" end="\]" contains=@NoSpell display oneline
 
-    hi Label guifg=#9cdcfe
-    hi MnuCmd guifg=#27d185
-    hi link MnuKey String
+    hi MC guifg=#27d185
+    hi link LBL Identifier
+    hi link MK String
     hi link T Function
+    hi link A Function
     hi link B Keyword
     hi link C Keyword
+    hi link L Keyword
+    hi link R Keyword
     hi link S Comment
     hi link D String
-    hi link A Function
     hi link P String
 
     # LOCAL KEY BINDS

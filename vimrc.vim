@@ -53,6 +53,7 @@ set ruler
 set shiftwidth=4
 set softtabstop=4
 set spell spelllang=en_us
+set synmaxcol=200
 set tabstop=4
 
 " TURN ON FILE TYPE INSPECTION TO RECEIVE FILETYPE EVENTS
