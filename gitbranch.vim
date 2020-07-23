@@ -38,7 +38,7 @@ def! GBRef(h: number, b = 1)
     let remotes = ''
 
     # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
-    let l0 = 10 | let l1 = 10 | let l2 = 20 | let l3 = 10 | let l4 = 10
+    let l0 = 7 | let l1 = 10 | let l2 = 20 | let l3 = 10 | let l4 = 10
 
     let rs: list<list<string>>
     for i in systemlist("git branch -a --format='%(objectname:short) | %(refname) | %(subject) | %(authordate:short) | %(authorname)'")
@@ -81,7 +81,6 @@ def! GBRef(h: number, b = 1)
     endfor
 
     let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', l0, l1, l2, l3)
-    Trace(f)
     let hdr = printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR')
     let hl = l0 + l1 + l2 + l3 + l4 + 8
     let sep = repeat('-', hl)
@@ -101,7 +100,7 @@ def! GBRef(h: number, b = 1)
     #     A  AUTHOR
     Region('C', 1, l0)
     exe 'sy keyword B ' .. kws
-    Region('S', l0 + l1 + 4, l2, 'c', 'contained display contains=L,P oneline')
+    Region('S', l0 + l1 + 4, l2 + 1, 'c', 'contained display contains=L,P oneline')
     Region('D', l0 + l1 + l2 + 7, 10)
     exe 'sy keyword A ' .. ats
 
@@ -222,21 +221,16 @@ def! GitBranch()
     sy match Comment "^\s\s\s\s.*$" contains=L,P
 
     # LINKS - SHA OR []
-    syn match L "[0-9a-f]\{40}" contains=@NoSpell display
+    sy match L "[0-9a-f]\{40}" contains=@NoSpell display
     sy region L start="\[" end="\]" contains=@NoSpell display oneline
 
     hi MC guifg=#27d185
     hi link LBL Identifier
     hi link MK String
-    hi link T Function
-    hi link A Function
-    hi link B Keyword
-    hi link C Keyword
-    hi link L Keyword
-    hi link R Keyword
+    hi link T Function | hi link A Function
+    hi link B Keyword | hi link C Keyword | hi link L Keyword | hi link R Keyword
     hi link S Comment
-    hi link D String
-    hi link P String
+    hi link D String | hi link P String
 
     # LOCAL KEY BINDS
     let m = 'nnoremap <silent><buffer>'
