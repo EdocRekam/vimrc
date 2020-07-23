@@ -31,25 +31,6 @@ def! GBRef(h: number, b: number)
     let kw = ''
     let authors = ''
 
-    let rs: list<list<string>>
-    for i in systemlist("git branch -a --format='%(objectname:short) %(refname)'")
-        let p = split(i)
-        let obj = p[0]
-        let ref = substitute(p[1], 'refs/remotes/', '', '')
-        ref = substitute(ref, 'refs/heads/', '', '')
-        for z in split(ref, '/')
-            kw = Appendif(kw, z)
-        endfor
-        let log = trim(system("git log -n1 --pretty='%s | %as | %an' " .. obj))
-        if v:shell_error
-            :continue
-        endif
-        let r = [ obj, ref]
-        extend(r, split(log, ' | '))
-        add(rs, r)
-    endfor
-
-
     let lens = [
         Widest(rs, 0, 7),
         Widest(rs, 1, 10),
@@ -63,11 +44,25 @@ def! GBRef(h: number, b: number)
     let sep = repeat('-', hl)
 
     let l = [hdr, sep]
-    for r in rs
-        for a in split(r[4])
+    for i in systemlist("git branch -a --format='%(objectname:short) | %(refname) | %(subject) | %(authordate:short) | %(authorname)'")
+        let p = split(i, ' | ')
+        if len(p) != 5
+            :continue
+        endif
+        let ref = substitute(p[1], 'refs/remotes/', '', '')
+        ref = substitute(ref, 'refs/heads/', '', '')
+
+        # BRANCHES
+        for z in split(ref, '/')
+            kw = Appendif(kw, z)
+        endfor
+
+        # AUTHORS
+        for a in split(p[4])
             authors = Appendif(authors, a)
         endfor
-        add(l, printf(f, r[0], r[1], r[2]->strchars() < 85 ? r[2] : r[2]->strcharpart(0, 85)->tr("\t", " "), r[3], r[4]))
+
+        add(l, printf(f, p[0], ref, p[2]->strchars() < 85 ? p[2] : p[2]->strcharpart(0, 85)->tr("\t", " "), p[3], p[4])
     endfor
 
     # SYNTAX
