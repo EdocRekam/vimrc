@@ -70,7 +70,7 @@ def! GBRef(h: number, b: number)
     # SUBJECT
     x = y + 1
     y = x + lens[2] + 1
-    Region('S', x, y)
+    Region('S', x, y, 'c', 'display contains=P oneline')
 
     # DATE
     x = y + 1
@@ -87,15 +87,15 @@ def! GBRef(h: number, b: number)
 
     x = rowCount + 3
     y = x + 5
-    Region('Mnu', x, y, 'l', 'contains=@NoSpell, MnuCmd, MnuKey')
+    Region('Mnu', x, y, 'l', 'contains=@NoSpell, P, MnuCmd, MnuKey')
 
     x += 8
     y = x + 1
     Region('Mnu', x, y, 'l', 'contains=@NoSpell, MnuCmd, MnuKey')
 
     extend(l, ['','',
-    '  <S+INS>  ADD BRANCH    |  <S+HOME>  CLEAN        |  <PGDN>  -------------  |',
-    '  <S+DEL>  DELETE BRANCH |  <S+END>   RESET        |  <PGUP>  -------------  |',
+    '  <S+INS>  CREATE        |  <S+HOME>  CLEAN        |  <PGDN>  -------------  |',
+    '  <S+DEL>  DELETE        |  <S+END>   RESET        |  <PGUP>  -------------  |',
     '                         |                         |                         |',
     '  <F1>   MENU            |  <F2>    -------------  |  <F3>    CLOSE          |  <F4>  CHECKOUT',
     '  <F5>   REFRESH         |  <F6>    GUI            |  <F7>    LOG/GITK       |  <F8>  STATUS',
@@ -182,31 +182,37 @@ def! GitBranch()
 
     # COLOR
     sy case ignore
-    sy keyword Label author branch date subject
-    sy region String start="<" end=">" contains=@NoSpell oneline
+    sy keyword Label author branch commit date subject
 
-    sy keyword MnuCmd add branch checkout clean close cursor delete fetch gitk gui log menu prune refresh reset status tags under contained
-    sy region MnuKey start="<" end=">" contained
+    # PAIRS
+    sy region P start="<" end=">" contains=@NoSpell display oneline
+    sy region P start="\[" end="\]" contains=@NoSpell display oneline
+    sy region P start="`" end="`" contains=@NoSpell display oneline
+
+    # MENU
+    sy keyword MnuCmd add checkout clean close create cursor delete fetch
+    sy keyword MnuCmd gitk gui log menu prune refresh reset status tags
+    sy keyword MnuCmd under contained
 
     # REMOTES
-    sy region Keyword start="^Remotes" end="$" oneline contains=@NoSpell
+    sy region Keyword start="^Remotes" end="$" contains=@NoSpell display oneline
 
     # COMMENTS
     sy match Comment "^\s\s\s\s.*$"
 
     # COMMITS
-    sy match Keyword "^commit.*$"hs=s+7
-    sy match Label "^commit"
+    syn match Keyword "[0-9a-f]\{40}" contains=@NoSpell display
 
     hi Label guifg=#9cdcfe
     hi MnuCmd guifg=#27d185
     hi link MnuKey String
-    hi link Brnch Function
+    hi link T Function
     hi link B Keyword
     hi link C Keyword
     hi link S Comment
     hi link D String
     hi link A Function
+    hi link P String
 
     # LOCAL KEY BINDS
     let m = 'nnoremap <silent><buffer>'
