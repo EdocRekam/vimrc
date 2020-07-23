@@ -42,13 +42,14 @@ def! GitCommit()
     Say(hB, 'Waiting for save ...')
 
     # TOP ----------------------------------------------------------------
-    let pad = filereadable(ct) ? 0 : 1
     exe 'split ' .. ct
     let hT = bufnr()
     setbufvar(hT, '&syntax', 'gitcommit')
     :2resize 20'
 
-    if pad
+    # MISSING COMMIT TEMPLATE MEANS THIS IS A NEW COMMIT SO PREFIX
+    # TWO BLANK LINKS
+    if 0 == filereadable(ct)
         Say(hT, ['', ''])
     endif
 
@@ -61,6 +62,8 @@ def! GitCommit()
         Say(hT, printf('#%s%s', '' == i ? '' : ' ', i))
     endfor
     Say(hT, ['#', '# PRESS <F3> TO ABORT OR CLOSE COMMIT WINDOW'])
+
+    # POSITION
     norm gg
     :star
 
