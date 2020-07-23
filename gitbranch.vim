@@ -1,35 +1,44 @@
-def! GRemotes(): string
-    let l: string
-    for r in systemlist('git remote')
-        l = printf('%s  %s', l, r)
-    endfor
-    retu 'REMOTE:' .. l
-enddef
-
-def! Appendif(x: string, y: string): string
-    return stridx(x, y) >= 0 ? x : printf('%s %s', x, y)
-enddef
-
 " REFRESH TOP WINDOW CONTENTS
 " 
 " h - Buffer number to write to
 " b - Should we clear first 0|1
-def! GBRef(h: number, b: number)
+def! GBRef(h: number, b = 1)
+
+    # CREATE A SYNTAX REGION STARTING/ENDING ON A COLUMN OR LINE
     def Region(group: string, x: number, y: number, t = 'c', extra = 'contained display oneline')
         let f = 'sy region %s start="%s" end="%s" %s'
         let z = x + y
         exe printf(f, group, '\%' .. x .. t, '\%' .. z .. t, extra)
     enddef
 
+    # RETURN X OR THE LENGTH OF VAL; WHICHEVER IS GREATER
+    def AddIf(x: number, val: string): number
+        let y = strchars(val)
+        return y > x ? y : x
+    enddef
+
+    # APPEND Y TO X IF IT DOES NOT EXIST; OTHERWISE X
+    def Appendif(x: string, y: string): string
+        return stridx(x, y) >= 0 ? x : printf('%s %s', x, y)
+    enddef
+
+    # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
+
+    # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if b
         deletebufline(h, 1, '$')
         sy clear M T C B S D A R
     endif
 
-    # KEYWORD LIST
-    let kw = ''
-    let authors = ''
+    # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
+    # ARE FASTER THAN REGEX
+    let kws = ''
+    let ats = ''
+    let remotes = ''
+
+    # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
+    let l0 = 10 | let l1 = 10 | let l2 = 20 | let l3 = 10 | let l4 = 10
 
     let rs: list<list<string>>
     for i in systemlist("git branch -a --format='%(objectname:short) | %(refname) | %(subject) | %(authordate:short) | %(authorname)'")
@@ -47,89 +56,87 @@ def! GBRef(h: number, b: number)
         # FIX SUBJECT LENGTH+FORMAT
         let subj = p[2]->strchars() < 85 ? p[2] : p[2]->strcharpart(0, 85)->tr("\t", " ")
 
+        # BUILD UNIQUE REMOTE LIST
+        let p1 = split(ref, '/')
+        if len(p1) > 1
+            remotes = Appendif(remotes, p1[0])
+        endif
+
         # SYNTAX: BRANCH KEYWORDS
-        for z in split(ref, '/')
-            kw = Appendif(kw, z)
+        for kw in p1
+            kws = Appendif(kws, kw)
         endfor
 
-        # SYNTAX: AUTHOR KEYWORDS
-        for a in split(p[4])
-            authors = Appendif(authors, a)
+        # SYNTAX: AUTHOR NAMES
+        for at in split(p[4])
+            ats = Appendif(ats, at)
         endfor
 
+        # UPDATE COLUMN LENGTHS
+        l0 = AddIf(l0, p[0])
+        l1 = AddIf(l1, ref)
+        l2 = AddIf(l2, subj)
+        l4 = AddIf(l4, p[4])
         add(rs, [ p[0], ref, subj, p[3], p[4]])
     endfor
 
-    let lens = [
-        Widest(rs, 0, 7),
-        Widest(rs, 1, 10),
-        Widest(rs, 2, 7),
-        11,
-        Widest(rs, 4, 7)]
-
-    let f = '%-' .. lens[0] .. 's  %-' .. lens[1] .. 's  %-' .. lens[2] .. 's  %-' .. lens[3] .. 's  %s'
+    let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', l0, l1, l2, l3)
+    Trace(f)
     let hdr = printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR')
-    let hl = lens[0] + lens[1] + lens[2] + lens[3] + lens[4] + 8
+    let hl = l0 + l1 + l2 + l3 + l4 + 8
     let sep = repeat('-', hl)
     let l = [hdr, sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], i[4]))
     endfor
 
-    # SYNTAX
-    #     B - BRANCH COLUMN
-    #     C - COMMIT COLUMN
-    #     S - SUBJECT COLUMN
-    #     D - DATE COLUMN
-    let rowCount = len(l)
+    # DYNAMIC SYNTAX GROUPS
+    #    THESE SYNTAX GROUPS ARE CALCULATED ON THE FLY. PERFORMANCE IS
+    #    BETTER SINCE THE DYNAMIC CALCULATION RESULTS IN FEWER REGEX
+    #
+    #     C  COMMIT
+    #     B  BRANCH
+    #     S  SUBJECT
+    #     D  DATE
+    #     A  AUTHOR
+    Region('C', 1, l0)
+    exe 'sy keyword B ' .. kws
+    Region('S', l0 + l1 + 4, l2, 'c', 'contained display contains=L,P oneline')
+    Region('D', l0 + l1 + l2 + 7, 10)
+    exe 'sy keyword A ' .. ats
 
-    # COMMIT
-    Region('C', 1, lens[0])
+    #     T  TOP LINES
+    #     M  MENU
+    #     R  REMOTES
+    let rc = len(l)
+    Region('T', 3, rc - 2, 'l', 'contains=C,B,S,D,A')
+    Region('M', rc + 3, 5, 'l', 'contains=@NoSpell,P,MC,MK')
+    Region('M', rc + 11, 1, 'l', 'contains=@NoSpell,P,MC,MK')
+    Region('R', rc + 9, 1, 'l', 'contains=@NoSpell display oneline')
 
-    # BRANCH
-    exe 'sy keyword B ' .. kw
-
-    # SUBJECT
-    let x = lens[0] + lens[1] + 4
-    let y = lens[2] + 2
-    Region('S', x, y, 'c', 'contained display contains=L,P oneline')
-
-    # DATE
-    x = lens[0] + lens[1] + lens[2] + 7
-    Region('D', x, 10)
-
-    # AUTHOR
-    exe 'sy keyword A ' .. authors
-
-    # TOP SECTION
-    Region('T', 3, rowCount - 2, 'l', 'contains=C,B,S,D,A')
-
-    # MENU
-    Region('M', rowCount + 3, 5, 'l', 'contains=@NoSpell,P,MC,MK')
-    Region('M', rowCount + 11, 1, 'l', 'contains=@NoSpell,P,MC,MK')
-
-    # REMOTES
-    Region('R', rowCount + 9, 1, 'l', 'contains=@NoSpell display oneline')
-
+    # ADD MENU + REMOTES + BRANCH NAME
     extend(l, ['','',
     '  <S+INS>  CREATE        |  <S+HOME>  CLEAN        |  <PGDN>  -------------  |',
     '  <S+DEL>  DELETE        |  <S+END>   RESET        |  <PGUP>  -------------  |',
     '                         |                         |                         |',
     '  <F1>     MENU          |  <F2>      -----------  |  <F3>    CLOSE          |  <F4>  CHECKOUT',
     '  <F5>     REFRESH       |  <F6>      GUI          |  <F7>    LOG/GITK       |  <F8>  STATUS',
-    '', GRemotes(),
+    '', 'REMOTE:' .. remotes,
     '', '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> FETCH TAGS',
     '', 'BRANCH: ' .. g:head, sep, ''])
 
+    # ADD LAST FIVE LOG ENTRIES
     for i in systemlist('git log -n5')
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
     endfor
     extend(l, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
+
+    # FINALLY PRINT EVERYTHING TO THE BUFFER
     Say(h, l)
 
-    # POSITION
+    # POSITION CURSOR
     let winid = win_getid(1)
-    win_execute(winid, printf('norm %s|', lens[0] + 3))
+    win_execute(winid, printf('norm %s|', l0 + 3))
     win_execute(winid, '3')
 enddef
 
