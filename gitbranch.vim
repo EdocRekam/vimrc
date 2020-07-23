@@ -17,13 +17,14 @@ enddef
 def! GBRef(h: number, b: number)
     def Region(group: string, x: number, y: number, t = 'c', extra = 'contained display oneline')
         let f = 'sy region %s start="%s" end="%s" %s'
-        exe printf(f, group, '\%' .. x .. t, '\%' .. y .. t, extra)
+        let z = x + y
+        exe printf(f, group, '\%' .. x .. t, '\%' .. z .. t, extra)
     enddef
 
     let now = reltime()
     if b
         deletebufline(h, 1, '$')
-        sy clear M T C B S D A
+        sy clear M T C B S D A R
     endif
 
     # KEYWORD LIST
@@ -33,17 +34,22 @@ def! GBRef(h: number, b: number)
     let rs: list<list<string>>
     for i in systemlist("git branch -a --format='%(objectname:short) %(refname)'")
         let p = split(i)
-        let commit = p[0]
+        let obj = p[0]
         let ref = substitute(p[1], 'refs/remotes/', '', '')
         ref = substitute(ref, 'refs/heads/', '', '')
-        let r = [ commit, ref]
         for z in split(ref, '/')
             kw = Appendif(kw, z)
         endfor
-        let cmd = "git log -n1 --pretty='%s | %as | %an' " .. commit
-        extend(r, split(trim(system(cmd)), ' | '))
+        let log = trim(system("git log -n1 --pretty='%s | %as | %an' " .. obj))
+        if v:shell_error
+            :continue
+        endif
+        let r = [ obj, ref]
+        extend(r, split(log, ' | '))
         add(rs, r)
     endfor
+
+
     let lens = [
         Widest(rs, 0, 7),
         Widest(rs, 1, 10),
@@ -61,7 +67,7 @@ def! GBRef(h: number, b: number)
         for a in split(r[4])
             authors = Appendif(authors, a)
         endfor
-        add(l, printf(f, r[0], r[1], r[2], r[3], r[4]))
+        add(l, printf(f, r[0], r[1], r[2]->strchars() < 85 ? r[2] : r[2]->strcharpart(0, 85)->tr("\t", " "), r[3], r[4]))
     endfor
 
     # SYNTAX
@@ -72,44 +78,32 @@ def! GBRef(h: number, b: number)
     let rowCount = len(l)
 
     # COMMIT
-    let x = 1
-    let y = lens[0] + 1
-    Region('C', 1, y)
+    Region('C', 1, lens[0])
 
     # BRANCH
-    x = y + 2
-    y = x + lens[1] + 1
     exe 'sy keyword B ' .. kw
-    " Region('B', x, y)
 
     # SUBJECT
-    x = y + 1
-    y = x + lens[2] + 1
+    let x = lens[0] + lens[1] + 4
+    let y = lens[2] + 2
     Region('S', x, y, 'c', 'contained display contains=L,P oneline')
 
     # DATE
-    x = y + 1
-    y = x + lens[3] + 1
-    Region('D', x, y)
+    x = lens[0] + lens[1] + lens[2] + 7
+    Region('D', x, 10)
 
     # AUTHOR
-    x = y + 1
-    y = x + lens[4]
     exe 'sy keyword A ' .. authors
 
     # TOP SECTION
-    y = rowCount + 1
-    Region('T', 3, y, 'l', 'contains=C,B,S,D,A')
+    Region('T', 3, rowCount - 2, 'l', 'contains=C,B,S,D,A')
 
     # MENU
-    x = rowCount + 3
-    y = x + 5
-    Region('M', x, y, 'l', 'contains=@NoSpell,P,MC,MK')
+    Region('M', rowCount + 3, 5, 'l', 'contains=@NoSpell,P,MC,MK')
+    Region('M', rowCount + 11, 1, 'l', 'contains=@NoSpell,P,MC,MK')
 
     # REMOTES
-    x = y + 1
-    y = x + 1
-    Region('R', x, y, 'l', 'contains=@NoSpell display oneline')
+    Region('R', rowCount + 9, 1, 'l', 'contains=@NoSpell display oneline')
 
     extend(l, ['','',
     '  <S+INS>  CREATE        |  <S+HOME>  CLEAN        |  <PGDN>  -------------  |',

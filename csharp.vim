@@ -75,7 +75,6 @@ enddef
 
 def! g:CsIndent(n: number): any
     let l = getline(n)
-    Trace(l)
     if char2nr('n') == strgetchar(l, 0)
         retu '>1'
     endif

@@ -38,7 +38,7 @@ def! Enum(base: number = 0)
     norm gv
 enddef
 
-def! Widest(rows: list<list<string>>, col: number, min: number, max = 100): number
+def! Widest(rows: list<list<string>>, col: number, min: number, max = 85): number
     let c = min
     for r in rows
         let len = strchars(r[col])

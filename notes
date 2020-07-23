@@ -5,3 +5,11 @@ To test vi startup speed
 To clear search highlight
 
         :noh
+
+Trace syntax times
+
+        :syntime clear
+        :syntime on
+        [ redraw test once+ with CTRL-L ]
+        :syntime off
+        :syntime report
