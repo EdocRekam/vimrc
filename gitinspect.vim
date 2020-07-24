@@ -1,3 +1,8 @@
+" GIT INSPECT EXAMINES A SPECIFIC COMMIT TO
+"
+" LIST WHAT FILES WERE MODIFIED
+" DIFF BEFORE/AFTER
+
 def! GInsCols(): list<number>
     let l: list<number> = gettabvar(tabpagenr(), 'lens')
     let c: list<number> = [l[0] + 3,
@@ -42,8 +47,8 @@ def! GInsHitTest(): number
     retu r
 enddef
 
-def! GInsNav(hT: number, hB: number, obj: string)
-    let cs = GInsCols()
+def! GINav(hT: number, hB: number, obj: string)
+    let cs: list<number> = GInsCols()
 
     let lin = getline('.')
     let pat = trim(strcharpart(lin, 0, cs[0] - 1))
@@ -99,9 +104,33 @@ def! GInsNav(hT: number, hB: number, obj: string)
     endif
 enddef
 
-def! GInsRefresh(hT: number, hB: number, obj: string)
+" REFRESH TOP WINDOW CONTENTS
+"
+" hT   TOP WINDOW BUFFER
+" hB   BOTTOM WINDOW BUFFER
+" obj  THE COMMIT TO INSPECT
+" b    CLEAR THE SCREEN BEFORE PRINTING
+def! GIRef(hT: number, hB: number, obj: string, bl = 1)
+    # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
-    deletebufline(hT, 1, '$')
+
+    # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
+    if bl
+        deletebufline(hT, 1, '$')
+        sy clear F BAH M
+    endif
+
+    # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
+    # ARE FASTER THAN REGEX.
+    #
+    # KWS  KEYWORDS
+    # ATS  AUTHORS
+    let kws = ''
+    let ats = ''
+
+    # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
+    let L0 = 24 | let L1 = 6 | let L2 = 6 | let L3 = 6 | let L4 = 13
+    let L5 = 13
 
     let rs: list<list<string>>
     for i in systemlist('git diff --numstat ' .. obj .. '~1 ' .. obj)
@@ -118,12 +147,26 @@ def! GInsRefresh(hT: number, hB: number, obj: string)
         # 1       1       menu.vim
         # 5       0       session.vim
         let abc = split(i)
+
+        # NUM LINES ADDED TO FILE
         let a = str2nr(abc[0])
+
+        # NUM LINES DELETED FROM FILE
         let b = str2nr(abc[1])
+
+        # FILE PATH
         let c = abc[2]
 
+        # COMMIT OF PATH AFTER MODIFICATION
         let aft = ''
+
+        # COMMIT OF PATH BEFORE MODIFICATION
         let bef = ''
+
+        # LOOK AT THE OBJECT - FILE LAST THREE CHANGES
+        #   ONE PAST ENTRY MEANS FILE WAS ADDED IN THIS `obj` COMMIT
+        #   TWO PAST ENTRY MEANS ?
+        #   THREE PAST ENTRY MEANS ?
         let past = systemlist('git log -n3 --pretty=%h ' .. obj .. ' -- ' .. c)
         if len(past) == 1
             bef = 'ADDED'
@@ -137,21 +180,23 @@ def! GInsRefresh(hT: number, hB: number, obj: string)
                 aft = v:shell_error ? 'DELETED' : obj
             endif
         endif
-        let head = filereadable(c) ? g:head : 'DELETED'
-        add(rs, [c, bef, aft, head])
+
+        # IF FILE EXISTS MEANS THAT ITS STILL IN LATEST HEAD
+        let hed = filereadable(c) ? g:head : 'DELETED'
+
+        # UPDATE COLUMN LENGTHS
+        L0 = AddIf(L0, c)
+        L1 = AddIf(L1, bef)
+        L2 = AddIf(L2, aft)
+        L3 = AddIf(L3, hed)
+        settabvar(tabpagenr(), 'lens', [L0, L1, L2, L3, L4, L5])
+
+        add(rs, [c, bef, aft, hed])
     endfor
 
-    let lens = [
-        Widest(rs, 0, 20),
-        Widest(rs, 1, 8),
-        Widest(rs, 2, 8),
-        Widest(rs, 3, 5),
-        13, 13]
-    settabvar(tabpagenr(), 'lens', lens)
-
-    let f = '%-' .. lens[0] .. 's  %-' .. lens[1] .. 's  %-' .. lens[2] .. 's  %-' .. lens[3] .. 's  %-' .. lens[4] .. 's  %s'
+    let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3, L4)
     let hdr = printf(f, 'FILE', 'BEFORE', 'AFTER', 'HEAD', 'COMPARE', 'SIDE BY SIDE')
-    let hl = lens[0] + lens[1] + lens[2] + lens[3] + lens[4] + lens[5] + 10
+    let hl = L0 + L1 + L2 + L3 + 36
     let sep = repeat('-', hl)
 
     let l = [hdr, sep]
@@ -159,12 +204,26 @@ def! GInsRefresh(hT: number, hB: number, obj: string)
         add(l, printf(f, i[0], i[1], i[2], i[3], 'B:A  B:H  A:H', 'B-A  B-H  A-H'))
     endfor
 
-    extend(l, ['',
-    '<F4>  INSPECT',
-    '<F6>  GIT GUI    <F7>       GIT LOG (UNDER CURSOR)',
-    '                 <SHIFT+F7> GITK (UNDER CURSOR)',
-    'CLICK ON FILE TO EDIT',
-    '', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
+    # DYNAMIC SYNTAX GROUPS
+    #    THESE SYNTAX GROUPS ARE CALCULATED ON THE FLY. PERFORMANCE IS
+    #    BETTER SINCE THE DYNAMIC CALCULATION RESULTS IN FEWER REGEX
+    #
+    #     F    FILE
+    #     BAH  BEFORE + AFTER + HEAD + PADDING
+    Region('F', 1, L0)
+    Region('BAH', L0 + 3, L1 + L2 + L3 + L4 + L5 + 8)
+
+    #     T  TOP LINES
+    #     M  MENU
+    #     R  REMOTES
+    let rc = len(l)
+    Region('T', 3, rc - 2, 'l', 'contains=F,BAH')
+    Region('M', rc + 3, 2, 'l', 'contains=@NoSpell,P,MC,MK')
+
+    extend(l, [sep, '',
+    '<F1> MENU      | <F2> -------  | <F3> CLOSE    | <F4> INSPECT',
+    '<F5> BRANCH    | <F6> GUI      | <F7> LOG/GITK | <F8> STATUS',
+    '', 'Time:' .. reltimestr(reltime(now, reltime()))])
     Say(hT, l)
 
     # POSITION
@@ -175,39 +234,49 @@ enddef
 def! GitInspect(obj: string)
     GHead()
 
-    # TOP ----------------------------------------------------------------
-    let tT = 'I:' .. obj
-    let hT = bufadd(tT)
-    bufload(hT)
-
     # BOTTOM -------------------------------------------------------------
+    let tT = 'I:' .. obj
     let tB = tT .. ' - Messages'
-    let hB = bufadd(tB)
-    bufload(hB)
-    Say(hB, 'Ready...')
-
-    # TAB ----------------------------------------------------------------
     exe 'tabnew ' .. tB
     settabvar(tabpagenr(), 'title', tT)
-
-    exe 'split ' .. tT
-    exe '2resize 20'
-    GInsRefresh(hT, hB, obj)
-
-    # OPTIONS
-    Hide(hT)
+    let hB = bufnr()
+    Say(hB, 'Ready...')
     Hide(hB)
+    setbufvar(hB, '&colorcolumn', '')
+
+    # TOP ----------------------------------------------------------------
+    exe 'split ' .. tT
+    let hT = bufnr()
+    setbufvar(hT, '&colorcolumn', '')
+    :ownsyntax gitinspect
+    :2resize 20
+    GIRef(hT, hB, obj, 0)
+    Hide(hT)
 
     # SYNTAX
-    setbufvar(hT, '&colorcolumn', '')
-    setbufvar(hB, '&colorcolumn', '')
-    GColor()
-    " syn region String start="\%>2l" end="\%90c" contains=@NoSpell oneline
+    sy case ignore
+
+    # LABELS
+    sy keyword LBL after before by compare file head side
+
+    # PAIRS
+    sy region P start="<" end=">" contains=@NoSpell display oneline
+    sy region P start="`" end="`" contains=@NoSpell display oneline
+
+    # MENU COMMANDS
+    sy keyword MC branch close inspect git gitk gui log menu status refresh contained
+
+    # COLOR
+    hi MC guifg=#27d185
+    hi link LBL Identifier
+    hi link P String | hi link F String
+    hi link BAH Keyword
 
     # LOCAL KEY BINDS
     let cmd = 'nnoremap <silent><buffer>'
-    exe printf("%s<2-LeftMouse> :cal <SID>GInsNav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
+    exe printf("%s<2-LeftMouse> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
     exe printf("%s<F3> :exe 'sil bw! %d %d'<CR> ", cmd, hT, hB)
-    exe printf("%s<F6> :cal <SID>GInsRefresh(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
+    exe printf("%s<F4> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
+    exe printf("%s<F6> :cal <SID>GIRef(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
 enddef
 nnoremap <silent><F6> :cal <SID>GitInspect('392bef0')<CR>

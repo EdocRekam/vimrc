@@ -1,4 +1,22 @@
 
+" CREATE A SYNTAX REGION STARTING/ENDING ON A COLUMN OR LINE
+def! Region(grp: string, x: number, y: number, t = 'c', extra = 'contained display oneline')
+    let f = 'sy region %s start="%s" end="%s" %s'
+    let z = x + y
+    exe printf(f, grp, '\%' .. x .. t, '\%' .. z .. t, extra)
+enddef
+
+" RETURN X OR THE LENGTH OF VAL; WHICHEVER IS GREATER
+def! AddIf(x: number, val: string): number
+    let y = strchars(val)
+    return y > x ? y : x
+enddef
+
+" APPEND Y TO X IF IT DOES NOT EXIST; OTHERWISE X
+def! Appendif(x: string, y: string): string
+    return stridx(x, y) >= 0 ? x : printf('%s %s', x, y)
+enddef
+
 def! FindInFile(val: string)
     exe printf("sil grep! -rni  '%s' *", val)
     copen 35

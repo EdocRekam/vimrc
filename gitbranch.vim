@@ -1,27 +1,8 @@
 " REFRESH TOP WINDOW CONTENTS
-" 
+"
 " h - Buffer number to write to
 " b - Should we clear first 0|1
 def! GBRef(h: number, b = 1)
-
-    # CREATE A SYNTAX REGION STARTING/ENDING ON A COLUMN OR LINE
-    def Region(group: string, x: number, y: number, t = 'c', extra = 'contained display oneline')
-        let f = 'sy region %s start="%s" end="%s" %s'
-        let z = x + y
-        exe printf(f, group, '\%' .. x .. t, '\%' .. z .. t, extra)
-    enddef
-
-    # RETURN X OR THE LENGTH OF VAL; WHICHEVER IS GREATER
-    def AddIf(x: number, val: string): number
-        let y = strchars(val)
-        return y > x ? y : x
-    enddef
-
-    # APPEND Y TO X IF IT DOES NOT EXIST; OTHERWISE X
-    def Appendif(x: string, y: string): string
-        return stridx(x, y) >= 0 ? x : printf('%s %s', x, y)
-    enddef
-
     # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
 
@@ -204,7 +185,7 @@ def! GitBranch()
     GBRef(hT, 0)
     Hide(hT)
 
-    # COLOR
+    # SYNTAX
     sy case ignore
 
     # LABELS
@@ -224,6 +205,7 @@ def! GitBranch()
     sy match L "[0-9a-f]\{40}" contains=@NoSpell display
     sy region L start="\[" end="\]" contains=@NoSpell display oneline
 
+    # COLOR
     hi MC guifg=#27d185
     hi link LBL Identifier
     hi link MK String
