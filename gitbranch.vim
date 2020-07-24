@@ -1,7 +1,7 @@
 " REFRESH TOP WINDOW CONTENTS
 "
-" h - Buffer number to write to
-" b - Should we clear first 0|1
+" h  BUFFER NUMBER TO WRITE TO
+" b  SHOULD WE CLEAR FIRST 0|1
 def! GBRef(h: number, b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
