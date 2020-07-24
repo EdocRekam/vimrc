@@ -1,13 +1,23 @@
 
-def! GStatRefresh(hT: number)
+def! GSRef(hT: number, b = 1)
+    # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
-    deletebufline(hT, 1, '$')
+
+    # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
+    if b
+        deletebufline(hT, 1, '$')
+        sy clear M
+    endif
+
     let l = systemlist('git status')
+
+    Region('M', len(l) + 2, 5, 'l', 'contains=@NoSpell,P,MC,MK')
     extend(l, ['',
-    '  <INS>  ADD ALL         |  <HOME>  -------------  |  <PGUP>  PUSH           |',
-    '  <DEL>  UNSTAGE         |  <END>   COMMIT         |  <PGDN>  FETCH          |',
+    '  <INS>    ADD ALL       |  <HOME>  -------------  |  <PGUP>  PUSH           |',
+    '  <DEL>    UNSTAGE       |  <END>   COMMIT         |  <PGDN>  FETCH          |',
     '                         |                         |                         |',
-    '  <F5>   BRANCHES        |  <F6>    GIT GUI        |  <F7>  LOG/GITK         |  <F8> REFRESH',
+    '  <F1>     MENU          |  <F2>    -------------  |  <F3>    CLOSE          |  <F4>  INSPECT',
+    '  <F5>     BRANCH        |  <F6>    GUI            |  <F7>    LOG/GITK       |  <F8>  REFRESH',
     '', repeat('-', 80)])
 
     for i in systemlist('git log -n5')
@@ -18,71 +28,74 @@ def! GStatRefresh(hT: number)
     win_execute(win_getid(1), 'norm gg')
 enddef
 
-def! GStatShellExit(hT: number, hB: number, chan: number, code: number)
-    GStatRefresh(hT)
+def! GSShellExit(hT: number, hB: number, chan: number, code: number)
+    GSRef(hT)
 enddef
 
-def! GStatShell(hT: number, hB: number, cmd: string)
+def! GSShell(hT: number, hB: number, cmd: string)
     Say(hB, cmd)
     let f = funcref("s:SayCallback", [hB])
-    let e = funcref("s:GStatShellExit", [hT, hB])
+    let e = funcref("s:GSShellExit", [hT, hB])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
-def! GStatAdd(hT: number, hB: number)
-    GStatShell(hT, hB, 'git add .')
+def! GSAdd(hT: number, hB: number)
+    GSShell(hT, hB, 'git add .')
 enddef
 
-def! GStatFetch(hT: number, hB: number)
-    GStatShell(hT, hB, 'git fetch')
+def! GSFetch(hT: number, hB: number)
+    GSShell(hT, hB, 'git fetch')
 enddef
 
-def! GStatPush(hT: number, hB: number)
-    GStatShell(hT, hB, 'git push')
+def! GSPush(hT: number, hB: number)
+    GSShell(hT, hB, 'git push')
 enddef
 
-def! GStatUnstage(hT: number, hB: number)
-    GStatShell(hT, hB, 'git restore --staged ' .. expand('<cfile>'))
+def! GSUns(hT: number, hB: number)
+    GSShell(hT, hB, 'git restore --staged ' .. expand('<cfile>'))
+enddef
+
+def! GSIns(hB: number)
+    let o = expand('<cfile>')
+    if strchars(o) > 5
+        Say(hB, "call GLog('" .. o .. "')")
+        GLog(o)
+    endif
 enddef
 
 def! GitStatus()
     GHead()
 
-    # TOP ----------------------------------------------------------------
-    let tT = 'Git Status'
-    let hT = bufadd(tT)
-    bufload(hT)
-    GStatRefresh(hT)
-
     # BOTTOM -------------------------------------------------------------
-    let tB = tT .. ' - Messages'
-    let hB = bufadd(tB)
-    bufload(hB)
-    Say(hB, 'Ready...')
-
-    # TAB ----------------------------------------------------------------
-    exe 'tabnew ' .. tB
+    exe 'tabnew Git Status - Messages'
     settabvar(tabpagenr(), 'title', 'STATUS')
-
-    exe 'split ' .. tT
-    exe '2resize 20'
-
-    Hide(hT)
+    let hB = bufnr()
+    Say(hB, 'Ready...')
     Hide(hB)
+    setbufvar(hB, '&colorcolumn', '')
+
+    # TOP ----------------------------------------------------------------
+    exe 'split Git Status'
+    let hT = bufnr()
+    setbufvar(hT, '&colorcolumn', '80')
+    :ownsyntax gitstatus
+    :2resize 20
+    GSRef(hT, 0)
+    Hide(hT)
 
     # SYNTAX
-    setbufvar(hT, '&colorcolumn', '80')
-    setbufvar(hB, '&colorcolumn', '')
+    sy match L "modified:.*$" display
     GColor()
 
     # LOCAL KEY BINDS
     let cmd = 'nnoremap <silent><buffer>'
-    exe printf("%s<F3> :exe 'sil bw! %d %d'<CR> ", cmd, hT, hB)
-    exe printf('%s<F8> :cal <SID>GStatRefresh(%d)<CR>', cmd, hT)
-    exe printf('%s<DEL> :cal <SID>GStatUnstage(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<INS> :cal <SID>GStatAdd(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<PageDown> :cal <SID>GStatFetch(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<PageUp> :cal <SID>GStatPush(%d, %d)<CR>', cmd, hT, hB)
+    exe printf("%s<F3> :exe 'sil bw! %d %d'<CR>", cmd, hT, hB)
+    exe printf('%s<F4> :cal <SID>GSIns(%d)<CR>', cmd, hB)
+    exe printf('%s<F8> :cal <SID>GSRef(%d)<CR>', cmd, hT)
+    exe printf('%s<DEL> :cal <SID>GSUns(%d, %d)<CR>', cmd, hT, hB)
+    exe printf('%s<INS> :cal <SID>GSAdd(%d, %d)<CR>', cmd, hT, hB)
+    exe printf('%s<PageDown> :cal <SID>GSFetch(%d, %d)<CR>', cmd, hT, hB)
+    exe printf('%s<PageUp> :cal <SID>GSPush(%d, %d)<CR>', cmd, hT, hB)
     nnoremap <silent><buffer><END> :cal <SID>GitCommit()<CR>
 enddef
 nnoremap <silent><F8> :cal <SID>GitStatus()<CR>

@@ -13,7 +13,7 @@ def! GColor()
     sy region L start="\[" end="\]" contains=@NoSpell display oneline contained
 
     # MENU COMMANDS
-    sy keyword MC add branch checkout clean close contained create cursor delete fetch gitk gui inspect log menu prune refresh reset status tags under
+    sy keyword MC add all branch checkout clean close commit contained create cursor delete fetch gitk gui inspect log menu push prune refresh reset status tags under unstage
 
     # KEYWORDS
     sy keyword K x86 x64 anycpu contained

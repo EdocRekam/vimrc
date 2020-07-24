@@ -1,3 +1,3 @@
-e gitbranch.vim | vsplit gitlog.vim
+e gitbranch.vim | vsplit gitstatus.vim
 tab help function-list
 norm 1gt
