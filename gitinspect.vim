@@ -118,7 +118,7 @@ def! GIRef(hT: number, hB: number, obj: string, bl = 1)
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if bl
         deletebufline(hT, 1, '$')
-        sy clear A F BAH M
+        sy clear A F BAH M T R
     endif
 
     # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
@@ -163,12 +163,12 @@ def! GIRef(hT: number, hB: number, obj: string, bl = 1)
         #   ONE PAST ENTRY MEANS FILE WAS ADDED IN THIS `obj` COMMIT
         #   TWO PAST ENTRY MEANS ?
         #   THREE PAST ENTRY MEANS ?
-        let past = systemlist("git log -n3 --pretty='%an' " .. obj .. ' -- ' .. c)
+        let past = systemlist("git log -n3 --pretty='%h | %an' " .. obj .. ' -- ' .. c)
         if len(past) == 1
             bef = 'ADDED'
             aft = obj
         else
-            bef = past[1]
+            bef = get(split(past[1], ' | '), 0)
             if b > 1
                 aft = obj
             else
@@ -178,7 +178,7 @@ def! GIRef(hT: number, hB: number, obj: string, bl = 1)
         endif
 
         # DIG OUT AUTHORS FROM PAST (IF POSSIBLE)
-        for at in past
+        for at in split(get(split(get(past, 1), ' | '), 1))
             ats = Appendif(ats, at)
         endfor
 
@@ -265,31 +265,12 @@ def! GitInspect(obj: string)
     Hide(hT)
 
     # SYNTAX
-    sy case ignore
+    GColor()
 
     # LABELS
     sy keyword LBL after author before by commit compare date file head side
 
-    # PAIRS
-    sy region P start="<" end=">" contains=@NoSpell display oneline
-    sy region P start="`" end="`" contains=@NoSpell display oneline
-
-    # MENU COMMANDS
-    sy keyword MC branch close inspect git gitk gui log menu status refresh contained
-
-    # COMMENTS
-    sy match Comment "^\s\s\s\s.*$" contains=L,P
-
-    # LINKS - SHA OR []
-    sy match L "[0-9a-f]\{40}" contains=@NoSpell display
-    sy region L start="\[" end="\]" contains=@NoSpell display oneline
-
     # COLOR
-    hi MC guifg=#27d185
-    hi link LBL Identifier
-    hi link A Function
-    hi link L Keyword
-    hi link P String | hi link F String
     hi link BAH Keyword
 
     # LOCAL KEY BINDS

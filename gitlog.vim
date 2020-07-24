@@ -1,26 +1,4 @@
 
-def! GitLogPath(pat: string)
-    " OpenTab('TRACE')
-
-    let l = [
-        printf('COMMIT   %-80s DATE       AUTHOR', pat),
-        repeat('-', 130)]
-    Say(0, l)
-
-    " SayShell(h, ["git log --pretty=format:'%s' -- '%s'",
-    "     '\%<(8)\%h \%<(80,trunc)\%s \%cs \%an',
-    "     pat])
-
-    exe '3'
-    normal 1|
-    setl colorcolumn=
-    GColor()
-
-    exe printf("noremap <silent><buffer><2-LeftMouse> :cal <SID>git_trace_nav('%s')<CR>", pat)
-    exe printf("nnoremap <silent><buffer><F4> :cal <SID>git_trace_nav('%s')<CR>", pat)
-    exe printf("nnoremap <silent><buffer><F5> :cal <SID>git_log_file('%s')<CR>", pat)
-enddef
-
 " REFRESH TOP WINDOW CONTENTS
 "
 " h  BUFFER NUMBER TO WRITE TO
@@ -141,25 +119,11 @@ def! GLog(obj: string)
     GLRefresh(hT, obj, 0)
     Hide(hT)
 
-    # SYNTAX
-    sy case ignore
+    # BASIC SYNTAX/COLOR
+    GColor()
 
     # LABELS
     sy keyword Identifier author commit date tag tree
-
-    # MENU COMMANDS
-    sy keyword MC branch close gitk gui inspect menu status refresh contained
-
-    # PAIRS
-    sy region P start="<" end=">" contains=@NoSpell display oneline
-    sy region P start="`" end="`" contains=@NoSpell display oneline
-
-    # COLORS
-    hi MC guifg=#27d185
-    hi link A Function
-    hi link TC Keyword | hi link K Keyword
-    hi link D String | hi link P String | hi link MK String
-    hi link S Comment
 
     # LOCAL KEY BINDS
     let cmd = 'nnoremap <silent><buffer>'

@@ -186,33 +186,10 @@ def! GitBranch()
     Hide(hT)
 
     # SYNTAX
-    sy case ignore
+    GColor()
 
     # LABELS
     sy keyword LBL author branch commit date remote subject
-
-    # PAIRS
-    sy region P start="<" end=">" contains=@NoSpell display oneline
-    sy region P start="`" end="`" contains=@NoSpell display oneline
-
-    # MENU COMMANDS
-    sy keyword MC add checkout clean close create cursor delete fetch gitk gui log menu prune refresh reset status tags under contained
-
-    # COMMENTS
-    sy match Comment "^\s\s\s\s.*$" contains=L,P
-
-    # LINKS - SHA OR []
-    sy match L "[0-9a-f]\{40}" contains=@NoSpell display
-    sy region L start="\[" end="\]" contains=@NoSpell display oneline
-
-    # COLOR
-    hi MC guifg=#27d185
-    hi link LBL Identifier
-    hi link MK String
-    hi link T Function | hi link A Function
-    hi link B Keyword | hi link C Keyword | hi link L Keyword | hi link R Keyword
-    hi link S Comment
-    hi link D String | hi link P String
 
     # LOCAL KEY BINDS
     let m = 'nnoremap <silent><buffer>'
