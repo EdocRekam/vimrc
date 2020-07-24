@@ -111,21 +111,20 @@ enddef
 " obj  THE COMMIT TO INSPECT
 " b    CLEAR THE SCREEN BEFORE PRINTING
 def! GIRef(hT: number, hB: number, obj: string, bl = 1)
+
     # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
 
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if bl
         deletebufline(hT, 1, '$')
-        sy clear F BAH M
+        sy clear A F BAH M
     endif
 
     # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
     # ARE FASTER THAN REGEX.
     #
-    # KWS  KEYWORDS
     # ATS  AUTHORS
-    let kws = ''
     let ats = ''
 
     # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
@@ -146,16 +145,13 @@ def! GIRef(hT: number, hB: number, obj: string, bl = 1)
         # 3       1       install
         # 1       1       menu.vim
         # 5       0       session.vim
-        let abc = split(i)
-
-        # NUM LINES ADDED TO FILE
-        let a = str2nr(abc[0])
+        let bc = split(i)
 
         # NUM LINES DELETED FROM FILE
-        let b = str2nr(abc[1])
+        let b = str2nr(bc[1])
 
         # FILE PATH
-        let c = abc[2]
+        let c = bc[2]
 
         # COMMIT OF PATH AFTER MODIFICATION
         let aft = ''
@@ -167,7 +163,7 @@ def! GIRef(hT: number, hB: number, obj: string, bl = 1)
         #   ONE PAST ENTRY MEANS FILE WAS ADDED IN THIS `obj` COMMIT
         #   TWO PAST ENTRY MEANS ?
         #   THREE PAST ENTRY MEANS ?
-        let past = systemlist('git log -n3 --pretty=%h ' .. obj .. ' -- ' .. c)
+        let past = systemlist("git log -n3 --pretty='%an' " .. obj .. ' -- ' .. c)
         if len(past) == 1
             bef = 'ADDED'
             aft = obj
@@ -180,6 +176,11 @@ def! GIRef(hT: number, hB: number, obj: string, bl = 1)
                 aft = v:shell_error ? 'DELETED' : obj
             endif
         endif
+
+        # DIG OUT AUTHORS FROM PAST (IF POSSIBLE)
+        for at in past
+            ats = Appendif(ats, at)
+        endfor
 
         # IF FILE EXISTS MEANS THAT ITS STILL IN LATEST HEAD
         let hed = filereadable(c) ? g:head : 'DELETED'
@@ -210,8 +211,10 @@ def! GIRef(hT: number, hB: number, obj: string, bl = 1)
     #
     #     F    FILE
     #     BAH  BEFORE + AFTER + HEAD + PADDING
+    #     AUTHORS FOUND IN LOGS
     Region('F', 1, L0)
     Region('BAH', L0 + 3, L1 + L2 + L3 + L4 + L5 + 8)
+    exe 'sy keyword A ' .. ats
 
     #     T  TOP LINES
     #     M  MENU
@@ -223,7 +226,15 @@ def! GIRef(hT: number, hB: number, obj: string, bl = 1)
     extend(l, [sep, '',
     '<F1> MENU      | <F2> -------  | <F3> CLOSE    | <F4> INSPECT',
     '<F5> BRANCH    | <F6> GUI      | <F7> LOG/GITK | <F8> STATUS',
-    '', 'Time:' .. reltimestr(reltime(now, reltime()))])
+    ''])
+
+    # LOG ENTRY
+    extend(l, systemlist('git log -n1 ' .. obj))
+
+    # PERFORMANCE
+    extend(l, ['', 'Time:' .. reltimestr(reltime(now, reltime()))])
+
+    # FINALLY PRINT IT
     Say(hT, l)
 
     # POSITION
@@ -257,7 +268,7 @@ def! GitInspect(obj: string)
     sy case ignore
 
     # LABELS
-    sy keyword LBL after before by compare file head side
+    sy keyword LBL after author before by commit compare date file head side
 
     # PAIRS
     sy region P start="<" end=">" contains=@NoSpell display oneline
@@ -266,9 +277,18 @@ def! GitInspect(obj: string)
     # MENU COMMANDS
     sy keyword MC branch close inspect git gitk gui log menu status refresh contained
 
+    # COMMENTS
+    sy match Comment "^\s\s\s\s.*$" contains=L,P
+
+    # LINKS - SHA OR []
+    sy match L "[0-9a-f]\{40}" contains=@NoSpell display
+    sy region L start="\[" end="\]" contains=@NoSpell display oneline
+
     # COLOR
     hi MC guifg=#27d185
     hi link LBL Identifier
+    hi link A Function
+    hi link L Keyword
     hi link P String | hi link F String
     hi link BAH Keyword
 
