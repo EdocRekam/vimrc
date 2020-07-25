@@ -14,12 +14,16 @@ def! GBRef(h: number, b = 1)
 
     # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
     # ARE FASTER THAN REGEX
-    let kws = ''
-    let ats = ''
-    let remotes = ''
+    let K = ''
+    let A = ''
+    let R = ''
 
     # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
-    let l0 = 7 | let l1 = 10 | let l2 = 20 | let l3 = 10 | let l4 = 10
+    let L0 = 7
+    let L1 = 10
+    let L2 = 20
+    let L3 = 10
+    let L4 = 10
 
     let rs: list<list<string>>
     for i in systemlist("git branch -a --format='%(objectname:short) | %(refname) | %(subject) | %(authordate:short) | %(authorname)'")
@@ -35,37 +39,36 @@ def! GBRef(h: number, b = 1)
         ref = substitute(ref, 'refs/heads/', '', '')
 
         # FIX SUBJECT LENGTH+FORMAT
-        let subj = p[2]->strchars() < 85 ? p[2] : p[2]->strcharpart(0, 85)->tr("\t", " ")
+        let s = p[2]->strcharpart(0, 85)->tr("\t", " ")
 
         # BUILD UNIQUE REMOTE LIST
         let p1 = split(ref, '/')
         if len(p1) > 1
-            remotes = Appendif(remotes, p1[0])
+            R = Appendif(R, p1[0])
         endif
 
         # SYNTAX: BRANCH KEYWORDS
         for kw in p1
-            kws = Appendif(kws, kw)
+            K = Appendif(K, kw)
         endfor
 
         # SYNTAX: AUTHOR NAMES
         for at in split(p[4])
-            ats = Appendif(ats, at)
+            A = Appendif(A, at)
         endfor
 
         # UPDATE COLUMN LENGTHS
-        l0 = AddIf(l0, p[0])
-        l1 = AddIf(l1, ref)
-        l2 = AddIf(l2, subj)
-        l4 = AddIf(l4, p[4])
-        add(rs, [ p[0], ref, subj, p[3], p[4]])
+        L0 = AddIf(L0, p[0])
+        L1 = AddIf(L1, ref)
+        L2 = AddIf(L2, s)
+        L4 = AddIf(L4, p[4])
+        add(rs, [ p[0], ref, s, p[3], p[4]])
     endfor
 
-    let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', l0, l1, l2, l3)
-    let hdr = printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR')
-    let hl = l0 + l1 + l2 + l3 + l4 + 8
+    let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3)
+    let hl = L0 + L1 + L2 + L3 + L4 + 8
     let sep = repeat('-', hl)
-    let l = [hdr, sep]
+    let l = [ printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR'), sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], i[4]))
     endfor
@@ -79,11 +82,11 @@ def! GBRef(h: number, b = 1)
     #     S  SUBJECT
     #     D  DATE
     #     A  AUTHOR
-    Region('C', 1, l0)
-    exe 'sy keyword B ' .. kws
-    Region('S', l0 + l1 + 4, l2 + 1, 'c', 'contained display contains=L,P oneline')
-    Region('D', l0 + l1 + l2 + 7, 10)
-    exe 'sy keyword A ' .. ats
+    Region('C', 1, L0)
+    exe 'sy keyword B ' .. K
+    Region('S', L0 + L1 + 4, L2 + 1, 'c', 'contained display contains=L,P oneline')
+    Region('D', L0 + L1 + L2 + 7, 10)
+    exe 'sy keyword A ' .. A
 
     #     T  TOP LINES
     #     M  MENU
@@ -101,7 +104,7 @@ def! GBRef(h: number, b = 1)
     '                         |                         |                         |',
     '  <F1>     MENU          |  <F2>      -----------  |  <F3>    CLOSE          |  <F4>  CHECKOUT',
     '  <F5>     REFRESH       |  <F6>      GUI          |  <F7>    LOG/GITK       |  <F8>  STATUS',
-    '', 'REMOTE:' .. remotes,
+    '', 'REMOTE:' .. R,
     '', '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> FETCH TAGS',
     '', 'BRANCH: ' .. g:head, sep, ''])
 
@@ -115,9 +118,7 @@ def! GBRef(h: number, b = 1)
     Say(h, l)
 
     # POSITION CURSOR
-    let winid = win_getid(1)
-    win_execute(winid, printf('norm %s|', l0 + 3))
-    win_execute(winid, '3')
+    win_execute(win_getid(1), printf('3 | norm %s|', L0 + 3))
 enddef
 
 def! GBExeExit(hT: number, hB: number, chan: number, code: number)

@@ -1,33 +1,32 @@
 " COMMIT TEMPLATE
 let ct = '.git/GITGUI_MSG'
 
-def! GComShellExit(h: number, chan: number, code: number)
+def! GCShellExit(h: number, chan: number, code: number)
     if 0 == code && filereadable(ct)
         delete(ct)
     endif
 enddef
 
-def! GComShell(h: number, cmd: string)
+def! GCShell(h: number, cmd: string)
     let f = funcref("s:SayCallback", [h])
-    let e = funcref("s:GComShellExit", [h])
+    let e = funcref("s:GCShellExit", [h])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
-def! GComQuit(hT: number, hB: number)
+def! GCQuit(hT: number, hB: number)
     if 1 == getbufvar(hT, '&modifiable')
         exe printf('au! BufWritePost <buffer=%d>', hT)
-        exe 'sil g/^#.*/d'
-        exe 'sil write ' .. ct
+        exe 'sil g/^#.*/d | write ' .. ct
     endif
     exe 'sil bw! ' .. hT .. ' ' .. hB
 enddef
 
-def! GComGo(hT: number, hB: number)
+def! GCGo(hT: number, hB: number)
     let cmd = 'git commit --cleanup=strip -F ' .. ct
     Say(hB, 'Switching to read-only mode.')
     Say(hB, cmd)
     setbufvar(hT, '&modifiable', 0)
-    GComShell(hB, cmd)
+    GCShell(hB, cmd)
 enddef
 
 def! GitCommit()
@@ -67,8 +66,8 @@ def! GitCommit()
     norm gg
     :star
 
-    exe printf('au! BufWritePost <buffer=%d> ++once :cal GComGo(%d, %d)', hT, hT, hB)
-    exe printf("nnoremap <silent><buffer><F3> :cal <SID>GComQuit(%d, %d)<CR>", hT, hB)
+    exe printf('au! BufWritePost <buffer=%d> ++once :cal GCGo(%d, %d)', hT, hT, hB)
+    exe printf("nnoremap <silent><buffer><F3> :cal <SID>GCQuit(%d, %d)<CR>", hT, hB)
 
     # PERFORMANCE
     Say(hT, '# Time:' .. reltimestr(reltime(now, reltime())))
