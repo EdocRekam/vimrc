@@ -196,11 +196,10 @@ def! GIRef(hT: number, hB: number, obj: string, bl = 1)
     endfor
 
     let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3, L4)
-    let hdr = printf(f, 'FILE', 'BEFORE', 'AFTER', 'HEAD', 'COMPARE', 'SIDE BY SIDE')
     let hl = L0 + L1 + L2 + L3 + 36
     let sep = repeat('-', hl)
 
-    let l = [hdr, sep]
+    let l = [ printf(f, 'FILE', 'BEFORE', 'AFTER', 'HEAD', 'COMPARE', 'SIDE BY SIDE'), sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], 'B:A  B:H  A:H', 'B-A  B-H  A-H'))
     endfor
@@ -238,8 +237,7 @@ def! GIRef(hT: number, hB: number, obj: string, bl = 1)
     Say(hT, l)
 
     # POSITION
-    let winid = win_getid(1)
-    win_execute(winid, '3')
+    win_execute(win_getid(1), '3')
 enddef
 
 def! GitInspect(obj: string)
@@ -274,9 +272,9 @@ def! GitInspect(obj: string)
     hi link BAH Keyword
 
     # LOCAL KEY BINDS
-    let cmd = 'nnoremap <silent><buffer>'
-    exe printf("%s<2-LeftMouse> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
-    exe printf("%s<F3> :exe 'sil bw! %d %d'<CR> ", cmd, hT, hB)
-    exe printf("%s<F4> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
-    exe printf("%s<F6> :cal <SID>GIRef(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
+    let cmd = 'nnoremap <silent><buffer><'
+    exe printf("%s2-LeftMouse> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
+    exe printf("%sF3> :exe 'sil bw! %d %d'<CR> ", cmd, hT, hB)
+    exe printf("%sF4> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
+    exe printf("%sF6> :cal <SID>GIRef(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
 enddef
