@@ -45,10 +45,10 @@ def! GLRef(h: number, obj: string, b = 1)
     endfor
 
     let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3)
-    let hdr = printf(f, 'TREE', 'COMMIT', obj, 'DATE', 'AUTHOR')
     let sep = repeat('-', L0 + L1 + L2 + L3 + L4 + 8)
 
-    let l = [hdr, sep]
+    # l REPRESENTS ALL THE LINES SENT TO THE BUFFER
+    let l = [ printf(f, 'TREE', 'COMMIT', obj, 'DATE', 'AUTHOR'), sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], i[4]))
     endfor
@@ -95,9 +95,7 @@ def! GLRef(h: number, obj: string, b = 1)
     Region('T', nlog + 6, nbr, 'l', 'contains=TC,S,D,A')
 
     # POSITION
-    let winid = win_getid(1)
-    win_execute(winid, printf('norm %s|', L1 + 3))
-    win_execute(winid, '3')
+    win_execute(win_getid(1), printf('3 | norm %s|', L1 + 3))
 enddef
 
 def! GLog(obj: string)
