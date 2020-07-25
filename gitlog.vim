@@ -35,6 +35,7 @@ def! GLRefresh(h: number, commit: string, b = 1)
         L1 = AddIf(L1, r[1])
         L2 = AddIf(L2, subj)
         L4 = AddIf(L4, r[4])
+        settabvar(tabpagenr(), 'L', [L0, L1, L2, L3, L4])
 
         add(rs, [ r[0], r[1], subj, r[3], r[4]])
     endfor
@@ -141,12 +142,10 @@ enddef
 nnoremap <silent><F7> :cal <SID>GitLog()<CR>
 
 def! GLNav()
-    let col = col('.')
-    if col > 0 && col < 11
-        GLog(expand('<cword>'))
-    elseif col > 10 && col < 21
-        GLog(expand('<cword>'))
+    let L = gettabvar(tabpagenr(), 'L')
+    if col('.') > L[0] + L[1] + 4
+        GLog(get(split(getline('.')), 1))
     else
-        GLog(expand('<cfile>'))
+        GitInspect(expand('<cword>'))
     endif
 enddef

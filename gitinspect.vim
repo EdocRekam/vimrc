@@ -280,4 +280,3 @@ def! GitInspect(obj: string)
     exe printf("%s<F4> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
     exe printf("%s<F6> :cal <SID>GIRef(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
 enddef
-nnoremap <silent><F6> :cal <SID>GitInspect('392bef0')<CR>
