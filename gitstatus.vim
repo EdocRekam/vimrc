@@ -28,31 +28,31 @@ def! GSRef(hT: number, b = 1)
     win_execute(win_getid(1), 'norm gg')
 enddef
 
-def! GSShellExit(hT: number, hB: number, chan: number, code: number)
+def! GSeXit(hT: number, hB: number, chan: number, code: number)
     GSRef(hT)
 enddef
 
-def! GSShell(hT: number, hB: number, cmd: string)
+def! GSex(hT: number, hB: number, cmd: string)
     Say(hB, cmd)
     let f = funcref("s:SayCallback", [hB])
-    let e = funcref("s:GSShellExit", [hT, hB])
+    let e = funcref("s:GSeXit", [hT, hB])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
 def! GSAdd(hT: number, hB: number)
-    GSShell(hT, hB, 'git add .')
+    GSex(hT, hB, 'git add .')
 enddef
 
-def! GSFetch(hT: number, hB: number)
-    GSShell(hT, hB, 'git fetch')
+def! GSFet(hT: number, hB: number)
+    GSex(hT, hB, 'git fetch')
 enddef
 
-def! GSPush(hT: number, hB: number)
-    GSShell(hT, hB, 'git push')
+def! GSPsh(hT: number, hB: number)
+    GSex(hT, hB, 'git push')
 enddef
 
 def! GSUns(hT: number, hB: number)
-    GSShell(hT, hB, 'git restore --staged ' .. expand('<cfile>'))
+    GSex(hT, hB, 'git restore --staged ' .. expand('<cfile>'))
 enddef
 
 def! GSIns(hB: number)
@@ -66,37 +66,47 @@ enddef
 def! GitStatus()
     GHead()
 
-    # BOTTOM -------------------------------------------------------------
-    exe 'tabnew Git Status - Messages'
-    settabvar(tabpagenr(), 'title', 'STATUS')
-    let hB = bufnr()
-    Say(hB, 'Ready...')
-    Hide(hB)
-    setbufvar(hB, '&colorcolumn', '')
+    # OPEN EXISTING WINDOW
+    let hT = bufnr('Git Status')
+    if -1 != hT
+        win_gotoid(get(hT->win_findbuf(), 0))
+        GSRef(hT)
+    else
+        # BOTTOM ---------------------------------------------------------
+        exe 'tabnew Git Status - Messages'
+        settabvar(tabpagenr(), 'title', 'STATUS')
+        let hB = bufnr()
+        Say(hB, 'Ready...')
+        Hide(hB)
+        setbufvar(hB, '&colorcolumn', '')
 
-    # TOP ----------------------------------------------------------------
-    exe 'split Git Status'
-    let hT = bufnr()
-    setbufvar(hT, '&colorcolumn', '80')
-    :ownsyntax gitstatus
-    :2resize 20
-    GSRef(hT, 0)
-    Hide(hT)
+        # TOP ------------------------------------------------------------
+        exe 'split Git Status'
+        hT = bufnr()
+        setbufvar(hT, '&colorcolumn', '80')
+        :ownsyntax gitstatus
+        :2resize 20
+        GSRef(hT, 0)
+        Hide(hT)
 
-    # SYNTAX
-    sy match L "modified:.*$" display
-    GColor()
+        # SYNTAX
+        sy match L "modified:.*$" display
+        GColor()
 
-    # LOCAL KEY BINDS
-    let cmd = 'nnoremap <silent><buffer>'
-    exe printf("%s<F3> :exe 'sil bw! %d %d'<CR>", cmd, hT, hB)
-    exe printf('%s<F4> :cal <SID>GSIns(%d)<CR>', cmd, hB)
-    exe printf('%s<F8> :cal <SID>GSRef(%d)<CR>', cmd, hT)
-    exe printf('%s<DEL> :cal <SID>GSUns(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<INS> :cal <SID>GSAdd(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<PageDown> :cal <SID>GSFetch(%d, %d)<CR>', cmd, hT, hB)
-    exe printf('%s<PageUp> :cal <SID>GSPush(%d, %d)<CR>', cmd, hT, hB)
-    nnoremap <silent><buffer><END> :cal <SID>GitCommit()<CR>
+        # LABELS
+        sy keyword LBL author commit date
+
+        # LOCAL KEY BINDS
+        let cmd = 'nnoremap <silent><buffer>'
+        exe printf("%s<F3> :exe 'sil bw! %d %d'<CR>", cmd, hT, hB)
+        exe printf('%s<F4> :cal <SID>GSIns(%d)<CR>', cmd, hB)
+        exe printf('%s<F8> :cal <SID>GSRef(%d)<CR>', cmd, hT)
+        exe printf('%s<DEL> :cal <SID>GSUns(%d, %d)<CR>', cmd, hT, hB)
+        exe printf('%s<INS> :cal <SID>GSAdd(%d, %d)<CR>', cmd, hT, hB)
+        exe printf('%s<PageDown> :cal <SID>GSFet(%d, %d)<CR>', cmd, hT, hB)
+        exe printf('%s<PageUp> :cal <SID>GSPsh(%d, %d)<CR>', cmd, hT, hB)
+        nnoremap <silent><buffer><END> :cal <SID>GitCommit()<CR>
+    endif
 enddef
 nnoremap <silent><F8> :cal <SID>GitStatus()<CR>
 
