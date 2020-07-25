@@ -96,8 +96,8 @@ def! GBRef(h: number, b = 1)
 
     # ADD MENU + REMOTES + BRANCH NAME
     extend(l, ['','',
-    '  <S+INS>  CREATE        |  <S+HOME>  CLEAN        |  <PGDN>  -------------  |',
-    '  <S+DEL>  DELETE        |  <S+END>   RESET        |  <PGUP>  -------------  |',
+    '  <S+INS>  CREATE        |  <S+HOME>  CLEAN        |  <PGUP>  -------------  |',
+    '  <S+DEL>  DELETE        |  <S+END>   RESET        |  <PGDN>  -------------  |',
     '                         |                         |                         |',
     '  <F1>     MENU          |  <F2>      -----------  |  <F3>    CLOSE          |  <F4>  CHECKOUT',
     '  <F5>     REFRESH       |  <F6>      GUI          |  <F7>    LOG/GITK       |  <F8>  STATUS',

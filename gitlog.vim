@@ -68,8 +68,8 @@ def! GLRefresh(h: number, commit: string, b = 1)
     endfor
 
     extend(l, ['', '',
-    '  <S+INS>  ------------  |  <S+HOME>  -----------  |  <PGDN>  -------------  |',
-    '  <S+DEL>  ------------  |  <S+END>   -----------  |  <PGUP>  -------------  |',
+    '  <S+INS>  ------------  |  <S+HOME>  -----------  |  <PGUP>  -------------  |',
+    '  <S+DEL>  ------------  |  <S+END>   -----------  |  <PGDN>  -------------  |',
     '                         |                         |                         |',
     '  <F1>     MENU          |  <F2>      -----------  |  <F3>    CLOSE          |  <F4>  INSPECT',
     '  <F5>     BRANCH        |  <F6>      GUI          |  <F7>    REFRESH/GITK   |  <F8>  STATUS',
