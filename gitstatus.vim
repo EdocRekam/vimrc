@@ -13,12 +13,12 @@ def! GSRef(hT: number, b = 1)
 
     Region('M', len(l) + 2, 5, 'l', 'contains=@NoSpell,P,MC,MK')
     extend(l, ['',
-    '  <INS>    ADD ALL       |  <HOME>  -------------  |  <PGUP>  PUSH           |',
-    '  <DEL>    UNSTAGE       |  <END>   COMMIT         |  <PGDN>  FETCH          |',
-    '                         |                         |                         |',
-    '  <F1>     MENU          |  <F2>    -------------  |  <F3>    CLOSE          |  <F4>  INSPECT',
-    '  <F5>     BRANCH        |  <F6>    GUI            |  <F7>    LOG/GITK       |  <F8>  REFRESH',
-    '', repeat('-', 80)])
+    '<INS>  ADD ALL   |  <HOME>  ---------  |  <PGUP>  PUSH      |',
+    '<DEL>  UNSTAGE   |  <END>   COMMIT     |  <PGDN>  FETCH     |',
+    '                 |                     |                    |',
+    '<F1>   MENU      |  <F2>    ---------  |  <F3>    CLOSE     |  <F4>  INSPECT',
+    '<F5>   BRANCH    |  <F6>    GUI        |  <F7>    LOG/GITK  |  <F8>  REFRESH',
+    '', repeat('-', 79)])
 
     for i in systemlist('git log -n5')
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
