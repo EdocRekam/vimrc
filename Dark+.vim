@@ -129,6 +129,11 @@ hi Todo             gui=ITALIC    guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg
 hi Underlined       gui=UNDERLINE guibg=NONE    guifg=NONE    cterm=NONE ctermbg=0  ctermfg=7
 
 " CUSTOM COLORS
-" hi Bad  guifg=#ee3020
+"       MC  MENU COMMAND
+hi MC guifg=#27d185
+"
+" hi Red guifg=#ee3020
+" hi LightBlue guifg=#9cdcfe
+" hi Green guifg=#00b135
 
 
