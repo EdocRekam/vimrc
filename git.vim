@@ -36,7 +36,7 @@ def! GColor()
     # sy match Keyword "\d\+\.\d\+\.\d\+\.\d\+"
     # sy match Keyword "\d\+\.\d\+\.\d\+\.\d\+\.\d\+"
     # hi LightBlue guifg=#9cdcfe
-    # hi Bad  guifg=#ee3020
+    # 
     # hi Good guifg=#00b135
 
     # COLORS

@@ -101,6 +101,7 @@ def! GitStatus()
 
         # SYNTAX
         sy match L "modified:.*$" display
+        sy match DiffDelete "deleted:.*$" display
         GColor()
 
         # LABELS
