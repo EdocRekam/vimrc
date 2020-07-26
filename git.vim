@@ -23,13 +23,9 @@ def! GColor()
     sy region P start="`" end="`" contains=@NoSpell display oneline
     sy region P start='"' end='"' contains=@NoSpell display oneline
 
-    # sy keyword Comment hofu freetown master ibaraki
-    # sy keyword DiffAdd added
-    # sy keyword DiffDelete deleted
-    # sy keyword Keyword arc head
-    # sy keyword LightBlue commit merge author date branch subject tag tree
-    # sy region Good start="^\t" end="$" contains=@NoSpell oneline
-    # sy region Keyword start="\s.*/" end="\s" contains=@NoSpell oneline
+    # VERSION STRING
+    sy match A "\d\+\.\d\+"
+
     # sy match String "\d\+-\d\+-\d\+"
     # sy match Keyword "\d\+\.\d\+"
     # sy match Keyword "\d\+\.\d\+\.\d\+"
