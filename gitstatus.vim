@@ -7,17 +7,17 @@ def! GSRef(hT: number, b = 1)
     if b
         deletebufline(hT, 1, '$')
         sy clear M
-    endif
+    en
 
     let l = systemlist('git status')
 
     Region('M', len(l) + 2, 5, 'l', 'contains=@NoSpell,P,MC,MK')
     extend(l, ['',
-    '<INS>  ADD ALL   |  <HOME>  ---------  |  <PGUP>  PUSH      |',
-    '<DEL>  UNSTAGE   |  <END>   COMMIT     |  <PGDN>  FETCH     |',
-    '                 |                     |                    |',
-    '<F1>   MENU      |  <F2>    ---------  |  <F3>    CLOSE     |  <F4>  INSPECT',
-    '<F5>   BRANCH    |  <F6>    GUI        |  <F7>    LOG/GITK  |  <F8>  REFRESH',
+    '<INS>  ADD ALL  |  <S-HOME> RESTORE  |  <PGUP>  PUSH      |',
+    '<DEL>  UNSTAGE  |  <END>    COMMIT   |  <PGDN>  FETCH     |',
+    '                |                    |                    |',
+    '<F1>   MENU     |  <F2>     -------  |  <F3>    CLOSE     |  <F4>  INSPECT',
+    '<F5>   BRANCH   |  <F6>     GUI      |  <F7>    LOG/GITK  |  <F8>  REFRESH',
     '', repeat('-', 79)])
 
     for i in systemlist('git log -n5')
@@ -51,8 +51,18 @@ def! GSPsh(hT: number, hB: number)
     GSex(hT, hB, 'git push')
 enddef
 
+def! GSRes(hT: number, hB: number)
+    let o = expand('<cfile>')
+    if filereadable(o)
+        GSex(hT, hB, 'git restore ' .. o)
+    en
+enddef
+
 def! GSUns(hT: number, hB: number)
-    GSex(hT, hB, 'git restore --staged ' .. expand('<cfile>'))
+    let o = expand('<cfile>')
+    if filereadable(o)
+        GSex(hT, hB, 'git restore --staged ' .. o)
+    en
 enddef
 
 def! GSIns(hB: number)
@@ -60,7 +70,7 @@ def! GSIns(hB: number)
     if strchars(o) > 5
         Say(hB, "call GLog('" .. o .. "')")
         GLog(o)
-    endif
+    en
 enddef
 
 def! GitStatus()
@@ -103,10 +113,11 @@ def! GitStatus()
         exe printf('%s<F8> :cal <SID>GSRef(%d)<CR>', cmd, hT)
         exe printf('%s<DEL> :cal <SID>GSUns(%d, %d)<CR>', cmd, hT, hB)
         exe printf('%s<INS> :cal <SID>GSAdd(%d, %d)<CR>', cmd, hT, hB)
+        exe printf('%s<S-HOME> :cal <SID>GSRes(%d, %d)<CR>', cmd, hT, hB)
         exe printf('%s<PageDown> :cal <SID>GSFet(%d, %d)<CR>', cmd, hT, hB)
         exe printf('%s<PageUp> :cal <SID>GSPsh(%d, %d)<CR>', cmd, hT, hB)
         nnoremap <silent><buffer><END> :cal <SID>GitCommit()<CR>
-    endif
+    en
 enddef
 nnoremap <silent><F8> :cal <SID>GitStatus()<CR>
 
