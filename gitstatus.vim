@@ -65,9 +65,18 @@ def! GSUns(hT: number, hB: number)
     en
 enddef
 
+def! GSIg(hT: number, hB: number)
+    let o = expand('<cfile>')
+    if filereadable(o) && filereadable('.gitignore')
+        Say(hB, 'Ignoring: ' .. o)
+        writefile(['*.swp'], '.gitignore')
+        GSRef(hT, hB)
+    en
+enddef
+
 def! GSIns(hB: number)
     let o = expand('<cfile>')
-    if filereadable(o) > 5
+    if filereadable(o)
         exe 'tabnew ' .. o
         let hR = bufnr()
 
@@ -78,7 +87,7 @@ def! GSIns(hB: number)
         win_execute(win_getid(2), 'norm gg')
 
         # LOCAL KEY BINDS
-        exe printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d %d'<CR> ", m, hL, hR)
+        exe printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d %d'<CR> ", hL, hR)
     en
 enddef
 
@@ -117,15 +126,16 @@ def! GitStatus()
         sy keyword LBL author commit date
 
         # LOCAL KEY BINDS
-        let cmd = 'nnoremap <silent><buffer>'
-        exe printf("%s<F3> :exe 'sil bw! %d %d'<CR>", cmd, hT, hB)
-        exe printf('%s<F4> :cal <SID>GSIns(%d)<CR>', cmd, hB)
-        exe printf('%s<F8> :cal <SID>GSRef(%d)<CR>', cmd, hT)
-        exe printf('%s<DEL> :cal <SID>GSUns(%d, %d)<CR>', cmd, hT, hB)
-        exe printf('%s<INS> :cal <SID>GSAdd(%d, %d)<CR>', cmd, hT, hB)
-        exe printf('%s<S-HOME> :cal <SID>GSRes(%d, %d)<CR>', cmd, hT, hB)
-        exe printf('%s<PageDown> :cal <SID>GSFet(%d, %d)<CR>', cmd, hT, hB)
-        exe printf('%s<PageUp> :cal <SID>GSPsh(%d, %d)<CR>', cmd, hT, hB)
+        let m = 'nnoremap <silent><buffer><'
+        exe printf("%sF3> :exe 'sil bw! %d %d'<CR>", m, hT, hB)
+        exe printf('%sF4> :cal <SID>GSIns(%d)<CR>', m, hB)
+        exe printf('%sF8> :cal <SID>GSRef(%d)<CR>', m, hT)
+        exe printf('%sc-i> :cal <SID>GSIg(%d, %d)<CR>', m, hT, hB)
+        exe printf('%sDEL> :cal <SID>GSUns(%d, %d)<CR>', m, hT, hB)
+        exe printf('%sINS> :cal <SID>GSAdd(%d, %d)<CR>', m, hT, hB)
+        exe printf('%sS-HOME> :cal <SID>GSRes(%d, %d)<CR>', m, hT, hB)
+        exe printf('%sPageDown> :cal <SID>GSFet(%d, %d)<CR>', m, hT, hB)
+        exe printf('%sPageUp> :cal <SID>GSPsh(%d, %d)<CR>', m, hT, hB)
         nnoremap <silent><buffer><END> :cal <SID>GitCommit()<CR>
     en
 enddef
