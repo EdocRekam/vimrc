@@ -67,11 +67,11 @@ enddef
 
 def! GSIg(hT: number, hB: number)
     let o = expand('<cfile>')
-    if filereadable(o) && filereadable('.gitignore')
-        Say(hB, 'Ignoring: ' .. o)
-        writefile(['*.swp'], '.gitignore')
-        GSRef(hT, hB)
+    :tabnew .gitignore
+    if filereadable(o)
+        append('$', o)
     en
+    norm G
 enddef
 
 def! GSIns(hB: number)
@@ -140,4 +140,3 @@ def! GitStatus()
     en
 enddef
 nnoremap <silent><F8> :cal <SID>GitStatus()<CR>
-
