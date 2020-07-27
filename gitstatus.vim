@@ -67,9 +67,18 @@ enddef
 
 def! GSIns(hB: number)
     let o = expand('<cfile>')
-    if strchars(o) > 5
-        Say(hB, "call GLog('" .. o .. "')")
-        GLog(o)
+    if filereadable(o) > 5
+        exe 'tabnew ' .. o
+        let hR = bufnr()
+
+        exe 'vsplit HEAD:' .. o
+        let hL = bufnr()
+        Hide(hL)
+        GShow(hL, 'HEAD', o)
+        win_execute(win_getid(2), 'norm gg')
+
+        # LOCAL KEY BINDS
+        exe printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d %d'<CR> ", m, hL, hR)
     en
 enddef
 
