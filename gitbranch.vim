@@ -1,8 +1,8 @@
-" REFRESH TOP WINDOW CONTENTS
-"
-" h  BUFFER NUMBER TO WRITE TO
-" b  SHOULD WE CLEAR FIRST 0|1
-def! GBRef(h: number, b = 1)
+# REFRESH TOP WINDOW CONTENTS
+#
+# h  BUFFER NUMBER TO WRITE TO
+# b  SHOULD WE CLEAR FIRST 0|1
+def GBRef(h: number, b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
 
@@ -98,7 +98,7 @@ def! GBRef(h: number, b = 1)
     Region('R', rc + 9, 1, 'l', 'contains=@NoSpell display oneline')
 
     # ADD MENU + REMOTES + BRANCH NAME
-    extend(l, ['','',
+    extend(l, ['', '',
     '  <S+INS>  CREATE        |  <S+HOME>  CLEAN        |  <PGUP>  -------------  |',
     '  <S+DEL>  DELETE        |  <S+END>   RESET        |  <PGDN>  -------------  |',
     '                         |                         |                         |',
@@ -106,7 +106,7 @@ def! GBRef(h: number, b = 1)
     '  <F5>     REFRESH       |  <F6>      GUI          |  <F7>    LOG/GITK       |  <F8>  STATUS',
     '', 'REMOTE:' .. R,
     '', '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> FETCH TAGS',
-    '', 'BRANCH: ' .. g:head, sep, ''])
+    '', 'BRANCH: ' .. Head, sep, ''])
 
     # ADD LAST FIVE LOG ENTRIES
     for i in systemlist('git log -n5')
@@ -121,11 +121,11 @@ def! GBRef(h: number, b = 1)
     win_execute(win_getid(1), printf('3 | norm %s|', L0 + 3))
 enddef
 
-def! GBExeExit(hT: number, hB: number, chan: number, code: number)
+def GBExeExit(hT: number, hB: number, chan: number, code: number)
     GBRef(hT, 1)
 enddef
 
-def! GBExe(hT: number, hB: number, cmd: string)
+def GBExe(hT: number, hB: number, cmd: string)
     Say(hB, cmd)
     win_execute(win_getid(2), 'norm G')
     let f = funcref("s:SayCallback", [hB])
@@ -133,15 +133,15 @@ def! GBExe(hT: number, hB: number, cmd: string)
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
-def! GBCln(hT: number, hB: number)
+def GBCln(hT: number, hB: number)
     GBExe(hT, hB, 'git clean -xdf -e *.swp')
 enddef
 
-def! GBDel(hT: number, hB: number)
+def GBDel(hT: number, hB: number)
     GBExe(hT, hB, 'git branch -d ' .. expand('<cfile>'))
 enddef
 
-def! GBNav(hT: number, hB: number)
+def GBNav(hT: number, hB: number)
     if col('.') < 10
         GitLog()
     else
@@ -149,23 +149,23 @@ def! GBNav(hT: number, hB: number)
     endif
 enddef
 
-def! GBNew(hT: number, hB: number)
+def GBNew(hT: number, hB: number)
     GBExe(hT, hB, 'git branch ' .. expand('<cfile>'))
 enddef
 
-def! GBPru(hT: number, hB: number)
+def GBPru(hT: number, hB: number)
     GBExe(hT, hB, 'git remote prune ' .. expand('<cword>'))
 enddef
 
-def! GBRes(hT: number, hB: number)
+def GBRes(hT: number, hB: number)
     GBExe(hT, hB, 'git reset --hard ' .. expand('<cfile>'))
 enddef
 
-def! GBTag(hT: number, hB: number)
+def GBTag(hT: number, hB: number)
     GBExe(hT, hB, 'git fetch --tags ' .. expand('<cword>'))
 enddef
 
-def! GitBranch()
+def GitBranch()
     let now = reltimestr(reltime())
     GHead()
 
@@ -205,4 +205,3 @@ def! GitBranch()
     exe printf("%s<c-t> :cal <SID>GBTag(%d, %d)<CR>", m, hT, hB)
 enddef
 nnoremap <silent><F5> :cal <SID>GitBranch()<CR>
-

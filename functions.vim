@@ -1,4 +1,4 @@
-def! Align(value: string)
+def Align(value: string)
     if '' == value
         retu
     endif
@@ -26,7 +26,7 @@ def! Align(value: string)
     norm gv
 enddef
 
-def! Enum(base: number = 0)
+def Enum(base: number = 0)
     let nr = line("'<")
     let cnt = base
     for line in getline(nr, "'>")
@@ -38,7 +38,7 @@ def! Enum(base: number = 0)
     norm gv
 enddef
 
-def! Widest(rows: list<list<string>>, col: number, min: number, max = 85): number
+def Widest(rows: list<list<string>>, col: number, min: number, max = 85): number
     let c = min
     for r in rows
         let len = strchars(r[col])
@@ -52,7 +52,7 @@ def! Widest(rows: list<list<string>>, col: number, min: number, max = 85): numbe
     retu c
 enddef
 
-def! OpenWin(title: string, blank = 1): number
+def OpenWin(title: string, blank = 1): number
     let h = bufnr(title)
     let ids = win_findbuf(h)
     if empty(ids)
@@ -69,4 +69,3 @@ def! OpenWin(title: string, blank = 1): number
     endif
     retu h
 enddef
-

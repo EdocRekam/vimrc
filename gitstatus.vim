@@ -1,5 +1,5 @@
 
-def! GSRef(hT: number, b = 1)
+def GSRef(hT: number, b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
 
@@ -28,44 +28,44 @@ def! GSRef(hT: number, b = 1)
     win_execute(win_getid(1), 'norm gg')
 enddef
 
-def! GSeXit(hT: number, hB: number, chan: number, code: number)
+def GSeXit(hT: number, hB: number, chan: number, code: number)
     GSRef(hT)
 enddef
 
-def! GSex(hT: number, hB: number, cmd: string)
+def GSex(hT: number, hB: number, cmd: string)
     Say(hB, cmd)
     let f = funcref("s:SayCallback", [hB])
     let e = funcref("s:GSeXit", [hT, hB])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
-def! GSAdd(hT: number, hB: number)
+def GSAdd(hT: number, hB: number)
     GSex(hT, hB, 'git add .')
 enddef
 
-def! GSFet(hT: number, hB: number)
+def GSFet(hT: number, hB: number)
     GSex(hT, hB, 'git fetch')
 enddef
 
-def! GSPsh(hT: number, hB: number)
+def GSPsh(hT: number, hB: number)
     GSex(hT, hB, 'git push')
 enddef
 
-def! GSRes(hT: number, hB: number)
+def GSRes(hT: number, hB: number)
     let o = expand('<cfile>')
     if filereadable(o)
         GSex(hT, hB, 'git restore ' .. o)
     en
 enddef
 
-def! GSUns(hT: number, hB: number)
+def GSUns(hT: number, hB: number)
     let o = expand('<cfile>')
     if filereadable(o)
         GSex(hT, hB, 'git restore --staged ' .. o)
     en
 enddef
 
-def! GSIg(hT: number, hB: number)
+def GSIg(hT: number, hB: number)
     let o = expand('<cfile>')
     :tabnew .gitignore
     if filereadable(o)
@@ -74,7 +74,7 @@ def! GSIg(hT: number, hB: number)
     norm G
 enddef
 
-def! GSIns(hB: number)
+def GSIns(hB: number)
     let o = expand('<cfile>')
     if filereadable(o)
         exe 'tabnew ' .. o
@@ -91,7 +91,7 @@ def! GSIns(hB: number)
     en
 enddef
 
-def! GitStatus()
+def GitStatus()
     GHead()
 
     # OPEN EXISTING WINDOW
@@ -101,7 +101,7 @@ def! GitStatus()
         GSRef(hT)
     else
         # BOTTOM ---------------------------------------------------------
-        exe 'tabnew Git Status - Messages'
+        tabnew Git Status - Messages
         settabvar(tabpagenr(), 'title', 'STATUS')
         let hB = bufnr()
         Say(hB, 'Ready...')
@@ -109,10 +109,10 @@ def! GitStatus()
         setbufvar(hB, '&colorcolumn', '')
 
         # TOP ------------------------------------------------------------
-        exe 'split Git Status'
+        split Git Status
         hT = bufnr()
         setbufvar(hT, '&colorcolumn', '80')
-        :ownsyntax gitstatus
+        ownsyntax gitstatus
         :2resize 20
         GSRef(hT, 0)
         Hide(hT)

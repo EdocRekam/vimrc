@@ -1,17 +1,17 @@
 
-def! GShowExit(h: number, chan: number, code: number)
+def GShowExit(h: number, chan: number, code: number)
     let id = get(win_findbuf(h), 0)
     win_gotoid(id)
     win_execute(id, 'norm gg')
 enddef
 
-def! GShow(h: number, obj: string, pat: string)
+def GShow(h: number, obj: string, pat: string)
     let f = funcref("s:SayCallback", [h])
     let e = funcref("s:GShowExit", [h])
     job_start('git show ' .. obj .. ':' .. pat,  #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
-def! GitShow(obj: string, pat: string, title: string = ''): number
+def GitShow(obj: string, pat: string, title: string = ''): number
     let t = '' == title ? obj .. ':' .. pat : title
 
     exe 'tabnew ' .. obj .. ':' .. pat
@@ -26,7 +26,7 @@ def! GitShow(obj: string, pat: string, title: string = ''): number
     retu h
 enddef
 
-def! GitShow2(objL: string, patL: string, objR: string, patR: string)
+def GitShow2(objL: string, patL: string, objR: string, patR: string)
     exe 'tabnew ' .. objR .. ':' .. patR
     let hR = bufnr()
     Hide(hR)

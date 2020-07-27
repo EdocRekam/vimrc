@@ -11,7 +11,7 @@ let MnuOpt["maxwidth"] = 36
 let MnuOpt["wrap"] = 0
 let MnuOpt["padding"] = [0, 1, 0, 1]
 
-def! MnuFilterBuf(buf: number)
+def MnuFilterBuf(buf: number)
     let lines = getbufline(buf, 1)
     let title = lines[0]
     let idx = 1
@@ -24,13 +24,13 @@ def! MnuFilterBuf(buf: number)
     endfor
 enddef
 
-def! MnuResetBuf()
+def MnuResetBuf()
     deletebufline(MnuBuf[1], 1, '$')
     appendbufline(MnuBuf[1], 1, getbufline(MnuBuf[0], 0, '$'))
     deletebufline(MnuBuf[1], '$')
 enddef
 
-def! MnuBackspace(winid: number)
+def MnuBackspace(winid: number)
     let lines = getbufline(MnuBuf[1], 1)
     let title = strcharpart(lines[0], 0, strchars(lines[0]) - 1)
     if strchars(title) >= 0
@@ -40,18 +40,18 @@ def! MnuBackspace(winid: number)
     endif
 enddef
 
-def! MnuPrintableChar(winid: number, key: string)
+def MnuPrintableChar(winid: number, key: string)
     let lines = getbufline(MnuBuf[1], 1)
     let title = printf('%s%s', lines[0], tolower(key))
     setbufline(MnuBuf[1], 1, title)
     MnuFilterBuf(MnuBuf[1])
 enddef
 
-def! MnuIgnore(winid: number)
+def MnuIgnore(winid: number)
     popup_close(winid, -1)
 enddef
 
-def! MnuFilter(winid: number, key: string): number
+def MnuFilter(winid: number, key: string): number
     let rc = 1
 
     if key == "\<F1>" || key == "\<ESC>"
@@ -87,21 +87,21 @@ def! MnuFilter(winid: number, key: string): number
 enddef
 let MnuOpt["filter"] = funcref('MnuFilter')
 
-def! MnuGetCmd(result: number): number
+def MnuGetCmd(result: number): number
     let lines = getbufline(MnuBuf[1], result)
     let line = lines[0]
     let nr = strcharpart(line, 39, 4)
     retu str2nr(nr)
 enddef
 
-def! MnuEnum()
+def MnuEnum()
     let ask = input('START: ', '0')
     if '' != ask
         Enum(str2nr(ask))
     endif
 enddef
 
-def! MnuZoom(val: number)
+def MnuZoom(val: number)
     if !has('gui')
         retu
     endif
@@ -113,21 +113,21 @@ def! MnuZoom(val: number)
     endif
 enddef
 
-def! MnuSyntax()
+def MnuSyntax()
     let pat = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
     if filereadable(pat)
         exe 'tabnew ' .. pat
     endif
 enddef
 
-def! MnuCheatsheet()
+def MnuCheatsheet()
     let pat = VimDir() .. 'keys.html'
     if filereadable(pat)
         exe printf("!firefox --new-window '%s'&", pat)
     endif
 enddef
 
-def! MnuCallback(winid: number, result: number): number
+def MnuCallback(winid: number, result: number): number
     let id = 0
     if result > 0
         id = MnuGetCmd(result)
@@ -165,7 +165,7 @@ def! MnuCallback(winid: number, result: number): number
     elseif 18 == id
         exe 'sil !git gui&'
     elsei 19 == id
-        GLog(g:head)
+        GLog(Head)
     elseif 21 == id
         CsUse()
     elseif 22 == id
@@ -215,7 +215,7 @@ def! MnuCallback(winid: number, result: number): number
 enddef
 let MnuOpt["callback"] = funcref('MnuCallback')
 
-def! MnuLoad()
+def MnuLoad()
     add(MnuBuf, bufadd(VimDir() .. 'menu.txt'))
     add(MnuBuf, bufadd('ea9b0beae51540edb1a0'))
 
@@ -226,7 +226,7 @@ def! MnuLoad()
     Hide(MnuBuf[1])
 enddef
 
-def! MnuOpen()
+def MnuOpen()
     if 0 == len(MnuBuf)
         MnuLoad()
         MnuResetBuf()
@@ -239,3 +239,5 @@ def! MnuOpen()
 enddef
 nnoremap <silent><F1> :call <SID>MnuOpen()<CR>
 vnoremap <silent><F1> :call <SID>MnuOpen()<CR>
+
+defcompile

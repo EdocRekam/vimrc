@@ -1,45 +1,45 @@
 vim9script
 
-" DO NOT SOURCE $VIMRUNTIME/menu.vim
+# DO NOT SOURCE $VIMRUNTIME/menu.vim
 set guioptions +=M
 
-" NO VI COMPATIBILITY
+# NO VI COMPATIBILITY
 set nocp
 set encoding=utf-8
 scriptencoding utf-8
 
-" MAKE BACKSPACE WORK CORRECTLY
+# MAKE BACKSPACE WORK CORRECTLY
 set backspace=indent,eol,start
 
-" DISPLAY SELECTION LEN
+# DISPLAY SELECTION LEN
 set sc
 
-" SYNCHRONIZE CLIPBOARD
+# SYNCHRONIZE CLIPBOARD
 set clipboard^=unnamed
 
-" HIGHLIGHT ALL SEARCH MATCH(S)
+# HIGHLIGHT ALL SEARCH MATCH(S)
 set hlsearch
 
-" SET SEARCH TO CASE INSENSITIVE
+# SET SEARCH TO CASE INSENSITIVE
 set ignorecase
 
-" ALWAYS DISPLAY THE STATUS LINE
+# ALWAYS DISPLAY THE STATUS LINE
 set laststatus=2
 
-" HIGHLIGHT TABS AND TRAILING WHITESPACE
+# HIGHLIGHT TABS AND TRAILING WHITESPACE
 set list
 set listchars=tab:▸\ ,trail:·
 
-" NO START OF LINE ON MANY COMMANDS
+# NO START OF LINE ON MANY COMMANDS
 set nosol
 
-" FUZZY FILE GLOBS
+# FUZZY FILE GLOBS
 set path+=**
 
-" KEEP CURSOR IN MIDDLE
+# KEEP CURSOR IN MIDDLE
 set scrolloff=30
 
-" MISC
+# MISC
 set colorcolumn=75,80,120,160
 set cursorline
 set expandtab
@@ -56,23 +56,24 @@ set spell spelllang=en_us
 set synmaxcol=200
 set tabstop=4
 
-" TURN ON FILE TYPE INSPECTION TO RECEIVE FILETYPE EVENTS
+# TURN ON FILE TYPE INSPECTION TO RECEIVE FILETYPE EVENTS
 filetype on
 
-" TURN ON PLUGIN SUPPORT
+# TURN ON PLUGIN SUPPORT
 filetype indent plugin on
 
-" SET THEME (ORDER SPECIFIC)
+# SET THEME (ORDER SPECIFIC)
 colorscheme Dark+
 
-" TURN ON SYNTAX HIGHLIGHTING
+# TURN ON SYNTAX HIGHLIGHTING
 syntax on
 
-" THINGS I CANNOT LOCALIZE
-def! g:GetStatus(): string
+# THINGS I CANNOT LOCALIZE
+let Head = 'HEAD'
+def g:GetStatus(): string
     let c = strchars(getreg('*'))
     let sel = c > 1 ? '  SEL:' .. c : ''
-    let head = exists('g:head') ? g:head .. '  ' : ''
+    let head = exists('Head') ? Head .. '  ' : ''
     let enc = strchars(&fenc) ? '  ' .. toupper(&fenc) : '  PLAIN'
     let bom = &bomb ? '  with BOM' : ''
     let le = &ff == 'unix' ? '  LF' : '  CRLF'
@@ -80,8 +81,8 @@ def! g:GetStatus(): string
 enddef
 set statusline=%!g:GetStatus()
 
-" CUSTOM TAB LABEL VIA `title` TAB VARIABLE
-def! g:TabLabel(h: number): string
+# CUSTOM TAB LABEL VIA `title` TAB VARIABLE
+def g:TabLabel(h: number): string
     retu gettabvar(h, 'title', '')
 enddef
 set guitablabel=%!TabLabel(v:lnum)

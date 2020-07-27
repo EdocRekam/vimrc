@@ -1,4 +1,4 @@
-def! GotoDef()
+def GotoDef()
     let pat = expand("<cfile>")
     if filereadable(pat)
         exe 'e! %s' .. pat

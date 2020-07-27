@@ -1,50 +1,50 @@
 
-" CREATE A SYNTAX REGION STARTING/ENDING ON A COLUMN OR LINE
-def! Region(grp: string, x: number, y: number, t = 'c', extra = 'contained display oneline')
+# CREATE A SYNTAX REGION STARTING/ENDING ON A COLUMN OR LINE
+def Region(grp: string, x: number, y: number, t = 'c', extra = 'contained display oneline')
     let f = 'sy region %s start="%s" end="%s" %s'
     let z = x + y
     exe printf(f, grp, '\%' .. x .. t, '\%' .. z .. t, extra)
 enddef
 
-" RETURN X OR THE LENGTH OF VAL; WHICHEVER IS GREATER
-def! AddIf(x: number, val: string): number
+# RETURN X OR THE LENGTH OF VAL; WHICHEVER IS GREATER
+def AddIf(x: number, val: string): number
     let y = strchars(val)
     return y > x ? y : x
 enddef
 
-" APPEND Y TO X IF IT DOES NOT EXIST; OTHERWISE X
-def! Appendif(x: string, y: string): string
+# APPEND Y TO X IF IT DOES NOT EXIST; OTHERWISE X
+def Appendif(x: string, y: string): string
     return stridx(x, y) >= 0 ? x : printf('%s %s', x, y)
 enddef
 
-def! FindInFile(val: string)
+def FindInFile(val: string)
     exe printf("sil grep! -rni  '%s' *", val)
     copen 35
 enddef
 command! -nargs=1 Find :cal <SID>FindInFile('<args>')
 
-def! Hide(h: number)
+def Hide(h: number)
     setbufvar(h, '&buflisted', '0')
     setbufvar(h, '&buftype', 'nofile')
     setbufvar(h, '&swapfile', '0')
 enddef
 
-def! NoTabs()
+def NoTabs()
     update
     setl expandtab
     retab
     update
 enddef
 
-def! NoTrails()
+def NoTrails()
     :%s/\s\+$//e
 enddef
 
-def! Lower()
+def Lower()
     norm gvugv
 enddef
 
-def! Rename(): void
+def Rename(): void
     let val = input('Value: ')
     if '' != val
         exe '%s/' .. expand('<cword>') .. '/' .. val .. '/g'
@@ -52,89 +52,95 @@ def! Rename(): void
 enddef
 nnoremap <silent><F2> :cal <SID>Rename()<CR>
 
-let s:orient = 'H'
-def! Rotate()
-    s:orient = s:orient == 'H' ? 'K' : 'H'
-    exe 'wincmd ' .. s:orient
+let Orient = 'H'
+def Rotate()
+    Orient = Orient == 'H' ? 'K' : 'H'
+    exe 'wincmd ' .. Orient
 enddef
 nnoremap <silent><S-F12> :cal <SID>Rotate()<CR>
 
-def! Say(h: number, msg: any)
+def Say(h: number, msg: any)
     let c = get(get(getbufinfo(h), 0), 'linecount')
     let l = strchars(get(getbufline(h, '$'), 0))
     appendbufline(h, l > 1 ? c : c - 1, msg)
 enddef
 
-def! SayCallback(h: number, chan: number, msg: string)
+def SayCallback(h: number, chan: number, msg: string)
     Say(h, msg)
 enddef
 
-def! SayShell(h: number, cmd: string)
+def SayShell(h: number, cmd: string)
     let f = funcref("s:SayCallback", [h])
     job_start(cmd, #{out_cb: f, err_cb: f})
 enddef
 
-def! SourceFile()
+def SourceFile()
     up
     so %
 enddef
 nnoremap <silent><S-F5> :cal <SID>SourceFile()<CR>
 
-def! Sort()
+def Sort()
     norm gv
-    :'<,'>sort
-    norm gv
-enddef
-
-def! SortD()
-    norm gv
-    :'<,'>sort!
+    # :'<,'>sort
     norm gv
 enddef
 
-def! SortDI()
+def SortD()
     norm gv
-    :'<,'>sort! i
-    norm gv
-enddef
-
-def! SortI()
-    norm gv
-    :'<,'>sort i
+    exe "'<,'>sort!"
     norm gv
 enddef
 
-def! Startup()
+def SortDI()
+    norm gv
+    exe "'<,'>sort! i"
+    norm gv
+enddef
+
+def SortI()
+    norm gv
+    exe "'<,'>sort i"
+    norm gv
+enddef
+
+def Startup()
     if filereadable('session.vim')
         so session.vim
     endif
 enddef
 au VimEnter * ++once : cal Startup()
 
-def! ToCrlf()
+def ToCrlf()
    up
    :e ++ff=unix
    setl ff=dos
    up
 enddef
 
-def! ToLf()
+def ToLf()
     up
     :e ++ff=dos
     setl ff=unix
     up
 enddef
 
-def! Unique()
+def Unique()
     norm gv
-    :'<,'>%!uniq
+    exe "'<,'>%!uniq"
     norm gv
 enddef
 
-def! Upper()
+def Upper()
     norm gvUgv
 enddef
 
-def! VimDir(): string
-    retu has('linux') ? $HOME .. '/.vim/' : $HOME .. '/vimfiles/'
-enddef
+if has('linux')
+    def VimDir(): string
+        retu $HOME .. '/.vim'
+    enddef
+else
+    def VimDir(): string
+        retu $HOME .. '/vimfiles'
+    enddef
+endif

@@ -1,19 +1,19 @@
-" COMMIT TEMPLATE
+# COMMIT TEMPLATE
 let ct = '.git/GITGUI_MSG'
 
-def! GCShellExit(h: number, chan: number, code: number)
+def GCShellExit(h: number, chan: number, code: number)
     if 0 == code && filereadable(ct)
         delete(ct)
     endif
 enddef
 
-def! GCShell(h: number, cmd: string)
+def GCShell(h: number, cmd: string)
     let f = funcref("s:SayCallback", [h])
     let e = funcref("s:GCShellExit", [h])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
-def! GCQuit(hT: number, hB: number)
+def GCQuit(hT: number, hB: number)
     if 1 == getbufvar(hT, '&modifiable')
         exe printf('au! BufWritePost <buffer=%d>', hT)
         exe 'sil g/^#.*/d | write ' .. ct
@@ -21,7 +21,7 @@ def! GCQuit(hT: number, hB: number)
     exe 'sil bw! ' .. hT .. ' ' .. hB
 enddef
 
-def! GCGo(hT: number, hB: number)
+def GCGo(hT: number, hB: number)
     let cmd = 'git commit --cleanup=strip -F ' .. ct
     Say(hB, 'Switching to read-only mode.')
     Say(hB, cmd)
@@ -29,7 +29,7 @@ def! GCGo(hT: number, hB: number)
     GCShell(hB, cmd)
 enddef
 
-def! GitCommit()
+def GitCommit()
     let now = reltime()
 
     # BOTTOM -------------------------------------------------------------

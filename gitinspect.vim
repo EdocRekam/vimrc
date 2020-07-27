@@ -1,9 +1,8 @@
-" GIT INSPECT EXAMINES A SPECIFIC COMMIT TO
-"
-" LIST WHAT FILES WERE MODIFIED
-" DIFF BEFORE/AFTER
-
-def! GInsCols(): list<number>
+# GIT INSPECT EXAMINES A SPECIFIC COMMIT TO
+#
+# LIST WHAT FILES WERE MODIFIED
+# DIFF BEFORE/AFTER
+def GInsCols(): list<number>
     let l: list<number> = gettabvar(tabpagenr(), 'lens')
     let c: list<number> = [l[0] + 3,
          l[0] + l[1] + 5,
@@ -20,7 +19,7 @@ def! GInsCols(): list<number>
     retu c
 enddef
 
-def! GInsHitTest(): number
+def GInsHitTest(): number
     let cs: list<number> = GInsCols()
     let c = col('.')
     let r = 1
@@ -47,7 +46,7 @@ def! GInsHitTest(): number
     retu r
 enddef
 
-def! GINav(hT: number, hB: number, obj: string)
+def GINav(hT: number, hB: number, obj: string)
     let cs: list<number> = GInsCols()
 
     let lin = getline('.')
@@ -104,13 +103,13 @@ def! GINav(hT: number, hB: number, obj: string)
     endif
 enddef
 
-" REFRESH TOP WINDOW CONTENTS
-"
-" hT   TOP WINDOW BUFFER
-" hB   BOTTOM WINDOW BUFFER
-" obj  THE COMMIT TO INSPECT
-" b    CLEAR THE SCREEN BEFORE PRINTING
-def! GIRef(hT: number, hB: number, obj: string, bl = 1)
+# REFRESH TOP WINDOW CONTENTS
+#
+# hT   TOP WINDOW BUFFER
+# hB   BOTTOM WINDOW BUFFER
+# obj  THE COMMIT TO INSPECT
+# b    CLEAR THE SCREEN BEFORE PRINTING
+def GIRef(hT: number, hB: number, obj: string, bl = 1)
 
     # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
@@ -183,7 +182,7 @@ def! GIRef(hT: number, hB: number, obj: string, bl = 1)
         endfor
 
         # IF FILE EXISTS MEANS THAT ITS STILL IN LATEST HEAD
-        let hed = filereadable(c) ? g:head : 'DELETED'
+        let hed = filereadable(c) ? Head : 'DELETED'
 
         # UPDATE COLUMN LENGTHS
         L0 = AddIf(L0, c)
@@ -240,7 +239,7 @@ def! GIRef(hT: number, hB: number, obj: string, bl = 1)
     win_execute(win_getid(1), '3')
 enddef
 
-def! GitInspect(obj: string)
+def GitInspect(obj: string)
     GHead()
 
     # BOTTOM -------------------------------------------------------------

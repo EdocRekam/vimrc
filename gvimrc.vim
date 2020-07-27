@@ -16,7 +16,7 @@ elseif has("gui_win32")
     set gfn=Consolas:h14:cANSI:qDRAFT
 endif
 
-def! g:ZoomIn()
+def g:ZoomIn()
     let old = getfontname()
     let i = match(old, '[0-9][0-9]')
     let family = strcharpart(old, -1, i)
@@ -31,7 +31,7 @@ def! g:ZoomIn()
     endif
 enddef
 
-def! g:ZoomOut()
+def g:ZoomOut()
     let old = getfontname()
     let i = match(old, '[0-9][0-9]')
     let family = strcharpart(old, -1, i)
@@ -48,3 +48,5 @@ enddef
 
 nnoremap <silent><C-S-LEFT> :cal g:ZoomOut()<CR>
 nnoremap <silent><C-S-RIGHT> :cal g:ZoomIn()<CR>
+
+defcompile

@@ -1,23 +1,25 @@
 
-" OMNISHARP - GENERAL
-let g:OmniSharp_server_path='/usr/local/bin/omnisharp'
-let g:OmniSharp_server_install='/usr/local/lib64/omnisharp-roslyn'
-let g:OmniSharp_server_stdio=1
-let g:OmniSharp_start_server=0
-let g:OmniSharp_timeout=5
+def DotNetInit()
+    # OMNISHARP - GENERAL
+    # let g:OmniSharp_server_path = '/usr/local/bin/omnisharp'
+    # let g:OmniSharp_server_install = '/usr/local/lib64/omnisharp-roslyn'
+    # let g:OmniSharp_server_stdio = 1
+    # let g:OmniSharp_start_server = 0
+    # let g:OmniSharp_timeout = 5
 
-" OMNISHARP - HIGHLIGHTING
-let g:OmniSharp_highlighting=2
-let g:OmniSharp_hightlight_types=3
-let g:omnicomplete_fetch_full_documentation=1
+    # OMNISHARP - HIGHLIGHTING
+    # let g:OmniSharp_highlighting = 2
+    # let g:OmniSharp_hightlight_types = 3
+    # let g:omnicomplete_fetch_full_documentation = 1
 
-let g:OmniSharp_highlight_groups={
-\ 'StringLiteral': 'String',
-\ 'XmlDocCommentText': 'Comment'
-\}
+    # let g:OmniSharp_highlight_groups = #{
+    #    \ 'StringLiteral': 'String',
+    #    \ 'XmlDocCommentText': 'Comment'
+    #    \}
+enddef
 
-" POPUP FUNCTIONS
-def! CsUse()
+# POPUP FUNCTIONS
+def CsUse()
     setf cs
     setl expandtab
     setl ff=unix
@@ -28,27 +30,27 @@ def! CsUse()
     setl tabstop=4
 enddef
 
-def! DotnetAsyncWin(cmd: string, title: string, msg: string)
+def DotnetAsyncWin(cmd: string, title: string, msg: string)
     let h = OpenWin(title, 0)
     Say(h, [msg, cmd])
     SayShell(h, cmd)
     setbufvar(h, '&colorcolumn', '0')
 enddef
 
-def! DotnetRestore()
+def DotnetRestore()
     DotnetAsyncWin('dotnet restore', 'DOTNET', 'Restoring . . .')
 enddef
 
-def! DotnetBuild()
+def DotnetBuild()
     DotnetAsyncWin('dotnet build', 'DOTNET', 'Building . . .')
-    syn case ignore
-    syn match Caution "\d\+\sWarn.*"
-    syn match Bad "\d\+\sError.*"
+    sy case ignore
+    sy match Caution "\d\+\sWarn.*"
+    sy match Bad "\d\+\sError.*"
     hi Caution guifg=#eed320
     hi Bad guifg=#ee3020
 enddef
 
-def! DotnetTest(filter: string = '')
+def DotnetTest(filter: string = '')
     let cmd: string
     if filter == ''
         cmd = 'dotnet test'
@@ -63,17 +65,17 @@ def! DotnetTest(filter: string = '')
     hi Good guifg=#00b135
 enddef
 
-def! CsNoFold()
+def CsNoFold()
     setl nofoldenable
     setl foldcolumn=0
     setl foldmethod=manual
 enddef
 
-def! g:CsFoldText(): string
+def g:CsFoldText(): string
     retu getline(v:foldstart)
 enddef
 
-def! g:CsIndent(n: number): any
+def g:CsIndent(n: number): any
     let l = getline(n)
     if char2nr('n') == strgetchar(l, 0)
         retu '>1'
@@ -81,9 +83,9 @@ def! g:CsIndent(n: number): any
     retu 1
 enddef
 
-def! CsFold()
+def CsFold()
     setl foldlevel=1
-    setl fillchars+=fold:\ 
+    setl fillchars+=fold:\
     setl foldcolumn=1
     setl foldmethod=expr
     setl foldexpr=CsIndent(v:lnum)
@@ -91,10 +93,10 @@ def! CsFold()
     setl foldenable
 enddef
 
-def! CsStartServer()
+def CsStartServer()
 enddef
 
-" XML
+# XML
 autocmd! filetypedetect BufNewFile,BufRead *.csproj setf xml
 autocmd! filetypedetect BufNewFile,BufRead *.props setf xml
 autocmd! filetypedetect BufNewFile,BufRead *.targets setf xml

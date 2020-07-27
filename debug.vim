@@ -1,4 +1,4 @@
-def! g:Trace(msg: string)
+def g:Trace(msg: string)
     let h: number
     if !bufexists('TRACE')
         h = bufadd('TRACE')
@@ -13,7 +13,7 @@ def! g:Trace(msg: string)
     appendbufline(h, lnr - 1, msg)
 enddef
 
-def! g:OpenTrace()
+def g:OpenTrace()
     if bufexists('TRACE')
         let h = bufnr('TRACE')
         if 0 == win_gotoid(h)

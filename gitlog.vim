@@ -1,9 +1,8 @@
-
-" REFRESH TOP WINDOW CONTENTS
-"
-" h  BUFFER NUMBER TO WRITE TO
-" b  SHOULD WE CLEAR FIRST 0|1
-def! GLRef(h: number, obj: string, b = 1)
+# REFRESH TOP WINDOW CONTENTS
+#
+# h  BUFFER NUMBER TO WRITE TO
+# b  SHOULD WE CLEAR FIRST 0|1
+def GLRef(h: number, obj: string, b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
 
@@ -98,7 +97,7 @@ def! GLRef(h: number, obj: string, b = 1)
     win_execute(win_getid(1), printf('3 | norm %s|', L1 + 3))
 enddef
 
-def! GLog(obj: string)
+def GLog(obj: string)
     let now = reltimestr(reltime())
 
     # BOTTOM -------------------------------------------------------------
@@ -131,14 +130,14 @@ def! GLog(obj: string)
     exe printf("%s2-LeftMouse> :cal <SID>GLNav()<CR>", m)
 enddef
 
-def! GitLog()
+def GitLog()
     GHead()
     let o = expand('<cfile>')
     GLog(strchars(o) > 5 ? o : 'HEAD')
 enddef
 nnoremap <silent><F7> :cal <SID>GitLog()<CR>
 
-def! GLNav()
+def GLNav()
     let L = gettabvar(tabpagenr(), 'L')
     if col('.') > L[0] + L[1] + 4
         GLog(get(split(getline('.')), 1))

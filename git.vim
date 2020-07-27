@@ -1,7 +1,7 @@
 
 nnoremap <silent><F6> :sil !git gui&<CR>
 
-def! GColor()
+def GColor()
     sy case ignore
 
     # COMMENTS
@@ -62,19 +62,18 @@ def! GColor()
     hi link TC Keyword
 enddef
 
-let g:head = 'HEAD'
-def! GHead(): string
-    g:head = trim(system('git rev-parse --abbrev-ref HEAD'))
-    retu g:head
+def GHead(): string
+    Head = trim(system('git rev-parse --abbrev-ref HEAD'))
+    retu Head
 enddef
 
-def! GWin(cmd: string, title: string, msg: string)
+def GWin(cmd: string, title: string, msg: string)
     let h = OpenWin(title, 0)
     Say(h, [msg, cmd])
     SayShell(h, cmd)
 enddef
 
-def! GitK()
+def GitK()
     let pat = expand('<cfile>')
     if filereadable(pat)
         exe printf("sil !gitk -- '%s'& ", pat)
@@ -85,4 +84,3 @@ def! GitK()
     endif
 enddef
 nnoremap <silent><S-F7> :cal <SID>GitK()<CR>
-
