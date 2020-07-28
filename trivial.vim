@@ -65,7 +65,7 @@ def Say(h: number, msg: any)
     appendbufline(h, l > 1 ? c : c - 1, msg)
 enddef
 
-def SayCallback(h: number, chan: number, msg: string)
+def SayCallback(h: number, c: channel, msg: string)
     Say(h, msg)
 enddef
 
