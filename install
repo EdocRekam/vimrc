@@ -54,15 +54,15 @@ cat "${CWD}/goto.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/menu.vim" >> "${HOME}/.vimrc"
 
 # DELETE COMMENTS
-# sed -i '/^\s*#\s.*/d' "${HOME}/.vimrc"
-#  sed -i '/^#.*/d' "${HOME}/.vimrc"
-# sed -i '/^\".*/d' "${HOME}/.vimrc"
+sed -i '/^\s*#\s.*/d' "${HOME}/.vimrc"
+sed -i '/^#.*/d' "${HOME}/.vimrc"
+sed -i '/^\".*/d' "${HOME}/.vimrc"
 
 # DELETE BLANK LINES
-# sed -i /^$/d "${HOME}/.vimrc"
+sed -i /^$/d "${HOME}/.vimrc"
 
 # REMOVE LEADING|TRAILING WHITESPACE
-# sed -i 's/^[ \t]*//;s/[ \t]*$//' "${HOME}/.vimrc"
+sed -i 's/^[ \t]*//;s/[ \t]*$//' "${HOME}/.vimrc"
 
 printf "Building .gvimrc . . .\n"
 cat "${CWD}/gvimrc.vim" > "${HOME}/.gvimrc"
