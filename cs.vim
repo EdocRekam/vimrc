@@ -6,23 +6,15 @@ endif
 
 " KEYWORDS
 " https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/
-sy keyword Keyword abstract as async await base checked class const event
-sy keyword Keyword explicit extern false fixed fixed get implicit interface
-sy keyword Keyword internal is lock namespace new null operator out
-sy keyword Keyword override params private protected public readonly
-sy keyword Keyword ref sealed set sizeof stackalloc static this true
-sy keyword Keyword typeof unchecked unsafe virtual volatile
+sy keyword Keyword abstract as async await base checked class const event explicit extern false fixed fixed get implicit interface internal is lock namespace new null operator out override params private protected public readonly ref sealed set sizeof stackalloc static this true typeof unchecked unsafe virtual volatile
 
-sy keyword Include     using
-sy keyword Exception   throw try catch finally
-sy keyword Repeat      do for foreach in while
-sy keyword Conditional if else switch case ifen ifn ifne ifns
-sy keyword Conditional break continue default goto return yield
+sy keyword Include using
+sy keyword Exception catch finally throw try
+sy keyword Repeat do for foreach in while
+sy keyword Conditional break case continue default else goto if ifen ifn ifne ifns return switch yield
 
 " VALUE TYPES
-sy keyword Type bool byte char decimal delegate double enum float int
-sy keyword Type long object sbyte short string struct uint ulong
-sy keyword Type ushort var void
+sy keyword Type bool byte char decimal delegate double enum float int long object sbyte short string struct uint ulong ushort var void
 
 sy keyword Identifier Int32 String
 sy keyword Identifier Fact Theory InlineData
