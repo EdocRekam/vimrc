@@ -197,7 +197,7 @@ def GitBranch()
     GColor()
 
     # LABELS
-    sy keyword LBL author branch commit date fetch merge remote subject
+    sy keyword LBL author branch commit date merge remote subject
 
     # LOCAL KEY BINDS
     let m = 'nnoremap <silent><buffer><'

@@ -5,26 +5,26 @@ def GColor()
     sy case ignore
 
     # COMMENTS
-    sy match S "^\s\s\s\s.*$" contains=L,P,K
+    sy match Comment "^\s\s\s\s.*$" contains=L,P,K
 
     # LINKS - SHA OR []
-    sy match L "[0-9a-f]\{40}" contains=@NoSpell display
-    sy match L "#\=\d\{5}" contains=@NoSpell display contained
-    sy region L start="\[" end="\]" contains=@NoSpell display oneline contained
+    sy match Keyword "[0-9a-f]\{40}" contains=@NoSpell display
+    sy match Keyword "#\=\d\{5}" contains=@NoSpell display contained
+    sy region Keyword start="\[" end="\]" contains=@NoSpell display oneline contained
 
     # MENU COMMANDS
     sy keyword MC add all branch checkout clean close commit contained create cursor delete fetch gitk gui inspect log menu push prune refresh reset restore status tags under unstage
 
     # KEYWORDS
-    sy keyword K x86 x64 anycpu contained
+    sy keyword Function x86 x64 anycpu contained
 
     # PAIRS
-    sy region P start="<" end=">" contains=@NoSpell display oneline
-    sy region P start="`" end="`" contains=@NoSpell display oneline
-    sy region P start='"' end='"' contains=@NoSpell display oneline
+    sy region String start="<" end=">" contains=@NoSpell display oneline
+    sy region String start="`" end="`" contains=@NoSpell display oneline
+    sy region String start='"' end='"' contains=@NoSpell display oneline
 
     # VERSION STRING
-    sy match A "\d\+\.\d\+"
+    # sy match String "\d\+\.\d\+"
 
     # sy match String "\d\+-\d\+-\d\+"
     # sy match Keyword "\d\+\.\d\+"
