@@ -15,6 +15,10 @@ is all over the place (but nice). And since I need everything to work on both
 Windows and Linux I decided to just go ahead and build myself on Linux and
 use the nightly build in Windows in order to get a consistently working .vimrc
 
+1307
+
+0aac67a4314d72a29d3fbee91b6f0ba89e950462
+
 ==========================================================================
 make clean
 make distclean
