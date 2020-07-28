@@ -4,11 +4,17 @@ https://github.com/vim/vim-win32-installer/releases
 https://github.com/vim/vim
 
     git clone https://github.com/vim/vim.git /data/Code/External/vim
+    cd /data/Code/External/vim
+    source myconfig
+    make
+    sudo make install
 
 https://github.com/preservim/nerdtree
 
     git clone https://github.com/preservim/nerdtree.git ~/.vim/pack/plugins/start/nerdtree
 
+
+    git clone https://github.com/OmniSharp/omnisharp-vim ~/.vim/pack/plugins/start/omnisharp-vim
 
 I switched over to using a self-compiled night build since vim9script stability
 is all over the place (but nice). And since I need everything to work on both
