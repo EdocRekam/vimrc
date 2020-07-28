@@ -137,10 +137,10 @@ enddef
 
 if has('linux')
     def VimDir(): string
-        retu $HOME .. '/.vim'
+        retu $HOME .. '/.vim/'
     enddef
 else
     def VimDir(): string
-        retu $HOME .. '/vimfiles'
+        retu $HOME .. '/vimfiles/'
     enddef
 endif

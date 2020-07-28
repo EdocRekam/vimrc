@@ -94,7 +94,7 @@ def GLRef(h: number, obj: string, b = 1)
     Region('T', nlog + 6, nbr, 'l', 'contains=TC,S,D,A')
 
     # POSITION
-    win_execute(win_getid(1), printf('3 | norm %s|', L1 + 3))
+    win_execute(win_getid(1), printf(':3 | norm %s|', L1 + 3))
 enddef
 
 def GLog(obj: string)

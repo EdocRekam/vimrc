@@ -1,7 +1,7 @@
 # COMMIT TEMPLATE
 let ct = '.git/GITGUI_MSG'
 
-def GCShellExit(h: number, chan: number, code: number)
+def GCShellExit(h: number, job: any, code: number)
     if 0 == code && filereadable(ct)
         delete(ct)
     endif

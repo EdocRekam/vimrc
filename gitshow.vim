@@ -1,5 +1,5 @@
 
-def GShowExit(h: number, chan: number, code: number)
+def GShowExit(h: number, chan: number, job: any, code: number)
     let id = get(win_findbuf(h), 0)
     win_gotoid(id)
     win_execute(id, 'norm gg')

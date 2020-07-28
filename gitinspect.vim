@@ -236,7 +236,7 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
     Say(hT, l)
 
     # POSITION
-    win_execute(win_getid(1), '3')
+    win_execute(win_getid(1), ':3')
 enddef
 
 def GitInspect(obj: string)

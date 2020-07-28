@@ -1,5 +1,6 @@
 let MnuWid = 0
-let MnuBuf: list<number> = []
+let Mnu0 = 0
+let Mnu1 = 1
 
 let MnuOpt = #{}
 let MnuOpt["cursorline"] = 1
@@ -25,26 +26,26 @@ def MnuFilterBuf(buf: number)
 enddef
 
 def MnuResetBuf()
-    deletebufline(MnuBuf[1], 1, '$')
-    appendbufline(MnuBuf[1], 1, getbufline(MnuBuf[0], 0, '$'))
-    deletebufline(MnuBuf[1], '$')
+    deletebufline(Mnu1, 1, '$')
+    appendbufline(Mnu1, 1, getbufline(Mnu0, 0, '$'))
+    deletebufline(Mnu1, '$')
 enddef
 
 def MnuBackspace(winid: number)
-    let lines = getbufline(MnuBuf[1], 1)
+    let lines = getbufline(Mnu1, 1)
     let title = strcharpart(lines[0], 0, strchars(lines[0]) - 1)
     if strchars(title) >= 0
         MnuResetBuf()
-        setbufline(MnuBuf[1], 1, title)
-        MnuFilterBuf(MnuBuf[1])
+        setbufline(Mnu1, 1, title)
+        MnuFilterBuf(Mnu1)
     endif
 enddef
 
 def MnuPrintableChar(winid: number, key: string)
-    let lines = getbufline(MnuBuf[1], 1)
+    let lines = getbufline(Mnu1, 1)
     let title = printf('%s%s', lines[0], tolower(key))
-    setbufline(MnuBuf[1], 1, title)
-    MnuFilterBuf(MnuBuf[1])
+    setbufline(Mnu1, 1, title)
+    MnuFilterBuf(Mnu1)
 enddef
 
 def MnuIgnore(winid: number)
@@ -88,7 +89,7 @@ enddef
 let MnuOpt["filter"] = funcref('MnuFilter')
 
 def MnuGetCmd(result: number): number
-    let lines = getbufline(MnuBuf[1], result)
+    let lines = getbufline(Mnu1, result)
     let line = lines[0]
     let nr = strcharpart(line, 39, 4)
     retu str2nr(nr)
@@ -216,28 +217,27 @@ enddef
 let MnuOpt["callback"] = funcref('MnuCallback')
 
 def MnuLoad()
-    add(MnuBuf, bufadd(VimDir() .. 'menu.txt'))
-    add(MnuBuf, bufadd('ea9b0beae51540edb1a0'))
+    Mnu0 = bufadd(VimDir() .. 'menu.txt')
+    bufload(Mnu0)
+    Hide(Mnu0)
 
-    bufload(MnuBuf[0])
-    Hide(MnuBuf[0])
-
-    bufload(MnuBuf[1])
-    Hide(MnuBuf[1])
+    Mnu1 = bufadd('ea9b0beae51540edb1a0')
+    bufload(Mnu1)
+    Hide(Mnu1)
 enddef
 
 def MnuOpen()
-    if 0 == len(MnuBuf)
+    if 0 == Mnu0
         MnuLoad()
         MnuResetBuf()
-    endif
+    en
 
     if 0 == MnuWid
-        MnuWid = popup_create(MnuBuf[1], MnuOpt)
-        win_execute(MnuWid, '2')
-    endif
+        MnuWid = popup_create(Mnu1, MnuOpt)
+        win_execute(MnuWid, ':2')
+    en
 enddef
-nnoremap <silent><F1> :call <SID>MnuOpen()<CR>
-vnoremap <silent><F1> :call <SID>MnuOpen()<CR>
+nnoremap <silent><F1> :cal <SID>MnuOpen()<CR>
+vnoremap <silent><F1> :cal <SID>MnuOpen()<CR>
 
 defcompile
