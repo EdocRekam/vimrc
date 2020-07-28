@@ -19,9 +19,9 @@ def GColor()
     sy keyword Function x86 x64 anycpu contained
 
     # PAIRS
-    sy region String start="<" end=">" contains=@NoSpell display oneline
-    sy region String start="`" end="`" contains=@NoSpell display oneline
-    sy region String start='"' end='"' contains=@NoSpell display oneline
+    sy region P start="<" end=">" contains=@NoSpell display oneline
+    sy region P start="`" end="`" contains=@NoSpell display oneline
+    sy region P start='"' end='"' contains=@NoSpell display oneline
 
     # VERSION STRING
     # sy match String "\d\+\.\d\+"

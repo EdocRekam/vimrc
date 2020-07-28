@@ -48,7 +48,12 @@ def GSFet(hT: number, hB: number)
 enddef
 
 def GSPsh(hT: number, hB: number)
-    GSex(hT, hB, 'git push')
+    let o = expand('<cword>')
+    for i in systemlist('git remote')
+        if o == i
+            GSex(hT, hB, 'git push -u ' .. o .. Head)
+        en
+    endfor
 enddef
 
 def GSRes(hT: number, hB: number)
