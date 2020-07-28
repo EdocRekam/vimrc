@@ -51,7 +51,7 @@ def GSPsh(hT: number, hB: number)
     let o = expand('<cword>')
     for i in systemlist('git remote')
         if o == i
-            GSex(hT, hB, 'git push -u ' .. o .. Head)
+            GSex(hT, hB, 'git push -u ' .. o .. ' ' .. Head)
         en
     endfor
 enddef
