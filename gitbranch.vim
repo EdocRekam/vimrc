@@ -10,7 +10,7 @@ def GBRef(h: number, b = 1)
     if b
         deletebufline(h, 1, '$')
         sy clear M T C B S D A R
-    endif
+    en
 
     # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
     # ARE FASTER THAN REGEX
@@ -32,7 +32,7 @@ def GBRef(h: number, b = 1)
         # HANDLE BAD REF
         if len(p) != 5
             :continue
-        endif
+        en
 
         # SHORTEN REF NAME
         let ref = substitute(p[1], 'refs/remotes/', '', '')
@@ -45,7 +45,7 @@ def GBRef(h: number, b = 1)
         let p1 = split(ref, '/')
         if len(p1) > 1
             R = Appendif(R, p1[0])
-        endif
+        en
 
         # SYNTAX: BRANCH KEYWORDS
         for kw in p1
@@ -99,11 +99,11 @@ def GBRef(h: number, b = 1)
 
     # ADD MENU + REMOTES + BRANCH NAME
     extend(l, ['', '',
-    '  <S+INS>  CREATE        |  <S+HOME>  CLEAN        |  <PGUP>  -------------  |',
-    '  <S+DEL>  DELETE        |  <S+END>   RESET        |  <PGDN>  -------------  |',
-    '                         |                         |                         |',
-    '  <F1>     MENU          |  <F2>      -----------  |  <F3>    CLOSE          |  <F4>  CHECKOUT',
-    '  <F5>     REFRESH       |  <F6>      GUI          |  <F7>    LOG/GITK       |  <F8>  STATUS',
+    '  <S+INS>  CREATE   |  <S+HOME>  CLEAN  |  <PGUP>  --------  |',
+    '  <S+DEL>  DELETE   |  <S+END>   RESET  |  <PGDN>  FETCH     |',
+    '                    |                   |                    |',
+    '  <F1>     MENU     |  <F2>      -----  |  <F3>    CLOSE     |  <F4>  CHECKOUT',
+    '  <F5>     REFRESH  |  <F6>      GUI    |  <F7>    LOG/GITK  |  <F8>  STATUS',
     '', 'REMOTE:' .. R,
     '', '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> FETCH TAGS',
     '', 'BRANCH: ' .. Head, sep, ''])
@@ -141,12 +141,19 @@ def GBDel(hT: number, hB: number)
     GBExe(hT, hB, 'git branch -d ' .. expand('<cfile>'))
 enddef
 
+def GBFet(hT = 0, hB = 0)
+    let o = expand('<cword>')
+    if strchars(o) > 2
+        GBExe(hT, hB, 'git fetch ' .. o)
+    en
+enddef
+
 def GBNav(hT: number, hB: number)
     if col('.') < 10
         GitLog()
     else
         GBExe(hT, hB, 'git checkout ' .. expand('<cfile>:t'))
-    endif
+    en
 enddef
 
 def GBNew(hT: number, hB: number)
@@ -190,18 +197,19 @@ def GitBranch()
     GColor()
 
     # LABELS
-    sy keyword LBL author branch commit date merge remote subject
+    sy keyword LBL author branch commit date fetch merge remote subject
 
     # LOCAL KEY BINDS
     let m = 'nnoremap <silent><buffer>'
-    exe printf("%s<s-DEL> :cal <SID>GBDel(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<s-END> :cal <SID>GBRes(%d, %d)<CR>", m, hT, hB)
     exe printf("%s<F3> :exe 'sil bw! %d %d'<CR>", m, hT, hB)
     exe printf("%s<F4> :cal <SID>GBNav(%d, %d)<CR>", m, hT, hB)
     exe printf("%s<F5> :cal <SID>GBRef(%d, 1)<CR>", m, hT)
-    exe printf("%s<s-HOME> :cal <SID>GBCln(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<s-INS> :cal <SID>GBNew(%d, %d)<CR>", m, hT, hB)
     exe printf("%s<c-p> :cal <SID>GBPru(%d, %d)<CR>", m, hT, hB)
     exe printf("%s<c-t> :cal <SID>GBTag(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<s-DEL> :cal <SID>GBDel(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<s-END> :cal <SID>GBRes(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<s-HOME> :cal <SID>GBCln(%d, %d)<CR>", m, hT, hB)
+    exe printf("%s<s-INS> :cal <SID>GBNew(%d, %d)<CR>", m, hT, hB)
+    exe printf('%sPageDown> :cal <SID>GBFet(%d, %d)<CR>', m, hT, hB)
 enddef
 nnoremap <silent><F5> :cal <SID>GitBranch()<CR>
