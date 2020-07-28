@@ -1,6 +1,7 @@
 
 nnoremap <silent><F6> :sil !git gui&<CR>
 
+let GKeys = 'head hub master origin vso'
 def GColor()
     sy case ignore
 
@@ -16,12 +17,15 @@ def GColor()
     sy keyword MC add all branch checkout clean close commit contained create cursor delete fetch gitk gui inspect log menu push prune refresh reset restore status tags under unstage
 
     # KEYWORDS
-    sy keyword Function x86 x64 anycpu contained
+    sy keyword Function x86 x64 anycpu
 
     # PAIRS
     sy region P start="<" end=">" contains=@NoSpell display oneline
     sy region P start="`" end="`" contains=@NoSpell display oneline
     sy region P start='"' end='"' contains=@NoSpell display oneline
+
+    # COMMON LINKS - THESE SHOW UP ON A REGULAR BASIS
+    exe 'sy keyword Keyword ' ..  GKeys
 
     # VERSION STRING
     # sy match String "\d\+\.\d\+"
@@ -64,6 +68,10 @@ enddef
 
 def GHead(): string
     Head = trim(system('git rev-parse --abbrev-ref HEAD'))
+    GKeys = Appendif(GKeys, Head)
+    for r in systemlist('git remote')
+        GKeys = Appendif(GKeys, r)
+    endfor
     retu Head
 enddef
 
