@@ -28,7 +28,7 @@ def GSRef(hT: number, b = 1)
     win_execute(win_getid(1), 'norm gg')
 enddef
 
-def GSeXit(hT: number, hB: number, job: any, code: number)
+def GSeXit(hT: number, hB: number, j: job, code: number)
     GSRef(hT)
 enddef
 

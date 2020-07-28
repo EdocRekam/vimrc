@@ -121,7 +121,7 @@ def GBRef(h: number, b = 1)
     win_execute(win_getid(1), printf(':3 | norm %s|', L0 + 3))
 enddef
 
-def GBExeExit(hT: number, hB: number, job: any, code: number)
+def GBExeExit(hT: number, hB: number, j: job, code: number)
     GBRef(hT, 1)
 enddef
 
