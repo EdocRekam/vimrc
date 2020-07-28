@@ -99,11 +99,11 @@ def GBRef(h: number, b = 1)
 
     # ADD MENU + REMOTES + BRANCH NAME
     extend(l, ['', '',
-    '  <S+INS>  CREATE   |  <S+HOME>  CLEAN  |  <PGUP>  --------  |',
-    '  <S+DEL>  DELETE   |  <S+END>   RESET  |  <PGDN>  FETCH     |',
-    '                    |                   |                    |',
-    '  <F1>     MENU     |  <F2>      -----  |  <F3>    CLOSE     |  <F4>  CHECKOUT',
-    '  <F5>     REFRESH  |  <F6>      GUI    |  <F7>    LOG/GITK  |  <F8>  STATUS',
+    '  <S+INS>  CREATE   |  <S+HOME>  CLEAN  |  <PGUP>    --------  |',
+    '  <S+DEL>  DELETE   |  <S+END>   RESET  |  <S-PGDN>  FETCH     |',
+    '                    |                   |                      |',
+    '  <F1>     MENU     |  <F2>      -----  |  <F3>      CLOSE     |  <F4>  CHECKOUT',
+    '  <F5>     REFRESH  |  <F6>      GUI    |  <F7>      LOG/GITK  |  <F8>  STATUS',
     '', 'REMOTE:' .. R,
     '', '<CTRL+P> PRUNE (UNDER CURSOR) <CTRL+T> FETCH TAGS',
     '', 'BRANCH: ' .. Head, sep, ''])
@@ -200,16 +200,16 @@ def GitBranch()
     sy keyword LBL author branch commit date fetch merge remote subject
 
     # LOCAL KEY BINDS
-    let m = 'nnoremap <silent><buffer>'
-    exe printf("%s<F3> :exe 'sil bw! %d %d'<CR>", m, hT, hB)
-    exe printf("%s<F4> :cal <SID>GBNav(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<F5> :cal <SID>GBRef(%d, 1)<CR>", m, hT)
-    exe printf("%s<c-p> :cal <SID>GBPru(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<c-t> :cal <SID>GBTag(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<s-DEL> :cal <SID>GBDel(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<s-END> :cal <SID>GBRes(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<s-HOME> :cal <SID>GBCln(%d, %d)<CR>", m, hT, hB)
-    exe printf("%s<s-INS> :cal <SID>GBNew(%d, %d)<CR>", m, hT, hB)
-    exe printf('%sPageDown> :cal <SID>GBFet(%d, %d)<CR>', m, hT, hB)
+    let m = 'nnoremap <silent><buffer><'
+    exe printf("%sF3> :exe 'sil bw! %d %d'<CR>", m, hT, hB)
+    exe printf("%sF4> :cal <SID>GBNav(%d, %d)<CR>", m, hT, hB)
+    exe printf("%sF5> :cal <SID>GBRef(%d, 1)<CR>", m, hT)
+    exe printf("%sc-p> :cal <SID>GBPru(%d, %d)<CR>", m, hT, hB)
+    exe printf("%sc-t> :cal <SID>GBTag(%d, %d)<CR>", m, hT, hB)
+    exe printf("%ss-DEL> :cal <SID>GBDel(%d, %d)<CR>", m, hT, hB)
+    exe printf("%ss-END> :cal <SID>GBRes(%d, %d)<CR>", m, hT, hB)
+    exe printf("%ss-HOME> :cal <SID>GBCln(%d, %d)<CR>", m, hT, hB)
+    exe printf("%ss-INS> :cal <SID>GBNew(%d, %d)<CR>", m, hT, hB)
+    exe printf('%sS-PageDown> :cal <SID>GBFet(%d, %d)<CR>', m, hT, hB)
 enddef
 nnoremap <silent><F5> :cal <SID>GitBranch()<CR>
