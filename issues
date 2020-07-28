@@ -28,7 +28,7 @@ use the nightly build in Windows in order to get a consistently working .vimrc
 ==========================================================================
 make clean
 make distclean
-./configure --enable-python3interp=dyn --with-x --enable-fail-if-missing --with-gnome --disable-netbeans --disable-arabic --disable-gpm --enable-gnome-check --disable-rightleft --enable-gui=gtk3 --enable-gtk3-check
+./configure --enable-python3interp=yes --with-python3-config-dir=/usr/lib64/python3.8/config-3.8-x86_64-linux-gnu --with-x --enable-fail-if-missing --with-gnome --disable-netbeans --disable-arabic --disable-gpm --enable-gnome-check --disable-rightleft --enable-gui=gtk3 --enable-gtk3-check
 
 # `configure' configures this package to adapt to many kinds of systems.
 #
