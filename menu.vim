@@ -196,7 +196,7 @@ def MnuCallback(winid: number, result: number): number
     elsei 37 == id
         set guifont=*
     elseif 38 == id
-        CsStartServer()
+        exe ':OmniSharpStartServer'
     elseif 39 == id
         CsFold()
     elseif 40 == id

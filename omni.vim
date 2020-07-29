@@ -1,21 +1,3 @@
-" RUN ONCE
-if exists("g:e0647a20")
-    finish
-en
-
-" https://github.com/OmniSharp/Omnisharp-vim
-
-" 1. Install OmnisSharp-Roslyn
-"         https://github.com/OmniSharp/omnisharp-roslyn/releases
-"
-" 2. Install `omnisharp-vim`
-"         git clone https://github.com/OmniSharp/omnisharp-vim ~/.vim/pack/plugins/start/omnisharp-vim
-"
-" 3. Turn on plugin support
-"         filetype indent plugin on
-"
-" 4. Manually start server
-"         OmniSharp -s /path/to/sln
 
 " TRIGGER SUGGEST                                       CTRL + SPACE
 inoremap <silent><c-space> <c-x><c-o>
@@ -23,15 +5,11 @@ inoremap <silent><c-space> <c-x><c-o>
 " RENAME SYMBOL COMMAND
 command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
 
-" OMNISHARP
-
-
 function! SanitizeCSharp()
     cal ExpandTabs()
     cal RemoveTrailingWhitespace()
     cal Dos2Unix()
 endfunction
-
 
 " REMOVE TRAILING WHITESPACE WHEN SAVING CSHARP FILES
 " au! BufWritePre *.cs,*.csproj,*.sln call SanitizeCSharp()
@@ -97,4 +75,3 @@ set completepopup=highlight:Pmenu,border:off
 " nnoremap <Leader>ss :OmniSharpStartServer<CR>
 " nnoremap <Leader>sp :OmniSharpStopServer<CR>
 
-let g:e0647a20=1
