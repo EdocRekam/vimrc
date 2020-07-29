@@ -3,7 +3,7 @@ def g:Trace(msg: string)
     if !bufexists('TRACE')
         h = bufadd('TRACE')
         bufload(h)
-        Hide(h)
+        Sbo(h)
     else
         h = bufnr('TRACE')
     endif

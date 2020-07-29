@@ -10,7 +10,8 @@ g:OmniSharp_highlighting = 2
 g:OmniSharp_hightlight_types = 3
 g:omnicomplete_fetch_full_documentation = 1
 
-g:OmniSharp_highlight_groups = #{StringLiteral: 'String', XmlDocCommentText: 'Comment' }
+g:OmniSharp_highlight_groups = #{StringLiteral: 'String',
+    XmlDocCommentText: 'Comment' }
 
 # POPUP FUNCTIONS
 def CsUse()

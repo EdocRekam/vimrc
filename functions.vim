@@ -60,7 +60,7 @@ def OpenWin(title: string, blank = 1): number
         exe "norm gg\<c-w>J"
         resize 20
         h = bufnr(title)
-        Hide(h)
+        Sbo(h)
     else
         win_gotoid(get(ids, 0))
         if blank

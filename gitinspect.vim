@@ -249,7 +249,7 @@ def GitInspect(obj: string)
     settabvar(tabpagenr(), 'title', tT)
     let hB = bufnr()
     Say(hB, 'Ready...')
-    Hide(hB)
+    Sbo(hB)
     setbufvar(hB, '&colorcolumn', '')
 
     # TOP ----------------------------------------------------------------
@@ -259,7 +259,7 @@ def GitInspect(obj: string)
     :ownsyntax gitinspect
     :2resize 20
     GIRef(hT, hB, obj, 0)
-    Hide(hT)
+    Sbo(hT)
 
     # SYNTAX
     GColor()

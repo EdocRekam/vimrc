@@ -87,7 +87,7 @@ def GSIns(hB: number)
 
         exe 'vsplit HEAD:' .. o
         let hL = bufnr()
-        Hide(hL)
+        Sbo(hL)
         GShow(hL, 'HEAD', o)
         win_execute(win_getid(2), 'norm gg')
 
@@ -110,7 +110,7 @@ def GitStatus()
         settabvar(tabpagenr(), 'title', 'STATUS')
         let hB = bufnr()
         Say(hB, 'Ready...')
-        Hide(hB)
+        Sbo(hB)
         setbufvar(hB, '&colorcolumn', '')
 
         # TOP ------------------------------------------------------------
@@ -120,7 +120,7 @@ def GitStatus()
         ownsyntax gitstatus
         :2resize 20
         GSRef(hT, 0)
-        Hide(hT)
+        Sbo(hT)
 
         # SYNTAX
         sy match L "modified:.*$" display

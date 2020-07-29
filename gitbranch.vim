@@ -181,7 +181,7 @@ def GitBranch()
     settabvar(tabpagenr(), 'title', 'BRANCH')
     let hB = bufnr()
     Say(hB, 'Ready...')
-    Hide(hB)
+    Sbo(hB)
     setbufvar(hB, '&colorcolumn', '')
 
     # TOP ----------------------------------------------------------------
@@ -191,7 +191,7 @@ def GitBranch()
     :ownsyntax gitbranch
     :2resize 20
     GBRef(hT, 0)
-    Hide(hT)
+    Sbo(hT)
 
     # SYNTAX
     GColor()

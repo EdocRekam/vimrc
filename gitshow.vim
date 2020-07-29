@@ -16,7 +16,7 @@ def GitShow(obj: string, pat: string, title: string = ''): number
 
     exe 'tabnew ' .. obj .. ':' .. pat
     let h = bufnr()
-    Hide(h)
+    Sbo(h)
     GShow(h, obj, pat)
     settabvar(tabpagenr(), 'title', t)
 
@@ -29,13 +29,13 @@ enddef
 def GitShow2(objL: string, patL: string, objR: string, patR: string)
     exe 'tabnew ' .. objR .. ':' .. patR
     let hR = bufnr()
-    Hide(hR)
+    Sbo(hR)
     GShow(hR, objR, patR)
     settabvar(tabpagenr(), 'title', objL .. '-' .. objR)
 
     exe 'vsplit ' .. objL .. ':' .. patL
     let hL = bufnr()
-    Hide(hL)
+    Sbo(hL)
     GShow(hL, objL, patL)
 
     # LOCAL KEY BINDS

@@ -219,11 +219,11 @@ let MnuOpt["callback"] = funcref('MnuCallback')
 def MnuLoad()
     Mnu0 = bufadd(VimDir() .. 'menu.txt')
     bufload(Mnu0)
-    Hide(Mnu0)
+    Sbo(Mnu0)
 
     Mnu1 = bufadd('ea9b0beae51540edb1a0')
     bufload(Mnu1)
-    Hide(Mnu1)
+    Sbo(Mnu1)
 enddef
 
 def MnuOpen()

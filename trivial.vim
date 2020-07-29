@@ -23,9 +23,10 @@ def FindInFile(val: string)
 enddef
 command! -nargs=1 Find :cal <SID>FindInFile('<args>')
 
-def Hide(h: number)
+def Sbo(h: number)
     setbufvar(h, '&buflisted', '0')
     setbufvar(h, '&buftype', 'nofile')
+    setbufvar(h, '&ff', 'unix')
     setbufvar(h, '&swapfile', '0')
 enddef
 

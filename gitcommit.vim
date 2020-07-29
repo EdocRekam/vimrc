@@ -36,7 +36,7 @@ def GitCommit()
     exe 'tabnew Commit - ' .. reltimestr(now)
     settabvar(tabpagenr(), 'title', 'COMMIT')
     let hB = bufnr()
-    Hide(hB)
+    Sbo(hB)
     setbufvar(hB, '&colorcolumn', '')
     Say(hB, 'Waiting for save ...')
 

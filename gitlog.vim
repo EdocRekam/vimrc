@@ -105,7 +105,7 @@ def GLog(obj: string)
     settabvar(tabpagenr(), 'title', obj)
     let hB = bufnr()
     Say(hB, 'Ready...')
-    Hide(hB)
+    Sbo(hB)
     setbufvar(hB, '&colorcolumn', '')
 
     # TOP ----------------------------------------------------------------
@@ -114,7 +114,7 @@ def GLog(obj: string)
     setbufvar(hT, '&colorcolumn', '')
     :2resize 20
     GLRef(hT, obj, 0)
-    Hide(hT)
+    Sbo(hT)
 
     # BASIC SYNTAX/COLOR
     GColor()
