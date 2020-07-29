@@ -1,2 +1,2 @@
 # :help NERD_tree.txt
-let NERDTreeShowHidden = 1
+g:NERDTreeShowHidden = 1
