@@ -49,7 +49,7 @@ enddef
 
 def GSPsh(hT: number, hB: number)
     let o = expand('<cword>')
-    GSex(hT, hB, IsR(o) ? 'git push -u' .. o .. ' ' .. Head : 'git push')
+    GSex(hT, hB, IsR(o) ? 'git push -u ' .. o .. ' ' .. Head : 'git push')
 enddef
 
 def GSRes(hT: number, hB: number)
