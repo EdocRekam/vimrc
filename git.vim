@@ -89,6 +89,15 @@ def GitK()
         exe printf("sil !gitk %s&", pat)
     else
         exe "sil !gitk&"
-    endif
+    en
 enddef
 nnoremap <silent><S-F7> :cal <SID>GitK()<CR>
+
+def MapClose(hT: number, hB: number)
+    exe printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d %d'<CR>", hT, hB)
+enddef
+
+def MapKey(hT: number, hB: number, k: string, f: string)
+    exe printf('nnoremap <silent><buffer><%s> :cal <SID>%s(%d, %d)<CR>', k, f, hT, hB)
+enddef
+

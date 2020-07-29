@@ -6,7 +6,7 @@ def g:Trace(msg: string)
         Sbo(h)
     else
         h = bufnr('TRACE')
-    endif
+    en
 
     let inf = getbufinfo(h)
     let lnr = inf[0].linecount
@@ -19,7 +19,7 @@ def g:OpenTrace()
         if 0 == win_gotoid(h)
             :tabnew
             exe 'b' .. h
-        endif
-    endif
+        en
+    en
 enddef
 

@@ -2,7 +2,7 @@
 
 if exists('b:current_syntax')
     finish
-endif
+en
 
 " KEYWORDS
 " https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/

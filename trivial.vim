@@ -49,7 +49,7 @@ def Rename(): void
     let val = input('Value: ')
     if '' != val
         exe '%s/' .. expand('<cword>') .. '/' .. val .. '/g'
-    endif
+    en
 enddef
 nnoremap <silent><F2> :cal <SID>Rename()<CR>
 
@@ -108,7 +108,7 @@ enddef
 def Startup()
     if filereadable('session.vim')
         so session.vim
-    endif
+    en
 enddef
 au VimEnter * ++once : cal Startup()
 
@@ -144,4 +144,4 @@ else
     def VimDir(): string
         retu $HOME .. '/vimfiles/'
     enddef
-endif
+en

@@ -14,7 +14,7 @@ if has("gui_gtk2") || has("gui_gtk3")
     set gfn=Inconsolata\ 15
 elseif has("gui_win32")
     set gfn=Consolas:h14:cANSI:qDRAFT
-endif
+en
 
 def g:ZoomIn()
     let old = getfontname()
@@ -23,12 +23,12 @@ def g:ZoomIn()
     let size = str2nr(strcharpart(old, i, 2)) + 1
     if size > FONT_MAX
         size = FONT_MIN
-    endif
+    en
     if has("gui_win32")
         &guifont = printf("%sh%d:cANSI:qDRAFT", family, size)
     else
         &guifont = printf("%s %d", family, size)
-    endif
+    en
 enddef
 
 def g:ZoomOut()
@@ -38,12 +38,12 @@ def g:ZoomOut()
     let size = str2nr(strcharpart(old, i, 2)) - 1
     if size < FONT_MIN
         size = FONT_MAX
-    endif
+    en
     if has("gui_win32")
         &guifont = printf("%sh%d:cANSI:qDRAFT", family, size)
     else
         &guifont = printf("%s %d", family, size)
-    endif
+    en
 enddef
 
 nnoremap <silent><C-S-LEFT> :cal g:ZoomOut()<CR>

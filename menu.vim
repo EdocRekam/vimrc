@@ -21,7 +21,7 @@ def MnuFilterBuf(buf: number)
             idx += 1
         else
             deletebufline(buf, idx)
-        endif
+        en
     endfor
 enddef
 
@@ -38,7 +38,7 @@ def MnuBackspace(winid: number)
         MnuResetBuf()
         setbufline(Mnu1, 1, title)
         MnuFilterBuf(Mnu1)
-    endif
+    en
 enddef
 
 def MnuPrintableChar(winid: number, key: string)
@@ -82,7 +82,7 @@ def MnuFilter(winid: number, key: string): number
     # NONPRINTABLE
     else
         rc = popup_filter_menu(winid, key)
-    endif
+    en
 
     retu rc
 enddef
@@ -99,40 +99,40 @@ def MnuEnum()
     let ask = input('START: ', '0')
     if '' != ask
         Enum(str2nr(ask))
-    endif
+    en
 enddef
 
 def MnuZoom(val: number)
     if !has('gui')
         retu
-    endif
+    en
 
     if val == 1
         g:ZoomOut()
     else
         g:ZoomIn()
-    endif
+    en
 enddef
 
 def MnuSyntax()
     let pat = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
     if filereadable(pat)
         exe 'tabnew ' .. pat
-    endif
+    en
 enddef
 
 def MnuCheatsheet()
     let pat = VimDir() .. 'keys.html'
     if filereadable(pat)
         exe printf("!firefox --new-window '%s'&", pat)
-    endif
+    en
 enddef
 
 def MnuCallback(winid: number, result: number): number
     let id = 0
     if result > 0
         id = MnuGetCmd(result)
-    endif
+    en
 
     if 1 == id
         let ask = input('ALIGN ON: ', '=')
@@ -209,7 +209,7 @@ def MnuCallback(winid: number, result: number): number
         tabnew ~/.vimrc
     elsei 45 == id
         GitBranch()
-    endif
+    en
 
     MnuWid = 0
     retu 1

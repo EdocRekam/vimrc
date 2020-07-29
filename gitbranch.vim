@@ -200,16 +200,15 @@ def GitBranch()
     sy keyword LBL author branch commit date merge remote subject
 
     # LOCAL KEY BINDS
-    let m = 'nnoremap <silent><buffer><'
-    exe printf("%sF3> :exe 'sil bw! %d %d'<CR>", m, hT, hB)
-    exe printf("%sF4> :cal <SID>GBNav(%d, %d)<CR>", m, hT, hB)
-    exe printf("%sF5> :cal <SID>GBRef(%d, 1)<CR>", m, hT)
-    exe printf("%sc-p> :cal <SID>GBPru(%d, %d)<CR>", m, hT, hB)
-    exe printf("%sc-t> :cal <SID>GBTag(%d, %d)<CR>", m, hT, hB)
-    exe printf("%ss-DEL> :cal <SID>GBDel(%d, %d)<CR>", m, hT, hB)
-    exe printf("%ss-END> :cal <SID>GBRes(%d, %d)<CR>", m, hT, hB)
-    exe printf("%ss-HOME> :cal <SID>GBCln(%d, %d)<CR>", m, hT, hB)
-    exe printf("%ss-INS> :cal <SID>GBNew(%d, %d)<CR>", m, hT, hB)
-    exe printf('%sS-PageDown> :cal <SID>GBFet(%d, %d)<CR>', m, hT, hB)
+    MapClose(hT, hB)
+    MapKey(hT, hB, 'F4', 'GBNav')
+    MapKey(hT, 1, 'F5', 'GBRef')
+    MapKey(hT, hB, 'c-p', 'GBPru')
+    MapKey(hT, hB, 'c-t', 'GBTag')
+    MapKey(hT, hB, 's-DEL', 'GBDel')
+    MapKey(hT, hB, 's-END', 'GBRes')
+    MapKey(hT, hB, 's-HOME', 'GBCln')
+    MapKey(hT, hB, 's-INS', 'GBNew')
+    MapKey(hT, hB, 's-PageDown', 'GBFet')
 enddef
 nnoremap <silent><F5> :cal <SID>GitBranch()<CR>

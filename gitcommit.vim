@@ -4,7 +4,7 @@ let ct = '.git/GITGUI_MSG'
 def GCShellExit(h: number, j: job, code: number)
     if 0 == code && filereadable(ct)
         delete(ct)
-    endif
+    en
 enddef
 
 def GCShell(h: number, cmd: string)
@@ -17,7 +17,7 @@ def GCQuit(hT: number, hB: number)
     if 1 == getbufvar(hT, '&modifiable')
         exe printf('au! BufWritePost <buffer=%d>', hT)
         exe 'sil g/^#.*/d | write ' .. ct
-    endif
+    en
     exe 'sil bw! ' .. hT .. ' ' .. hB
 enddef
 
@@ -50,7 +50,7 @@ def GitCommit()
     # TWO BLANK LINKS
     if 0 == filereadable(ct)
         Say(hT, ['', ''])
-    endif
+    en
 
     Say(hT, [
     '# Please enter the commit message for your changes. Lines starting',
@@ -67,7 +67,7 @@ def GitCommit()
     :star
 
     exe printf('au! BufWritePost <buffer=%d> ++once :cal GCGo(%d, %d)', hT, hT, hB)
-    exe printf("nnoremap <silent><buffer><F3> :cal <SID>GCQuit(%d, %d)<CR>", hT, hB)
+    MapKey(hT, hB, 'F3', 'GCQuit')
 
     # PERFORMANCE
     Say(hT, '# Time:' .. reltimestr(reltime(now, reltime())))

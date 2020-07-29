@@ -1,5 +1,5 @@
 
-def GSRef(hT: number, b = 1)
+def GSRef(hT: number, hB: number, b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
 
@@ -29,7 +29,7 @@ def GSRef(hT: number, b = 1)
 enddef
 
 def GSeXit(hT: number, hB: number, j: job, code: number)
-    GSRef(hT)
+    GSRef(hT, hB)
 enddef
 
 def GSex(hT: number, hB: number, cmd: string)
@@ -79,7 +79,7 @@ def GSIg(hT: number, hB: number)
     norm G
 enddef
 
-def GSIns(hB: number)
+def GSIns(hT: number, hB: number)
     let o = expand('<cfile>')
     if filereadable(o)
         exe 'tabnew ' .. o
@@ -96,6 +96,7 @@ def GSIns(hB: number)
     en
 enddef
 
+
 def GitStatus()
     GHead()
 
@@ -103,7 +104,7 @@ def GitStatus()
     let hT = bufnr('Git Status')
     if -1 != hT
         win_gotoid(get(hT->win_findbuf(), 0))
-        GSRef(hT)
+        GSRef(hT, 0)
     else
         # BOTTOM ---------------------------------------------------------
         tabnew Git Status - Messages
@@ -119,7 +120,7 @@ def GitStatus()
         setbufvar(hT, '&colorcolumn', '80')
         ownsyntax gitstatus
         :2resize 20
-        GSRef(hT, 0)
+        GSRef(hT, hB, 0)
         Sbo(hT)
 
         # SYNTAX
@@ -131,16 +132,16 @@ def GitStatus()
         sy keyword LBL author commit date
 
         # LOCAL KEY BINDS
-        let m = 'nnoremap <silent><buffer><'
-        exe printf("%sF3> :exe 'sil bw! %d %d'<CR>", m, hT, hB)
-        exe printf('%sF4> :cal <SID>GSIns(%d)<CR>', m, hB)
-        exe printf('%sF8> :cal <SID>GSRef(%d)<CR>', m, hT)
-        exe printf('%sc-i> :cal <SID>GSIg(%d, %d)<CR>', m, hT, hB)
-        exe printf('%sDEL> :cal <SID>GSUns(%d, %d)<CR>', m, hT, hB)
-        exe printf('%sINS> :cal <SID>GSAdd(%d, %d)<CR>', m, hT, hB)
-        exe printf('%sS-HOME> :cal <SID>GSRes(%d, %d)<CR>', m, hT, hB)
-        exe printf('%sPageDown> :cal <SID>GSFet(%d, %d)<CR>', m, hT, hB)
-        exe printf('%sPageUp> :cal <SID>GSPsh(%d, %d)<CR>', m, hT, hB)
+        MapClose(hT, hB)
+        MapKey(hT, hB, 'F4', 'GSIns')
+        MapKey(hT, hB, 'F8', 'GSRef')
+        MapKey(hT, hB, 'c-i', 'GSIg')
+        MapKey(hT, hB, 'DEL', 'GSUns')
+        MapKey(hT, hB, 'INS', 'GSAdd')
+        MapKey(hT, hB, 'S-HOME', 'GSRes')
+        MapKey(hT, hB, 'PageDown', 'GSFet')
+        MapKey(hT, hB, 'PageUp', 'GSPsh')
+
         nnoremap <silent><buffer><END> :cal <SID>GitCommit()<CR>
     en
 enddef

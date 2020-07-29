@@ -10,7 +10,7 @@ def GLRef(h: number, obj: string, b = 1)
     if b
         deletebufline(h, 1, '$')
         sy clear TC S D A K T M
-    endif
+    en
 
     # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
     # ARE FASTER THAN REGEX
@@ -123,8 +123,8 @@ def GLog(obj: string)
     sy keyword Identifier author commit date tag tree
 
     # LOCAL KEY BINDS
+    MapClose(hT, hB)
     let m = 'nnoremap <silent><buffer><'
-    exe printf("%sF3> :exe 'sil bw! %d %d'<CR> ", m, hT, hB)
     exe printf('%sF4> :cal <SID>GLNav()<CR>', m)
     exe printf("%sF7> :cal <SID>GLRef(%d, '%s')<CR>", m, hT, obj)
     exe printf("%s2-LeftMouse> :cal <SID>GLNav()<CR>", m)
@@ -143,5 +143,5 @@ def GLNav()
         GLog(get(split(getline('.')), 1))
     else
         GitInspect(expand('<cword>'))
-    endif
+    en
 enddef

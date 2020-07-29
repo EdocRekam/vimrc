@@ -1,7 +1,7 @@
 def Align(value: string)
     if '' == value
         retu
-    endif
+    en
 
     let nr = line("'<")
     let colAlign = 0
@@ -9,7 +9,7 @@ def Align(value: string)
         let col = stridx(line, value)
         if col > colAlign
             colAlign = col + 1
-        endif
+        en
     endfor
     let cnt = 0
     for line in getline(nr, "'>")
@@ -46,8 +46,8 @@ def Widest(rows: list<list<string>>, col: number, min: number, max = 85): number
             c = len
             if c > max
                 retu max
-            endif
-        endif
+            en
+        en
     endfor
     retu c
 enddef
@@ -65,7 +65,7 @@ def OpenWin(title: string, blank = 1): number
         win_gotoid(get(ids, 0))
         if blank
             exe 'sil norm ggvGD'
-        endif
-    endif
+        en
+    en
     retu h
 enddef

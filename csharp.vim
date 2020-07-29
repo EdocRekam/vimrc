@@ -51,7 +51,7 @@ def DotnetTest(filter: string = '')
         cmd = 'dotnet test'
     else
         cmd = printf("dotnet test --filter '%s'", filter)
-    endif
+    en
     DotnetAsyncWin(cmd, 'DOTNET', 'Testing . . .')
     syn case ignore
     syn match Bad "Failed:\s\d\+"
@@ -74,7 +74,7 @@ def g:CsIndent(n: number): any
     let l = getline(n)
     if char2nr('n') == strgetchar(l, 0)
         retu '>1'
-    endif
+    en
     retu 1
 enddef
 

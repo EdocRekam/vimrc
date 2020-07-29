@@ -1,7 +1,7 @@
 " RUN ONCE
 if exists("g:e0647a20")
     finish
-endif
+en
 
 " https://github.com/OmniSharp/Omnisharp-vim
 
@@ -27,9 +27,9 @@ command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
 
 
 function! SanitizeCSharp()
-    call ExpandTabs()
-    call RemoveTrailingWhitespace()
-    call Dos2Unix()
+    cal ExpandTabs()
+    cal RemoveTrailingWhitespace()
+    cal Dos2Unix()
 endfunction
 
 
@@ -89,7 +89,7 @@ set completepopup=highlight:Pmenu,border:off
 " nnoremap <Leader><Space> :OmniSharpGetCodeActions<CR>
 
 " Run code actions with text selected in visual mode to extract method
-" xnoremap <Leader><Space> :call OmniSharp#GetCodeActions('visual')<CR>
+" xnoremap <Leader><Space> :cal OmniSharp#GetCodeActions('visual')<CR>
 
 " nnoremap <Leader>cf :OmniSharpCodeFormat<CR>
 

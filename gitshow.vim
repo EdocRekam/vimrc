@@ -39,6 +39,5 @@ def GitShow2(objL: string, patL: string, objR: string, patR: string)
     GShow(hL, objL, patL)
 
     # LOCAL KEY BINDS
-    let cmd = 'nnoremap <silent><buffer>'
-    exe printf("%s<F3> :exe 'sil bw! %d %d'<CR> ", cmd, hL, hR)
+    MapClose(hL, hR)
 enddef

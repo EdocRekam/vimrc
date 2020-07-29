@@ -41,7 +41,7 @@ def GInsHitTest(): number
         r = 3
     elsei c < cs[1] && c >= cs[0]
         r = 2
-    endif
+    en
 
     retu r
 enddef
@@ -100,7 +100,7 @@ def GINav(hT: number, hB: number, obj: string)
     elsei c == 10 && aft != 'DELETED' && hed != 'DELETED'
         GitShow2(aft, pat, hed, pat)
 
-    endif
+    en
 enddef
 
 # REFRESH TOP WINDOW CONTENTS
@@ -118,7 +118,7 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
     if bl
         deletebufline(hT, 1, '$')
         sy clear A F BAH M T R
-    endif
+    en
 
     # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
     # ARE FASTER THAN REGEX.
@@ -173,8 +173,8 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
             else
                 system('git show ' .. obj .. ':' .. c)
                 aft = v:shell_error ? 'DELETED' : obj
-            endif
-        endif
+            en
+        en
 
         # DIG OUT AUTHORS FROM PAST (IF POSSIBLE)
         for at in split(get(split(get(past, 1), ' | '), 1))
@@ -271,9 +271,9 @@ def GitInspect(obj: string)
     hi link BAH Keyword
 
     # LOCAL KEY BINDS
+    MapClose(hT, hB)
     let cmd = 'nnoremap <silent><buffer><'
     exe printf("%s2-LeftMouse> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
-    exe printf("%sF3> :exe 'sil bw! %d %d'<CR> ", cmd, hT, hB)
     exe printf("%sF4> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
     exe printf("%sF6> :cal <SID>GIRef(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
 enddef

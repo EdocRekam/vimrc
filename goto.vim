@@ -2,9 +2,9 @@ def GotoDef()
     let pat = expand("<cfile>")
     if filereadable(pat)
         exe 'e! %s' .. pat
-    endif
+    en
     # else
     # OmniSharpGotoDefinition()
 enddef
-nnoremap <silent><F4> :call GotoDef()<CR>
+nnoremap <silent><F4> :cal GotoDef()<CR>
 
