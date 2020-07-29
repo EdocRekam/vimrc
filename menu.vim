@@ -218,12 +218,12 @@ let MnuOpt["callback"] = funcref('MnuCallback')
 
 def MnuLoad()
     Mnu0 = bufadd(VimDir() .. 'menu.txt')
-    bufload(Mnu0)
     Sbo(Mnu0)
+    bufload(Mnu0)
 
     Mnu1 = bufadd('ea9b0beae51540edb1a0')
-    bufload(Mnu1)
     Sbo(Mnu1)
+    bufload(Mnu1)
 enddef
 
 def MnuOpen()
@@ -237,7 +237,7 @@ def MnuOpen()
         win_execute(MnuWid, ':2')
     en
 enddef
-nnoremap <silent><F1> :cal <SID>MnuOpen()<CR>
-vnoremap <silent><F1> :cal <SID>MnuOpen()<CR>
+nnoremap <silent><F1> :sil cal <SID>MnuOpen()<CR>
+vnoremap <silent><F1> :sil cal <SID>MnuOpen()<CR>
 
 defcompile
