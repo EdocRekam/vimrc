@@ -8,8 +8,8 @@ def GRemotes()
 enddef
 
 # IS REMOTE
-def IsR(r: string): number
-    retu stridx(R, r)
+def IsR(r: string): bool
+    retu -1 != stridx(R, r)
 enddef
 
 # AUTHORS
