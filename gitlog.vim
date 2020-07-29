@@ -14,7 +14,6 @@ def GLRef(h: number, obj: string, b = 1)
 
     # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
     # ARE FASTER THAN REGEX
-    let A = ''
     let K = obj
 
     # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
@@ -87,7 +86,7 @@ def GLRef(h: number, obj: string, b = 1)
     Region('TC', 1, L0 + L1 + 2, 'c', 'contains=@NoSpell contained display oneline')
     Region('S', L0 + L1 + 5, L2 + 1, 'c', 'contains=K,P contained display oneline')
     Region('D', L0 + L1 + L2 + 7, 10)
-    exe 'sy keyword A ' .. A .. ' | sy keyword K ' .. K
+    exe 'sy keyword K ' .. K
 
     Region('M', nlog + nbr + 8, 2, 'l', 'contains=@NoSpell,P,MC,MK')
     Region('T', 3, nlog, 'l', 'contains=TC,S,D,A')

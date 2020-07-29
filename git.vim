@@ -1,7 +1,24 @@
 
+# REMOTES
+let R = 'hub origin vso'
+def GRemotes()
+    for r in systemlist('git remote')
+        R = Appendif(R, r)
+    endfor
+enddef
+
+# IS REMOTE
+def IsR(r: string): number
+    retu stridx(R, r)
+enddef
+
+# AUTHORS
+let A = 'edoc rekam'
+
+# LAUNCH GIT GUI
 nnoremap <silent><F6> :sil !git gui&<CR>
 
-let GKeys = 'head hub master origin vso'
+let GKeys = 'head master'
 def GColor()
     sy case ignore
 
@@ -24,8 +41,14 @@ def GColor()
     sy region P start="`" end="`" contains=@NoSpell display oneline
     sy region P start='"' end='"' contains=@NoSpell display oneline
 
+    # AUTHORS
+    exe 'sy keyword A ' .. A
+
     # COMMON LINKS - THESE SHOW UP ON A REGULAR BASIS
-    exe 'sy keyword Keyword ' ..  GKeys
+    exe 'sy keyword K ' ..  GKeys
+
+    # REMOTES
+    exe 'sy keyword R ' .. R
 
     # VERSION STRING
     # sy match String "\d\+\.\d\+"
@@ -69,9 +92,7 @@ enddef
 def GHead(): string
     Head = trim(system('git rev-parse --abbrev-ref HEAD'))
     GKeys = Appendif(GKeys, Head)
-    for r in systemlist('git remote')
-        GKeys = Appendif(GKeys, r)
-    endfor
+    GRemotes()
     retu Head
 enddef
 
@@ -92,6 +113,7 @@ def GitK()
     en
 enddef
 nnoremap <silent><S-F7> :cal <SID>GitK()<CR>
+
 
 def MapClose(hT: number, hB: number)
     exe printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d %d'<CR>", hT, hB)

@@ -120,12 +120,6 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
         sy clear A F BAH M T R
     en
 
-    # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
-    # ARE FASTER THAN REGEX.
-    #
-    # ATS  AUTHORS
-    let ats = ''
-
     # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
     let L0 = 24 | let L1 = 6 | let L2 = 6 | let L3 = 6 | let L4 = 13
     let L5 = 13
@@ -178,7 +172,7 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
 
         # DIG OUT AUTHORS FROM PAST (IF POSSIBLE)
         for at in split(get(split(get(past, 1), ' | '), 1))
-            ats = Appendif(ats, at)
+            A = Appendif(A, at)
         endfor
 
         # IF FILE EXISTS MEANS THAT ITS STILL IN LATEST HEAD
@@ -212,7 +206,6 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
     #     AUTHORS FOUND IN LOGS
     Region('F', 1, L0)
     Region('BAH', L0 + 3, L1 + L2 + L3 + L4 + L5 + 8)
-    exe 'sy keyword A ' .. ats
 
     #     T  TOP LINES
     #     M  MENU

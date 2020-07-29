@@ -15,8 +15,6 @@ def GBRef(h: number, b = 1)
     # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
     # ARE FASTER THAN REGEX
     let K = ''
-    let A = ''
-    let R = ''
 
     # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
     let L0 = 7
@@ -86,7 +84,6 @@ def GBRef(h: number, b = 1)
     exe 'sy keyword B ' .. K
     Region('S', L0 + L1 + 4, L2 + 1, 'c', 'contained display contains=L,P oneline')
     Region('D', L0 + L1 + L2 + 7, 10)
-    exe 'sy keyword A ' .. A
 
     #     T  TOP LINES
     #     M  MENU
