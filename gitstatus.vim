@@ -6,7 +6,7 @@ def GSRef(hT: number, hB: number, b = 1)
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if b
         deletebufline(hT, 1, '$')
-        sy clear M
+        sy clear M LOG
     en
 
     let l = systemlist('git status')
@@ -20,9 +20,12 @@ def GSRef(hT: number, hB: number, b = 1)
     '<F5>   BRANCH   |  <F6>     GUI      |  <F7>    LOG/GITK  |  <F8>  REFRESH',
     '', repeat('-', 79)])
 
-    for i in systemlist('git log -n5')
+    let log = systemlist('git log -n5')
+    Region('LOG', len(l) + 1, len(log), 'l', 'contains=L')
+    for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
     endfor
+
     extend(l, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
     Say(hT, l)
     win_execute(win_getid(1), 'norm gg')
@@ -88,10 +91,9 @@ def GSIns(hT: number, hB: number)
         win_execute(win_getid(2), 'norm gg')
 
         # LOCAL KEY BINDS
-        exe printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d %d'<CR> ", hL, hR)
+        MapClose(hL, hR)
     en
 enddef
-
 
 def GitStatus()
     GHead()
@@ -100,7 +102,7 @@ def GitStatus()
     let hT = bufnr('Git Status')
     if -1 != hT
         win_gotoid(get(hT->win_findbuf(), 0))
-        GSRef(hT, 0)
+        GSRef(hT, 0, 1)
     else
         # BOTTOM ---------------------------------------------------------
         tabnew Git Status - Messages
