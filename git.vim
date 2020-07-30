@@ -25,10 +25,13 @@ def GColor()
     # COMMENTS
     sy match Comment "^\s\s\s\s.*$" contains=L,P,K
 
+    # DATE
+    sy match D "\d\d\d\d-\d\d-\d\d"
+
     # LINKS - SHA OR []
-    sy match Keyword "[0-9a-f]\{40}" contains=@NoSpell display
-    sy match Keyword "#\=\d\{5}" contains=@NoSpell display contained
-    sy region Keyword start="\[" end="\]" contains=@NoSpell display oneline contained
+    sy match L "[0-9a-f]\{40}" contains=@NoSpell display
+    sy match L "#\=\d\{5}" contains=@NoSpell display contained
+    sy region L start="\[" end="\]" contains=@NoSpell display oneline contained
 
     # MENU COMMANDS
     sy keyword MC add all branch checkout clean close commit contained create cursor delete fetch gitk gui inspect log menu push prune refresh reset restore status tags under unstage
@@ -82,6 +85,7 @@ def GColor()
     hi link K Keyword
     hi link L Keyword
     hi link LBL Identifier
+    hi link LOG Comment
     hi link MK String
     hi link P String
     hi link R Keyword

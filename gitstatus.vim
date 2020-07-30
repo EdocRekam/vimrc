@@ -20,8 +20,8 @@ def GSRef(hT: number, hB: number, b = 1)
     '<F5>   BRANCH   |  <F6>     GUI      |  <F7>    LOG/GITK  |  <F8>  REFRESH',
     '', repeat('-', 79)])
 
-    let log = systemlist('git log -n5')
-    Region('LOG', len(l) + 1, len(log), 'l', 'contains=L')
+    let log = systemlist('git log --date=short -n5')
+    Region('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,LBL,L,P')
     for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
     endfor
