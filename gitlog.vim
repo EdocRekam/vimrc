@@ -134,7 +134,7 @@ def GitLog()
     let o = expand('<cfile>')
     GLog(strchars(o) > 5 ? o : 'HEAD')
 enddef
-nnoremap <silent><F7> :cal <SID>GitLog()<CR>
+nnoremap <F7> :sil cal <SID>GitLog()<CR>
 
 def GLNav()
     let L = gettabvar(tabpagenr(), 'L')

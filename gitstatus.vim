@@ -141,4 +141,4 @@ def GitStatus()
         nnoremap <silent><buffer><END> :cal <SID>GitCommit()<CR>
     en
 enddef
-nnoremap <silent><F8> :cal <SID>GitStatus()<CR>
+nnoremap <F8> :sil cal <SID>GitStatus()<CR>

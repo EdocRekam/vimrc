@@ -208,4 +208,4 @@ def GitBranch()
     MapKey(hT, hB, 's-INS', 'GBNew')
     MapKey(hT, hB, 's-PageDown', 'GBFet')
 enddef
-nnoremap <silent><F5> :cal <SID>GitBranch()<CR>
+nnoremap <F5> :sil cal <SID>GitBranch()<CR>

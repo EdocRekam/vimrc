@@ -120,6 +120,6 @@ def MapClose(hT: number, hB: number)
 enddef
 
 def MapKey(hT: number, hB: number, k: string, f: string)
-    exe printf('nnoremap <silent><buffer><%s> :cal <SID>%s(%d, %d)<CR>', k, f, hT, hB)
+    exe printf('nnoremap <silent><buffer><%s> :sil cal <SID>%s(%d, %d)<CR>', k, f, hT, hB)
 enddef
 
