@@ -47,7 +47,8 @@ def GSAdd(hT: number, hB: number)
 enddef
 
 def GSFet(hT: number, hB: number)
-    GSex(hT, hB, 'git fetch')
+    let o = expand('<cword>')
+    GSex(hT, hB, IsR(o) ? 'git fetch ' .. o .. ' ' .. Head : 'git fetch')
 enddef
 
 def GSPsh(hT: number, hB: number)
@@ -78,17 +79,21 @@ def GSIg(hT: number, hB: number)
     norm G
 enddef
 
+# INSPECT THE FILE UNDER CURSOR (BEFORE|AFTER)
 def GSIns(hT: number, hB: number)
     let o = expand('<cfile>')
     if filereadable(o)
+        # RIGHT = AFTER
         exe 'tabnew ' .. o
         let hR = bufnr()
+        settabvar(tabpagenr(), 'title', 'B:A')
 
-        exe 'vsplit HEAD:' .. o
+        # LEFT = BEFORE
+        exe 'vsplit B:' .. o
         let hL = bufnr()
         Sbo(hL)
         GShow(hL, 'HEAD', o)
-        win_execute(win_getid(2), 'norm gg')
+        windo :1
         windo set scb
 
         # LOCAL KEY BINDS

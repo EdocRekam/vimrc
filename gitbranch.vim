@@ -142,9 +142,7 @@ enddef
 
 def GBFet(hT = 0, hB = 0)
     let o = expand('<cword>')
-    if strchars(o) > 2
-        GBExe(hT, hB, 'git fetch ' .. o)
-    en
+    GBExe(hT, hB, IsR(o) ? 'git fetch ' .. o .. ' ' .. Head : 'git fetch')
 enddef
 
 def GBNav(hT: number, hB: number)
