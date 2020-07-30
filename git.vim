@@ -120,7 +120,8 @@ nnoremap <silent><S-F7> :cal <SID>GitK()<CR>
 
 
 def MapClose(hT: number, hB: number)
-    exe printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d %d'<CR>", hT, hB)
+    win_execute(win_getid(1), printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d %d'<CR>", hT, hB))
+    win_execute(win_getid(2), printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d %d'<CR>", hT, hB))
 enddef
 
 def MapKey(hT: number, hB: number, k: string, f: string)

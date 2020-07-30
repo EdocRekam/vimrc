@@ -9,7 +9,7 @@ def GBRef(h: number, b = 1)
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if b
         deletebufline(h, 1, '$')
-        sy clear M T C B S D A R
+        sy clear A B C D LOG M S T R
     en
 
     # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
@@ -106,7 +106,9 @@ def GBRef(h: number, b = 1)
     '', 'BRANCH: ' .. Head, sep, ''])
 
     # ADD LAST FIVE LOG ENTRIES
-    for i in systemlist('git log -n5')
+    let log = systemlist('git log --date=short -n5')
+    Region('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,LBL,L,P')
+    for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
     endfor
     extend(l, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
