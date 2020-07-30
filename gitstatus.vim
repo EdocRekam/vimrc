@@ -89,6 +89,7 @@ def GSIns(hT: number, hB: number)
         Sbo(hL)
         GShow(hL, 'HEAD', o)
         win_execute(win_getid(2), 'norm gg')
+        windo set scb
 
         # LOCAL KEY BINDS
         MapClose(hL, hR)
