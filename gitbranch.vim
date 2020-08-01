@@ -96,7 +96,7 @@ def GBRef(h: number, b = 1)
 
     # ADD MENU + REMOTES + BRANCH NAME
     extend(l, ['', '',
-    '  <S+INS>  CREATE   |  <S+HOME>  CLEAN  |  <PGUP>    --------  |',
+    '  <S+INS>  CREATE   |  <S+HOME>  CLEAN  |  <S-PGUP>  PUSH      |',
     '  <S+DEL>  DELETE   |  <S+END>   RESET  |  <S-PGDN>  FETCH     |',
     '                    |                   |                      |',
     '  <F1>     MENU     |  <F2>      -----  |  <F3>      CLOSE     |  <F4>  CHECKOUT',
@@ -157,6 +157,11 @@ def GBNew(hT: number, hB: number)
     GBExe(hT, hB, 'git branch ' .. expand('<cfile>'))
 enddef
 
+def GBPsh(hT: number, hB: number)
+    let o = expand('<cword>')
+    GBExe(hT, hB, IsR(o) ? 'git push ' .. o .. ' ' .. Head : 'git push')
+enddef
+
 def GBPru(hT: number, hB: number)
     GBExe(hT, hB, 'git remote prune ' .. expand('<cword>'))
 enddef
@@ -207,5 +212,6 @@ def GitBranch()
     MapKey(hT, hB, 's-HOME', 'GBCln')
     MapKey(hT, hB, 's-INS', 'GBNew')
     MapKey(hT, hB, 's-PageDown', 'GBFet')
+    MapKey(hT, hB, 's-PageUp', 'GBPsh')
 enddef
 nnoremap <F5> :sil cal <SID>GitBranch()<CR>
