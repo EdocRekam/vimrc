@@ -9,7 +9,7 @@ def GBRef(h: number, b = 1)
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if b
         deletebufline(h, 1, '$')
-        sy clear A B C D LOG M S T R
+        sy clear B C LOG M S T
     en
 
     # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
@@ -83,13 +83,12 @@ def GBRef(h: number, b = 1)
     Region('C', 1, L0)
     exe 'sy keyword B ' .. K
     Region('S', L0 + L1 + 4, L2 + 1, 'c', 'contained display contains=L,P oneline')
-    Region('D', L0 + L1 + L2 + 7, 10)
 
     #     T  TOP LINES
     #     M  MENU
     #     R  REMOTES
     let rc = len(l)
-    Region('T', 3, rc - 2, 'l', 'contains=C,B,S,D,A')
+    Region('T', 3, len(rs), 'l', 'contains=C,B,S,D,A')
     Region('M', rc + 3, 5, 'l', 'contains=@NoSpell,P,MC,MK')
     Region('M', rc + 11, 1, 'l', 'contains=@NoSpell,P,MC,MK')
     Region('R', rc + 9, 1, 'l', 'contains=@NoSpell display oneline')
