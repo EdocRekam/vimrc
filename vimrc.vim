@@ -73,11 +73,10 @@ let Head = 'HEAD'
 def g:GetStatus(): string
     let c = strchars(getreg('*'))
     let sel = c > 1 ? '  SEL:' .. c : ''
-    let head = exists('Head') ? Head .. '  ' : ''
     let enc = strchars(&fenc) ? '  ' .. toupper(&fenc) : '  PLAIN'
     let bom = &bomb ? '  with BOM' : ''
     let le = &ff == 'unix' ? '  LF' : '  CRLF'
-    retu head .. '%M%<%f%=' .. sel .. '  Col %c' .. enc .. bom .. le .. '  %Y'
+    retu Head .. ' %M%<%f%=' .. sel .. '  Col %c' .. enc .. bom .. le .. '  %Y'
 enddef
 set statusline=%!g:GetStatus()
 
