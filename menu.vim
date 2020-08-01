@@ -13,11 +13,10 @@ let MnuOpt["wrap"] = 0
 let MnuOpt["padding"] = [0, 1, 0, 1]
 
 def MnuFilterBuf(buf: number)
-    let lines = getbufline(buf, 1)
-    let title = lines[0]
+    let t = get(getbufline(buf, 1), 0)
     let idx = 1
     for i in getbufline(buf, 1, '$')
-        if stridx(tolower(i), title) != -1
+        if stridx(tolower(i), t) != -1
             idx += 1
         else
             deletebufline(buf, idx)
@@ -31,68 +30,65 @@ def MnuResetBuf()
     deletebufline(Mnu1, '$')
 enddef
 
-def MnuBackspace(winid: number)
-    let lines = getbufline(Mnu1, 1)
-    let title = strcharpart(lines[0], 0, strchars(lines[0]) - 1)
-    if strchars(title) >= 0
+def MnuBackspace(wid: number)
+    let l = get(getbufline(Mnu1, 1), 0)
+    let t = strcharpart(l, 0, strchars(l) - 1)
+    if strchars(t) >= 0
         MnuResetBuf()
-        setbufline(Mnu1, 1, title)
+        setbufline(Mnu1, 1, t)
         MnuFilterBuf(Mnu1)
     en
 enddef
 
-def MnuPrintableChar(winid: number, key: string)
-    let lines = getbufline(Mnu1, 1)
-    let title = printf('%s%s', lines[0], tolower(key))
-    setbufline(Mnu1, 1, title)
+def MnuPrintableChar(wid: number, k: string)
+    let t = printf('%s%s', get(getbufline(Mnu1, 1), 0), tolower(k))
+    setbufline(Mnu1, 1, t)
     MnuFilterBuf(Mnu1)
 enddef
 
-def MnuIgnore(winid: number)
-    popup_close(winid, -1)
-enddef
-
-def MnuFilter(winid: number, key: string): number
+def MnuFilter(wid: number, k: string): number
     let rc = 1
 
-    if key == "\<F1>" || key == "\<ESC>"
-        popup_close(winid, -1)
+    if k == "\<F1>" || k == "\<ESC>"
+        popup_close(wid, -1)
+
+    # PASS THESE ON TO SYSTEM
+    elsei k == "\<Down>" || k == "\<Up>"
+        rc = popup_filter_menu(wid, k)
 
     # BACKUP
-    elsei key == "\<BS>"
-        MnuBackspace(winid)
+    elsei k == "\<BS>"
+        MnuBackspace(wid)
 
     # IGNORED
-    elsei key == ':'
-        MnuIgnore(winid)
+    elsei k == ':'
+        popup_close(wid, -1)
         rc = 0
 
     # PASS THROUGH
-    elsei key == "\<F2>" || key == "\<F3>" || key == "\<F4>"
-     \ || key == "\<F5>" || key == "\<F6>" || key == "\<F7>"
-     \ || key == "\<F8>" || key == "\<F9>" || key == "\<F10>"
-     \ || key == "\<F11>" || key == "\<F12>"
-        popup_close(winid, -1)
-        feedkeys(key)
+    elsei k == "\<F2>" || k == "\<F3>" || k == "\<F4>"
+     \ || k == "\<F5>" || k == "\<F6>" || k == "\<F7>"
+     \ || k == "\<F8>" || k == "\<F9>" || k == "\<F10>"
+     \ || k == "\<F11>" || k == "\<F12>"
+        popup_close(wid, -1)
+        feedkeys(k)
 
     # PRINTABLE CHAR
-    elsei 0 == match(key, '\p')
-        MnuPrintableChar(winid, key)
+    elsei 0 == match(k, '\p')
+        MnuPrintableChar(wid, k)
 
     # NONPRINTABLE
     else
-        rc = popup_filter_menu(winid, key)
+        rc = popup_filter_menu(wid, k)
     en
 
     retu rc
 enddef
 let MnuOpt["filter"] = funcref('MnuFilter')
 
-def MnuGetCmd(result: number): number
-    let lines = getbufline(Mnu1, result)
-    let line = lines[0]
-    let nr = strcharpart(line, 39, 4)
-    retu str2nr(nr)
+def MnuGetCmd(id: number): number
+    let l = get(getbufline(Mnu1, id), 0)
+    retu str2nr(strcharpart(l, 39, 4))
 enddef
 
 def MnuEnum()
@@ -128,15 +124,14 @@ def MnuCheatsheet()
     en
 enddef
 
-def MnuCallback(winid: number, result: number): number
+def MnuCallback(wid: number, result: number): number
     let id = 0
     if result > 0
         id = MnuGetCmd(result)
     en
 
     if 1 == id
-        let ask = input('ALIGN ON: ', '=')
-        Align(ask)
+        Align(input('ALIGN ON: ', '='))
     elseif 2 == id
         DotnetBuild()
     elseif 3 == id
