@@ -16,7 +16,7 @@ def GSRef(hT: number, hB: number, b = 1)
     '<INS>  ADD ALL  |  <S-HOME> RESTORE  |  <PGUP>  PUSH      |',
     '<DEL>  UNSTAGE  |  <END>    COMMIT   |  <PGDN>  FETCH     |',
     '                |                    |                    |',
-    '<F1>   MENU     |  <F2>     -------  |  <F3>    CLOSE     |  <F4>  INSPECT',
+    '<F1>   MENU     |  <F2>     AMEND    |  <F3>    CLOSE     |  <F4>  INSPECT',
     '<F5>   BRANCH   |  <F6>     GUI      |  <F7>    LOG/GITK  |  <F8>  REFRESH',
     '', repeat('-', 79)])
 
@@ -44,6 +44,13 @@ enddef
 
 def GSAdd(hT: number, hB: number)
     GSex(hT, hB, 'git add .')
+enddef
+
+# SCRIPT VARIABLE `ct` DEFINED IN `gitcommit.vim`
+def GCAmd(hT: number, hB: number)
+    let log = systemlist("git log -n1 --format='%s%n%n%b'")
+    GSex(hT, hB, 'git reset --soft HEAD^')
+    writefile(log, ct)
 enddef
 
 def GSFet(hT: number, hB: number)
@@ -137,6 +144,7 @@ def GitStatus()
 
         # LOCAL KEY BINDS
         MapClose(hT, hB)
+        MapKey(hT, hB, 'F2', 'GCAmd')
         MapKey(hT, hB, 'F4', 'GSIns')
         MapKey(hT, hB, 'F8', 'GSRef')
         MapKey(hT, hB, 'c-i', 'GSIg')
