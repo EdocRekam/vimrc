@@ -18,7 +18,7 @@ def GSRef(hT: number, hB: number, b = 1)
     '                |                    |                    |',
     '<F1>   MENU     |  <F2>     AMEND    |  <F3>    CLOSE     |  <F4>  INSPECT',
     '<F5>   BRANCH   |  <F6>     GUI      |  <F7>    LOG/GITK  |  <F8>  REFRESH',
-    '', repeat('-', 79)])
+    '', 'Remotes: ' .. R, repeat('-', 79)])
 
     let log = systemlist('git log --date=short -n5')
     Region('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,LBL,L,P')
