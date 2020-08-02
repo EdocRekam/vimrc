@@ -1,6 +1,6 @@
 
 # REMOTES
-let R = 'hub origin vso'
+let R = 'hub vso'
 def GRemotes()
     for r in systemlist('git remote')
         R = Appendif(R, r)

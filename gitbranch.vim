@@ -120,6 +120,7 @@ def GBRef(h: number, b = 1)
 enddef
 
 def GBExeExit(hT: number, hB: number, j: job, code: number)
+    GHead()
     GBRef(hT, 1)
 enddef
 
