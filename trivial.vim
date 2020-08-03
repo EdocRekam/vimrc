@@ -18,7 +18,14 @@ def Appendif(x: string, y: string): string
 enddef
 
 def FindInFile(val: string)
-    exe printf("sil grep! -rni  '%s' *", val)
+    if 0 == strchars(val)
+        retu
+    en
+    if 34 == strgetchar(val, 0)
+        exe printf("sil grep! -rn  '%s' *", trim(val, '"'))
+    el
+        exe printf("sil grep! -rni '%s' *", val)
+    en
     copen 35
 enddef
 command! -nargs=1 Find :cal <SID>FindInFile('<args>')
