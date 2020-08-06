@@ -232,6 +232,7 @@ def MnuOpen()
         win_execute(MnuWid, ':2')
     en
 enddef
+inoremap <silent><F1> <ESC>:sil cal <SID>MnuOpen()<CR>
 nnoremap <silent><F1> :sil cal <SID>MnuOpen()<CR>
 vnoremap <silent><F1> :sil cal <SID>MnuOpen()<CR>
 

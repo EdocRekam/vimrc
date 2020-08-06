@@ -9,12 +9,8 @@ def GBRef(h: number, b = 1)
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if b
         deletebufline(h, 1, '$')
-        sy clear B C LOG M S T
+        sy clear C LOG M S T
     en
-
-    # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
-    # ARE FASTER THAN REGEX
-    let K = ''
 
     # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
     let L0 = 7
@@ -41,8 +37,10 @@ def GBRef(h: number, b = 1)
 
         # SYNTAX: BRANCH KEYWORDS
         let p1 = split(ref, '/')
-        for kw in p1
-            K = Appendif(K, kw)
+        for br in p1
+            if !IsR(br)
+                B = Appendif(B, br)
+            en
         endfor
 
         # SYNTAX: AUTHOR NAMES
@@ -76,14 +74,13 @@ def GBRef(h: number, b = 1)
     #     D  DATE
     #     A  AUTHOR
     Region('C', 1, L0)
-    exe 'sy keyword B ' .. K
     Region('S', L0 + L1 + 4, L2 + 1, 'c', 'contained display contains=L,P oneline')
 
     #     T  TOP LINES
     #     M  MENU
     #     R  REMOTES
     let rc = len(l)
-    Region('T', 3, len(rs), 'l', 'contains=C,B,S,D,A')
+    Region('T', 3, len(rs), 'l', 'contains=C,B,S,D,A,R')
     Region('M', rc + 3, 5, 'l', 'contains=@NoSpell,P,MC,MK')
     Region('M', rc + 11, 1, 'l', 'contains=@NoSpell,P,MC,MK')
     Region('R', rc + 9, 1, 'l', 'contains=@NoSpell display oneline')
@@ -101,7 +98,7 @@ def GBRef(h: number, b = 1)
 
     # ADD LAST FIVE LOG ENTRIES
     let log = systemlist('git log --date=short -n5')
-    Region('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,LBL,L,P')
+    Region('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,L,P')
     for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
     endfor

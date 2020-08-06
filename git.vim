@@ -1,6 +1,26 @@
 
-# REMOTES
+# GENERALLY SYNTAX HIGHLIGHTING WORKS A LOT FASTER WITH A BUNCH OF
+# KEYWORDS INSTEAD OF REGULAR EXPRESSIONS. MY GIT FUNCTIONS BUILD UP
+# THESE SYNTAX KEYWORDS OVER TIME WHEN RUNNING DIFFERENT FUNCTIONS SO
+# THAT I CAN HIGHLIGHT CERTAIN TERMS ON PAGES THAT LACK ENOUGH INFORMATION
+# TO FIGURE OUT THE TERMS.
+#
+# FOR EXAMPLE:
+# BRANCH NAMES MAY BE REFERENCED IN GIT LOG MESSAGES. I WANT TO HIGHLIGHT
+# THESE BRANCH NAMES. I HOWEVER HAVE NO CLUE WHICH ARE BRANCH NAMES FROM
+# THE LOGS ALONE. I CAN FIND BRANCH NAMES FROM THE BRANCH FUNCTION THOUGH
+# AND THE NEXT TIME I DISPLAY A LOG THESE BRANCHES ARE HIGHLIGHTED.
+#
+# SYNTAX GROUPS THAT I TRACK:
+#     (A)UTHORS
+#     (B)RANCHES
+#     (R)EMOTES
+
+let A = 'edoc rekam'
+let B = 'head master'
 let R = 'hub vso'
+
+# REMOTES
 def GRemotes()
     for r in systemlist('git remote')
         R = Appendif(R, r)
@@ -12,13 +32,10 @@ def IsR(r: string): bool
     retu -1 != stridx(R, r)
 enddef
 
-# AUTHORS
-let A = 'edoc rekam'
 
 # LAUNCH GIT GUI
 nnoremap <silent><F6> :sil !git gui&<CR>
 
-let GKeys = 'head master'
 def GColor()
     sy case ignore
 
@@ -43,13 +60,12 @@ def GColor()
     sy region P start="`" end="`" contains=@NoSpell display oneline
     sy region P start='"' end='"' contains=@NoSpell display oneline
 
-    # AUTHORS
+    sy keyword A A
+    sy keyword B B
+    sy keyword R R
+    sy clear A B R
     exe 'sy keyword A ' .. A
-
-    # COMMON LINKS - THESE SHOW UP ON A REGULAR BASIS
-    exe 'sy keyword K ' ..  GKeys
-
-    # REMOTES
+    exe 'sy keyword B ' .. B
     exe 'sy keyword R ' .. R
 
     # VERSION STRING
@@ -94,7 +110,7 @@ enddef
 
 def GHead(): string
     Head = trim(system('git rev-parse --abbrev-ref HEAD'))
-    GKeys = Appendif(GKeys, Head)
+    B = Appendif(B, Head)
     GRemotes()
     retu Head
 enddef
