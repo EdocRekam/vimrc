@@ -39,13 +39,8 @@ def GBRef(h: number, b = 1)
         # FIX SUBJECT LENGTH+FORMAT
         let s = p[2]->strcharpart(0, 85)->tr("\t", " ")
 
-        # BUILD UNIQUE REMOTE LIST
-        let p1 = split(ref, '/')
-        if len(p1) > 1
-            R = Appendif(R, p1[0])
-        en
-
         # SYNTAX: BRANCH KEYWORDS
+        let p1 = split(ref, '/')
         for kw in p1
             K = Appendif(K, kw)
         endfor
