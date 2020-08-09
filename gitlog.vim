@@ -40,7 +40,7 @@ def GLRef(h: number, obj: string, b = 1)
         settabvar(tabpagenr(), 'L', [L0, L1, L2, L3, L4])
 
         add(rs, [ r[0], r[1], s, r[3], r[4]])
-    endfor
+    endfo
 
     let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3)
     let sep = repeat('-', L0 + L1 + L2 + L3 + L4 + 8)
@@ -49,7 +49,7 @@ def GLRef(h: number, obj: string, b = 1)
     let l = [ printf(f, 'TREE', 'COMMIT', obj, 'DATE', 'AUTHOR'), sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], i[4]))
-    endfor
+    endfo
 
     # BRANCHES
     extend(l, ['', printf(f, 'TREE', 'COMMIT', 'TAG', 'DATE', 'AUTHOR'), sep])
@@ -63,10 +63,10 @@ def GLRef(h: number, obj: string, b = 1)
         # SYNTAX: AUTHOR NAMES
         for at in split(r[4])
             A = Appendif(A, at)
-        endfor
+        endfo
 
         add(l, printf(f, r[0], r[1], r[2], r[3], r[4]))
-    endfor
+    endfo
 
     extend(l, ['', '',
     '<F1>  MENU    |  <F2> -----  |  <F3>  CLOSE         |  <F4>  INSPECT',
@@ -131,7 +131,7 @@ enddef
 
 def GitLog()
     GHead()
-    let o = expand('<cfile>')
+    let o = Cfile()
     GLog(strchars(o) > 5 ? o : 'HEAD')
 enddef
 nnoremap <F7> :sil cal <SID>GitLog()<CR>

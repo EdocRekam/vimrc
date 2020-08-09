@@ -173,7 +173,7 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
         # DIG OUT AUTHORS FROM PAST (IF POSSIBLE)
         for at in split(get(split(get(past, 1), ' | '), 1))
             A = Appendif(A, at)
-        endfor
+        endfo
 
         # IF FILE EXISTS MEANS THAT ITS STILL IN LATEST HEAD
         let hed = filereadable(c) ? Head : 'DELETED'
@@ -186,7 +186,7 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
         settabvar(tabpagenr(), 'lens', [L0, L1, L2, L3, L4, L5])
 
         add(rs, [c, bef, aft, hed])
-    endfor
+    endfo
 
     let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3, L4)
     let hl = L0 + L1 + L2 + L3 + 36
@@ -195,7 +195,7 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
     let l = [ printf(f, 'FILE', 'BEFORE', 'AFTER', 'HEAD', 'COMPARE', 'SIDE BY SIDE'), sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], 'B:A  B:H  A:H', 'B-A  B-H  A-H'))
-    endfor
+    endfo
 
     # DYNAMIC SYNTAX GROUPS
     #    THESE SYNTAX GROUPS ARE CALCULATED ON THE FLY. PERFORMANCE IS

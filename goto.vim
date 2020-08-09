@@ -1,5 +1,5 @@
 def GotoDef()
-    let pat = expand("<cfile>")
+    let pat = Cfile()
     if filereadable(pat)
         exe 'e! %s' .. pat
     en

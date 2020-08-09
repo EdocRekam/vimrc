@@ -1,4 +1,8 @@
 
+def Cfile(): string
+    retu expand('<cfile>')
+enddef
+
 # CREATE A SYNTAX REGION STARTING/ENDING ON A COLUMN OR LINE
 def Region(grp: string, x: number, y: number, t = 'c', extra = 'contained display oneline')
     let f = 'sy region %s start="%s" end="%s" %s'
@@ -22,9 +26,9 @@ def FindInFile(val: string)
         retu
     en
     if 34 == strgetchar(val, 0)
-        exe printf("sil grep! -rn  '%s' *", trim(val, '"'))
+        sil printf("grep! -rn  '%s' *", trim(val, '"'))
     el
-        exe printf("sil grep! -rni '%s' *", val)
+        sil printf("grep! -rni '%s' *", val)
     en
     copen 35
 enddef
@@ -90,25 +94,25 @@ nnoremap <silent><S-F5> :cal <SID>SourceFile()<CR>
 
 def Sort()
     norm gv
-    # :'<,'>sort
+    # :sil '<,'>sort
     norm gv
 enddef
 
 def SortD()
     norm gv
-    exe "'<,'>sort!"
+    # :sil '<,'>sort!
     norm gv
 enddef
 
 def SortDI()
     norm gv
-    exe "'<,'>sort! i"
+    # :sil '<,'>sort! i
     norm gv
 enddef
 
 def SortI()
     norm gv
-    exe "'<,'>sort i"
+    # :sil '<,'>sort i
     norm gv
 enddef
 
@@ -135,7 +139,7 @@ enddef
 
 def Unique()
     norm gv
-    exe "'<,'>%!uniq"
+    # :sil '<,'>%!uniq
     norm gv
 enddef
 

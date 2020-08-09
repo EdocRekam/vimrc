@@ -39,14 +39,14 @@ def GBRef(h: number, b = 1)
         let p1 = split(ref, '/')
         for br in p1
             if !IsR(br)
-                B = Appendif(B, br)
+                Ab(br)
             en
-        endfor
+        endfo
 
         # SYNTAX: AUTHOR NAMES
         for at in split(p[4])
             A = Appendif(A, at)
-        endfor
+        endfo
 
         # UPDATE COLUMN LENGTHS
         L0 = AddIf(L0, p[0])
@@ -54,7 +54,7 @@ def GBRef(h: number, b = 1)
         L2 = AddIf(L2, s)
         L4 = AddIf(L4, p[4])
         add(rs, [ p[0], ref, s, p[3], p[4]])
-    endfor
+    endfo
 
     let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3)
     let hl = L0 + L1 + L2 + L3 + L4 + 8
@@ -62,7 +62,7 @@ def GBRef(h: number, b = 1)
     let l = [ printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR'), sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], i[4]))
-    endfor
+    endfo
 
     # DYNAMIC SYNTAX GROUPS
     #    THESE SYNTAX GROUPS ARE CALCULATED ON THE FLY. PERFORMANCE IS
@@ -73,14 +73,14 @@ def GBRef(h: number, b = 1)
     #     S  SUBJECT
     #     D  DATE
     #     A  AUTHOR
-    Region('C', 1, L0)
+    Region('C', 1, L0 + L1 + 3)
     Region('S', L0 + L1 + 4, L2 + 1, 'c', 'contained display contains=L,P oneline')
 
     #     T  TOP LINES
     #     M  MENU
     #     R  REMOTES
     let rc = len(l)
-    Region('T', 3, len(rs), 'l', 'contains=C,B,S,D,A,R')
+    Region('T', 3, len(rs), 'l', 'contains=C,S,D,A,R')
     Region('M', rc + 3, 5, 'l', 'contains=@NoSpell,P,MC,MK')
     Region('M', rc + 11, 1, 'l', 'contains=@NoSpell,P,MC,MK')
     Region('R', rc + 9, 1, 'l', 'contains=@NoSpell display oneline')
@@ -101,7 +101,7 @@ def GBRef(h: number, b = 1)
     Region('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,L,P')
     for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
-    endfor
+    endfo
     extend(l, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
 
     # FINALLY PRINT EVERYTHING TO THE BUFFER
@@ -129,7 +129,7 @@ def GBCln(hT: number, hB: number)
 enddef
 
 def GBDel(hT: number, hB: number)
-    GBExe(hT, hB, 'git branch -d ' .. expand('<cfile>'))
+    GBExe(hT, hB, 'git branch -d ' .. Cfile())
 enddef
 
 def GBFet(hT = 0, hB = 0)
@@ -140,13 +140,13 @@ enddef
 def GBNav(hT: number, hB: number)
     if col('.') < 10
         GitLog()
-    else
-        GBExe(hT, hB, 'git checkout ' .. expand('<cfile>:t'))
+    el
+        GBExe(hT, hB, 'git checkout ' .. Sr(Cfile()))
     en
 enddef
 
 def GBNew(hT: number, hB: number)
-    GBExe(hT, hB, 'git branch ' .. expand('<cfile>'))
+    GBExe(hT, hB, 'git branch ' .. Cfile())
 enddef
 
 def GBPsh(hT: number, hB: number)
@@ -159,7 +159,7 @@ def GBPru(hT: number, hB: number)
 enddef
 
 def GBRes(hT: number, hB: number)
-    GBExe(hT, hB, 'git reset --hard ' .. expand('<cfile>'))
+    GBExe(hT, hB, 'git reset --hard ' .. Cfile())
 enddef
 
 def GBTag(hT: number, hB: number)

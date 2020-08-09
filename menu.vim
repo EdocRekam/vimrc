@@ -21,7 +21,7 @@ def MnuFilterBuf(buf: number)
         else
             deletebufline(buf, idx)
         en
-    endfor
+    endfo
 enddef
 
 def MnuResetBuf()

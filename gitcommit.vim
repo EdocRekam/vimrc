@@ -18,7 +18,7 @@ def GCQuit(hT: number, hB: number)
         exe printf('au! BufWritePost <buffer=%d>', hT)
         exe 'sil g/^#.*/d | write ' .. ct
     en
-    exe 'sil bw! ' .. hT .. ' ' .. hB
+    sil 'bw! ' .. hT .. ' ' .. hB
 enddef
 
 def GCGo(hT: number, hB: number)
@@ -59,7 +59,7 @@ def GitCommit()
 
     for i in systemlist('git status')
         Say(hT, printf('#%s%s', '' == i ? '' : ' ', i))
-    endfor
+    endfo
     Say(hT, ['#', '# PRESS <F3> TO ABORT OR CLOSE COMMIT WINDOW'])
 
     # POSITION

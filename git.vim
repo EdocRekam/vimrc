@@ -18,13 +18,21 @@
 
 let A = 'edoc rekam'
 let B = 'head master'
-let R = 'hub vso'
+let R = 'hub origin vso'
+
+# SPLIT BRANCH STRING INTO PARTS. ADD EACH PART AS REMOTE
+# vso/1.1 -> ['vso', '1.1']
+def Ab(val: string)
+    for p in split(val, '[/]')
+        B = Appendif(B, p)
+    endfo
+enddef
 
 # REMOTES
 def GRemotes()
     for r in systemlist('git remote')
         R = Appendif(R, r)
-    endfor
+    endfo
 enddef
 
 # IS REMOTE
@@ -32,6 +40,15 @@ def IsR(r: string): bool
     retu -1 != stridx(R, r)
 enddef
 
+# Sr - TrimRemoteName
+# TRIM THE LEADING REMOTE TEXT FROM THE SPECIFIED BRANCH NAME
+def Sr(b: string): string
+    let p = get(split(b, '/'), 0)
+    if IsR(p)
+        retu Sr(strcharpart(b, strchars(p) + 1))
+    en
+    retu b
+enddef
 
 # LAUNCH GIT GUI
 nnoremap <silent><F6> :sil !git gui&<CR>
@@ -42,12 +59,19 @@ def GColor()
     # COMMENTS
     sy match Comment "^\s\s\s\s.*$" contains=L,P,K
 
+    # PAIRS
+    sy region P start="\[" end="\]" contains=@NoSpell,L contained display oneline
+    sy region P start="(" end=")" contains=@NoSpell,L contained display oneline
+    sy region P start="<" end=">" contains=@NoSpell contained display oneline
+    sy region P start="`" end="`" contains=@NoSpell contained display oneline
+    sy region P start='"' end='"' contains=@NoSpell contained display oneline
+
     # DATE
     sy match D "\d\d\d\d-\d\d-\d\d"
 
-    # LINKS - SHA OR []
-    sy match L "[0-9a-f]\{40}" contains=@NoSpell display contained
-    sy region L start="\[" end="\]" contains=@NoSpell display oneline contained
+    # LINKS - SHA OR TFS
+    sy match L "#[0-9]\{5}" contains=@NoSpell contained display oneline
+    sy match L "[0-9a-f]\{40}" contains=@NoSpell contained display oneline
 
     # MENU COMMANDS
     sy keyword MC add all amend branch checkout clean close commit contained create cursor delete fetch gitk gui inspect log menu push prune refresh reset restore status tags under unstage
@@ -55,18 +79,14 @@ def GColor()
     # KEYWORDS
     sy keyword Function anycpu x86 x64
 
-    # PAIRS
-    sy region P start="<" end=">" contains=@NoSpell display oneline
-    sy region P start="`" end="`" contains=@NoSpell display oneline
-    sy region P start='"' end='"' contains=@NoSpell display oneline
-
+    # ORDER SPECIFIC
     sy keyword A A
     sy keyword B B
     sy keyword R R
     sy clear A B R
-    exe 'sy keyword A ' .. A
     exe 'sy keyword B ' .. B
     exe 'sy keyword R ' .. R
+    exe 'sy keyword A ' .. A
 
     # VERSION STRING
     # sy match String "\d\+\.\d\+"
@@ -110,7 +130,7 @@ enddef
 
 def GHead(): string
     Head = trim(system('git rev-parse --abbrev-ref HEAD'))
-    B = Appendif(B, Head)
+    Ab(Head)
     GRemotes()
     retu Head
 enddef
@@ -122,21 +142,21 @@ def GWin(cmd: string, title: string, msg: string)
 enddef
 
 def GitK()
-    let pat = expand('<cfile>')
+    let pat = Cfile()
     if filereadable(pat)
-        exe printf("sil !gitk -- '%s'& ", pat)
+        sil printf("!gitk -- '%s'& ", pat)
     elsei strchars(pat) > 0
-        exe printf("sil !gitk %s&", pat)
+        sil printf("!gitk %s&", pat)
     else
-        exe "sil !gitk&"
+        sil !gitk&
     en
 enddef
 nnoremap <silent><S-F7> :cal <SID>GitK()<CR>
 
 
 def MapClose(hT: number, hB: number)
-    win_execute(win_getid(1), printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d %d'<CR>", hT, hB))
-    win_execute(win_getid(2), printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d %d'<CR>", hT, hB))
+    win_execute(win_getid(1), printf("nnoremap <silent><buffer><F3> :sil bw! %d %d<CR>", hT, hB))
+    win_execute(win_getid(2), printf("nnoremap <silent><buffer><F3> :sil bw! %d %d<CR>", hT, hB))
 enddef
 
 def MapKey(hT: number, hB: number, k: string, f: string)

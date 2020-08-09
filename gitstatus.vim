@@ -24,7 +24,7 @@ def GSRef(hT: number, hB: number, b = 1)
     Region('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,LBL,L,P')
     for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
-    endfor
+    endfo
 
     extend(l, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
     Say(hT, l)
@@ -64,21 +64,21 @@ def GSPsh(hT: number, hB: number)
 enddef
 
 def GSRes(hT: number, hB: number)
-    let o = expand('<cfile>')
+    let o = Cfile()
     if filereadable(o)
         GSex(hT, hB, 'git restore ' .. o)
     en
 enddef
 
 def GSUns(hT: number, hB: number)
-    let o = expand('<cfile>')
+    let o = Cfile()
     if filereadable(o)
         GSex(hT, hB, 'git restore --staged ' .. o)
     en
 enddef
 
 def GSIg(hT: number, hB: number)
-    let o = expand('<cfile>')
+    let o = Cfile()
     :tabnew .gitignore
     if filereadable(o)
         append('$', o)
@@ -88,7 +88,7 @@ enddef
 
 # INSPECT THE FILE UNDER CURSOR (BEFORE|AFTER)
 def GSIns(hT: number, hB: number)
-    let o = expand('<cfile>')
+    let o = Cfile()
     if filereadable(o)
         # RIGHT = AFTER
         exe 'tabnew ' .. o

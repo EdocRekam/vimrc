@@ -10,7 +10,7 @@ def Align(value: string)
         if col > colAlign
             colAlign = col + 1
         en
-    endfor
+    endfo
     let cnt = 0
     for line in getline(nr, "'>")
         let col = stridx(line, value)
@@ -22,7 +22,7 @@ def Align(value: string)
         setline(nr, line)
         nr += 1
         cnt += 1
-    endfor
+    endfo
     norm gv
 enddef
 
@@ -34,7 +34,7 @@ def Enum(base: number = 0)
         setline(nr, line)
         nr += 1
         cnt += 1
-    endfor
+    endfo
     norm gv
 enddef
 
@@ -48,7 +48,7 @@ def Widest(rows: list<list<string>>, col: number, min: number, max = 85): number
                 retu max
             en
         en
-    endfor
+    endfo
     retu c
 enddef
 
@@ -56,15 +56,15 @@ def OpenWin(title: string, blank = 1): number
     let h = bufnr(title)
     let ids = win_findbuf(h)
     if empty(ids)
-        exe 'sil new ' .. title
-        exe "norm gg\<c-w>J"
+        sil 'new ' .. title
+        :norm gg\<c-w>J
         resize 20
         h = bufnr(title)
         Sbo(h)
     else
         win_gotoid(get(ids, 0))
         if blank
-            exe 'sil norm ggvGD'
+            sil norm ggvGD
         en
     en
     retu h
