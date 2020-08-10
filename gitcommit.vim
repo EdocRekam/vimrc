@@ -1,40 +1,44 @@
 # COMMIT TEMPLATE
 let ct = '.git/GITGUI_MSG'
 
-def GCShellExit(h: number, j: job, code: number)
-    if 0 == code && filereadable(ct)
+# EXIT JOB CALLBACK - DELETE COMMIT TEMPLATE IS EXIT CODE IS 0
+def GC1(j: job, c: number)
+    if 0 == c && filereadable(ct)
         delete(ct)
     en
 enddef
 
-def GCShell(h: number, cmd: string)
-    let f = funcref("s:SayCallback", [h])
-    let e = funcref("s:GCShellExit", [h])
-    job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
+# F3 QUIT - THE USER SAVED COMMIT MESSAGE IF THE TOP WINDOW IS
+# LOCKED; OTHERWISE STRIP COMMENTS FROM COMMIT MESSAGE AND STASH IT
+# FOR FURTHER RECALL. CLOSE TOP/BOTTOM WINDOWS
+def GC2(hT: number, hB: number)
+    if 1 == getbufvar(hT, '&modifiable')
+        exe 'au! BufWritePost <buffer=' .. hT .. '>'
+        win_execute(win_getid(1), 'g/^#.*$/d')
+        :up
+    en
+    exe 'bw! ' .. hT .. ' ' .. hB
 enddef
 
-def GCQuit(hT: number, hB: number)
-    win_execute(win_getid(1), 'g/^#.*$/d')
-    # if 1 == getbufvar(hT, '&modifiable')
-    #    exe printf('au! BufWritePost <buffer=%d>', hT)
-    #    up
-    # en
-    # exe 'bw! ' .. hT .. ' ' .. hB
-enddef
-
-def GCGo(hT: number, hB: number)
-    let cmd = 'git commit --cleanup=strip -F ' .. ct
+# RUN THIS WHEN THE COMMIT MESSAGE WAS SAVED. THIS MEANS WE CAN LOCK
+# THE TOP WINDOW AND RUN THE ACTUAL COMMIT
+def GC3(hT: number, hB: number)
+    # LOCK TOP WINDOW
     Say(hB, 'Switching to read-only mode.')
-    Say(hB, cmd)
     sil setbufvar(hT, '&modifiable', 0)
-    GCShell(hB, cmd)
+
+    let c = 'git commit --cleanup=strip -F ' .. ct
+    Say(hB, c)
+    let f = funcref("SayCallback", [hB])
+    job_start(c, #{out_cb: f, err_cb: f, exit_cb: GC1})
 enddef
 
 def GitCommit()
-    let now = reltime()
+    # NOW
+    let n = reltime()
 
     # BOTTOM -------------------------------------------------------------
-    exe 'tabnew Commit - ' .. reltimestr(now)
+    exe 'tabnew Commit - ' .. reltimestr(n)
     settabvar(tabpagenr(), 'title', 'COMMIT')
     let hB = bufnr()
     Sbo(hB)
@@ -67,10 +71,10 @@ def GitCommit()
     norm gg
     :star
 
-    exe printf('au! BufWritePost <buffer=%d> ++once :cal GCGo(%d, %d)', hT, hT, hB)
-    MapKey(hT, hB, 'F3', 'GCQuit')
+    exe printf('au! BufWritePost <buffer=%d> ++once :cal GC3(%d, %d)', hT, hT, hB)
+    MapKey(hT, hB, 'F3', 'GC2')
 
     # PERFORMANCE
-    Say(hT, '# Time:' .. reltimestr(reltime(now, reltime())))
+    Say(hT, '# Time:' .. reltimestr(reltime(n, reltime())))
 enddef
 
