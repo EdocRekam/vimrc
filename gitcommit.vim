@@ -24,8 +24,9 @@ enddef
 # THE TOP WINDOW AND RUN THE ACTUAL COMMIT
 def GC3(hT: number, hB: number)
     # LOCK TOP WINDOW
+    :stopi
     Say(hB, 'Switching to read-only mode.')
-    sil setbufvar(hT, '&modifiable', 0)
+    setbufvar(hT, '&modifiable', 0)
 
     let c = 'git commit --cleanup=strip -F ' .. ct
     Say(hB, c)
