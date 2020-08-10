@@ -44,7 +44,7 @@ def GitCommit()
     exe 'split ' .. ct
     let hT = bufnr()
     setbufvar(hT, '&syntax', 'gitcommit')
-    :2resize 20'
+    :2resize 20
 
     # MISSING COMMIT TEMPLATE MEANS THIS IS A NEW COMMIT SO PREFIX
     # TWO BLANK LINKS
