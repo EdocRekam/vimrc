@@ -25,7 +25,7 @@ def GCGo(hT: number, hB: number)
     let cmd = 'git commit --cleanup=strip -F ' .. ct
     Say(hB, 'Switching to read-only mode.')
     Say(hB, cmd)
-    setbufvar(hT, '&modifiable', 0)
+    sil setbufvar(hT, '&modifiable', 0)
     GCShell(hB, cmd)
 enddef
 
