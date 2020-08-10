@@ -46,7 +46,7 @@ def g:ZoomOut()
     en
 enddef
 
-nnoremap <silent><C-S-LEFT> :cal g:ZoomOut()<CR>
-nnoremap <silent><C-S-RIGHT> :cal g:ZoomIn()<CR>
+nn <silent><C-S-LEFT> :cal g:ZoomOut()<CR>
+nn <silent><C-S-RIGHT> :cal g:ZoomIn()<CR>
 
 defcompile

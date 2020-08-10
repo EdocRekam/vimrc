@@ -26,9 +26,9 @@ def FindInFile(val: string)
         retu
     en
     if 34 == strgetchar(val, 0)
-        sil printf("grep! -rn  '%s' *", trim(val, '"'))
+        exe printf("sil grep! -rn  '%s' *", trim(val, '"'))
     el
-        sil printf("grep! -rni '%s' *", val)
+        exe printf("sil grep! -rni '%s' *", val)
     en
     copen 35
 enddef
@@ -62,14 +62,14 @@ def Rename(): void
         exe '%s/' .. expand('<cword>') .. '/' .. val .. '/g'
     en
 enddef
-nnoremap <silent><F2> :cal <SID>Rename()<CR>
+nn <silent><F2> :cal <SID>Rename()<CR>
 
 let Orient = 'H'
 def Rotate()
     Orient = Orient == 'H' ? 'K' : 'H'
     exe 'wincmd ' .. Orient
 enddef
-nnoremap <silent><S-F12> :cal <SID>Rotate()<CR>
+nn <silent><S-F12> :cal <SID>Rotate()<CR>
 
 def Say(h: number, msg: any)
     let c = get(get(getbufinfo(h), 0), 'linecount')
@@ -90,7 +90,7 @@ def SourceFile()
     up
     so %
 enddef
-nnoremap <silent><S-F5> :cal <SID>SourceFile()<CR>
+nn <silent><S-F5> :cal <SID>SourceFile()<CR>
 
 def Sort()
     norm gv

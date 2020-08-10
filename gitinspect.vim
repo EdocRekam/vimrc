@@ -265,7 +265,7 @@ def GitInspect(obj: string)
 
     # LOCAL KEY BINDS
     MapClose(hT, hB)
-    let cmd = 'nnoremap <silent><buffer><'
+    let cmd = 'nn <silent><buffer><'
     exe printf("%s2-LeftMouse> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
     exe printf("%sF4> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
     exe printf("%sF6> :cal <SID>GIRef(%d, %d, '%s')<CR>", cmd, hT, hB, obj)

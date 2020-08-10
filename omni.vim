@@ -41,37 +41,37 @@ set completepopup=highlight:Pmenu,border:off
     " autocmd CursorHold *.cs OmniSharpTypeLookup
 
     " The following commands are contextual, based on the cursor position.
-    " autocmd FileType cs nnoremap <buffer> gd :OmniSharpGotoDefinition<CR>
-    " autocmd FileType cs nnoremap <buffer> <Leader>fi :OmniSharpFindImplementations<CR>
-    " autocmd FileType cs nnoremap <buffer> <Leader>fs :OmniSharpFindSymbol<CR>
-    " autocmd FileType cs nnoremap <buffer> <Leader>fu :OmniSharpFindUsages<CR>
+    " autocmd FileType cs nn <buffer> gd :OmniSharpGotoDefinition<CR>
+    " autocmd FileType cs nn <buffer> <Leader>fi :OmniSharpFindImplementations<CR>
+    " autocmd FileType cs nn <buffer> <Leader>fs :OmniSharpFindSymbol<CR>
+    " autocmd FileType cs nn <buffer> <Leader>fu :OmniSharpFindUsages<CR>
 
     " Finds members in the current buffer
-    " autocmd FileType cs nnoremap <buffer> <Leader>fm :OmniSharpFindMembers<CR>
+    " autocmd FileType cs nn <buffer> <Leader>fm :OmniSharpFindMembers<CR>
 
-    " autocmd FileType cs nnoremap <buffer> <Leader>fx :OmniSharpFixUsings<CR>
-    " autocmd FileType cs nnoremap <buffer> <Leader>tt :OmniSharpTypeLookup<CR>
-    " autocmd FileType cs nnoremap <buffer> <Leader>dc :OmniSharpDocumentation<CR>
-    " autocmd FileType cs nnoremap <buffer> <C-\> :OmniSharpSignatureHelp<CR>
+    " autocmd FileType cs nn <buffer> <Leader>fx :OmniSharpFixUsings<CR>
+    " autocmd FileType cs nn <buffer> <Leader>tt :OmniSharpTypeLookup<CR>
+    " autocmd FileType cs nn <buffer> <Leader>dc :OmniSharpDocumentation<CR>
+    " autocmd FileType cs nn <buffer> <C-\> :OmniSharpSignatureHelp<CR>
     " autocmd FileType cs inoremap <buffer> <C-\> <C-o>:OmniSharpSignatureHelp<CR>
 
     " Navigate up and down by method/property/field
-    " autocmd FileType cs nnoremap <buffer> <C-k> :OmniSharpNavigateUp<CR>
-    " autocmd FileType cs nnoremap <buffer> <C-j> :OmniSharpNavigateDown<CR>
+    " autocmd FileType cs nn <buffer> <C-k> :OmniSharpNavigateUp<CR>
+    " autocmd FileType cs nn <buffer> <C-j> :OmniSharpNavigateDown<CR>
 
     " Find all code errors/warnings for the current solution and populate the quickfix window
-    " autocmd FileType cs nnoremap <buffer> <Leader>cc :OmniSharpGlobalCodeCheck<CR>
+    " autocmd FileType cs nn <buffer> <Leader>cc :OmniSharpGlobalCodeCheck<CR>
 " augroup END
 
 " Contextual code actions (uses fzf, CtrlP or unite.vim when available)
-" nnoremap <Leader><Space> :OmniSharpGetCodeActions<CR>
+" nn <Leader><Space> :OmniSharpGetCodeActions<CR>
 
 " Run code actions with text selected in visual mode to extract method
 " xnoremap <Leader><Space> :cal OmniSharp#GetCodeActions('visual')<CR>
 
-" nnoremap <Leader>cf :OmniSharpCodeFormat<CR>
+" nn <Leader>cf :OmniSharpCodeFormat<CR>
 
 " Start the OmniSharp server for the current solution
-" nnoremap <Leader>ss :OmniSharpStartServer<CR>
-" nnoremap <Leader>sp :OmniSharpStopServer<CR>
+" nn <Leader>ss :OmniSharpStartServer<CR>
+" nn <Leader>sp :OmniSharpStopServer<CR>
 

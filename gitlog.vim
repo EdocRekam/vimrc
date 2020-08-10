@@ -123,7 +123,7 @@ def GLog(obj: string)
 
     # LOCAL KEY BINDS
     MapClose(hT, hB)
-    let m = 'nnoremap <silent><buffer><'
+    let m = 'nn <silent><buffer><'
     exe printf('%sF4> :cal <SID>GLNav()<CR>', m)
     exe printf("%sF7> :cal <SID>GLRef(%d, '%s')<CR>", m, hT, obj)
     exe printf("%s2-LeftMouse> :cal <SID>GLNav()<CR>", m)
@@ -134,7 +134,7 @@ def GitLog()
     let o = Cfile()
     GLog(strchars(o) > 5 ? o : 'HEAD')
 enddef
-nnoremap <F7> :sil cal <SID>GitLog()<CR>
+nn <F7> :sil cal <SID>GitLog()<CR>
 
 def GLNav()
     let L = gettabvar(tabpagenr(), 'L')

@@ -51,7 +51,7 @@ def Sr(b: string): string
 enddef
 
 # LAUNCH GIT GUI
-nnoremap <silent><F6> :sil !git gui&<CR>
+nn <silent><F6> :sil !git gui&<CR>
 
 def GColor()
     sy case ignore
@@ -151,15 +151,15 @@ def GitK()
         sil !gitk&
     en
 enddef
-nnoremap <silent><S-F7> :cal <SID>GitK()<CR>
+nn <silent><S-F7> :cal <SID>GitK()<CR>
 
 
 def MapClose(hT: number, hB: number)
-    win_execute(win_getid(1), printf("nnoremap <silent><buffer><F3> :sil bw! %d %d<CR>", hT, hB))
-    win_execute(win_getid(2), printf("nnoremap <silent><buffer><F3> :sil bw! %d %d<CR>", hT, hB))
+    win_execute(win_getid(1), printf("nn <silent><buffer><F3> :sil bw! %d %d<CR>", hT, hB))
+    win_execute(win_getid(2), printf("nn <silent><buffer><F3> :sil bw! %d %d<CR>", hT, hB))
 enddef
 
 def MapKey(hT: number, hB: number, k: string, f: string)
-    exe printf('nnoremap <silent><buffer><%s> :sil cal <SID>%s(%d, %d)<CR>', k, f, hT, hB)
+    exe printf('nn <silent><buffer><%s> :sil cal <SID>%s(%d, %d)<CR>', k, f, hT, hB)
 enddef
 

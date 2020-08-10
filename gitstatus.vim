@@ -154,7 +154,7 @@ def GitStatus()
         MapKey(hT, hB, 'PageDown', 'GSFet')
         MapKey(hT, hB, 'PageUp', 'GSPsh')
 
-        nnoremap <silent><buffer><END> :cal <SID>GitCommit()<CR>
+        nn <silent><buffer><END> :cal <SID>GitCommit()<CR>
     en
 enddef
-nnoremap <F8> :sil cal <SID>GitStatus()<CR>
+nn <F8> :sil cal <SID>GitStatus()<CR>

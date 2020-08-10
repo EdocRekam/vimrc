@@ -21,7 +21,7 @@ def GitShow(obj: string, pat: string, title: string = ''): number
     settabvar(tabpagenr(), 'title', t)
 
     # LOCAL KEY BINDS
-    exe printf("nnoremap <silent><buffer><F3> :exe 'sil bw! %d'<CR> ", h)
+    exe printf("nn <silent><buffer><F3> :exe 'sil bw! %d'<CR> ", h)
 
     retu h
 enddef

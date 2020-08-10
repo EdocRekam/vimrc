@@ -1,11 +1,19 @@
 vim9script
 
 def! g:Unique()
-    let lines = getline("'<", "'>")->uniq()
-    for l in lines
-        echom l
-    endfor
-    setline("'<", lines)
+    let src = getline("'<", "'>")
+    let dst: list<string>
+    for l in src
+        if index(dst, l, 0, 0) < 0
+            add(dst, l)
+        en
+    endfo
+    let x = len(src) - len(dst)
+    wh x > 0
+        add(dst, '')
+        x -= 1
+    endw
+    setline("'<", dst)
 enddef
 
 defcompile
@@ -13,8 +21,8 @@ defcompile
 # 1
 # 2
 # 3
-# 1
 # 5
-# 1
 # 6
+
+
 
