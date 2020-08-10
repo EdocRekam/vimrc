@@ -14,7 +14,7 @@ def GCShell(h: number, cmd: string)
 enddef
 
 def GCQuit(hT: number, hB: number)
-    if 1 == getbufvar(hT, '&modifiable')
+    if getbufvar(hT, '&modifiable')
         exe printf('au! BufWritePost <buffer=%d>', hT)
         exe 'sil g/^#.*/d | write ' .. ct
     en
