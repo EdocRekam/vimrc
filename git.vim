@@ -160,6 +160,6 @@ def MapClose(hT: number, hB: number)
 enddef
 
 def MapKey(hT: number, hB: number, k: string, f: string)
-    exe printf('nn <silent><buffer><%s> :sil cal <SID>%s(%d, %d)<CR>', k, f, hT, hB)
+    win_execute(win_getid(1), printf('nn <silent><buffer><%s> :sil cal <SID>%s(%d, %d)<CR>', k, f, hT, hB))
 enddef
 

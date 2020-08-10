@@ -14,11 +14,12 @@ def GCShell(h: number, cmd: string)
 enddef
 
 def GCQuit(hT: number, hB: number)
-    if getbufvar(hT, '&modifiable')
-        exe printf('au! BufWritePost <buffer=%d>', hT)
-        exe 'sil g/^#.*/d | write ' .. ct
-    en
-    sil 'bw! ' .. hT .. ' ' .. hB
+    win_execute(win_getid(1), 'g/^#.*$/d')
+    # if 1 == getbufvar(hT, '&modifiable')
+    #    exe printf('au! BufWritePost <buffer=%d>', hT)
+    #    up
+    # en
+    # exe 'bw! ' .. hT .. ' ' .. hB
 enddef
 
 def GCGo(hT: number, hB: number)
