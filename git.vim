@@ -155,8 +155,8 @@ nn <silent><S-F7> :cal <SID>GitK()<CR>
 
 
 def MapClose(hT: number, hB: number)
-    win_execute(win_getid(1), printf("nn <silent><buffer><F3> :sil bw! %d %d<CR>", hT, hB))
-    win_execute(win_getid(2), printf("nn <silent><buffer><F3> :sil bw! %d %d<CR>", hT, hB))
+    win_execute(win_getid(1), printf("no <silent><buffer><F3> :sil bw! %d %d<CR>", hT, hB))
+    win_execute(win_getid(2), printf("no <silent><buffer><F3> :sil bw! %d %d<CR>", hT, hB))
 enddef
 
 def MapKey(hT: number, hB: number, k: string, f: string)
