@@ -138,8 +138,19 @@ def ToLf()
 enddef
 
 def Unique()
-    norm gv
-    # :sil '<,'>%!uniq
+    let src = getline("'<", "'>")
+    let dst: list<string>
+    for l in src
+        if index(dst, l, 0, 0) < 0
+            add(dst, l)
+        en
+    endfo
+    let x = len(src) - len(dst)
+    wh x > 0
+        add(dst, '')
+        x -= 1
+    endw
+    setline("'<", dst)
     norm gv
 enddef
 
