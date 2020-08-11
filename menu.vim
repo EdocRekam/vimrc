@@ -164,7 +164,7 @@ def MnuCallback(wid: number, result: number): number
     elsei 17 == id
         GitK()
     elseif 18 == id
-        exe 'sil !git gui&'
+        sil !git gui&
     elsei 19 == id
         GLog(Head)
     elseif 21 == id
@@ -192,7 +192,7 @@ def MnuCallback(wid: number, result: number): number
     elseif 29 == id
         DotnetTest()
     elseif 30 == id
-        DotnetTest(expand('<cword>'))
+        DotnetTest(T9())
     elsei 32 == id
         :so $VIMRUNTIME/syntax/hitest.vim
     elseif 35 == id

@@ -1,3 +1,8 @@
+# MAP SPECIFIED KEY TO FUNCTION IN NORMAL MODE
+def T0(k = '', f = '')
+    exe 'nn <silent><' .. k .. '> :cal <SID>' .. f .. '()<CR>'
+enddef
+
 # EXPAND CURSOR UNDER STRING TO FILE. SYNTAX SUGAR
 def T1(): string
     retu expand('<cfile>')
@@ -28,7 +33,7 @@ def T5()
     up
     so %
 enddef
-nn <silent><S-F5> :cal <SID>T5()<CR>
+T0('S-F5', 'T5')
 
 # SOURCE SESSION.VIM IF PRESENT
 def T6()
@@ -44,6 +49,23 @@ def T7(x: number, val: string): number
     return y > x ? y : x
 enddef
 
+# RETURN THE CURRENT SELECTION AS ARRAY
+def T8(): list<string>
+    retu getline("'<", "'>")
+enddef
+
+# RETURN WORD UNDER CURSOR - SYNTAX SUGAR
+def T9(): string
+    retu expand('<cword>')
+enddef
+
+let _T10 = 'H'
+def T10()
+    _T10 = _T10 == 'H' ? 'K' : 'H'
+    exe 'winc ' .. _T10
+enddef
+T0('S-F12', 'T10')
+
 # WRITE MSG TO END OF BUFFER
 def Say(h: number, msg: any)
     let c = get(get(getbufinfo(h), 0), 'linecount')
@@ -56,41 +78,31 @@ def SayCallback(h: number, c: channel, msg: string)
     Say(h, msg)
 enddef
 
-def FindInFile(val: string)
-    if 0 == strchars(val)
+def SayShell(h: number, cmd: string)
+    let f = funcref(SayCallback, [h])
+    job_start(cmd, #{out_cb: f, err_cb: f})
+enddef
+
+def FindInFile(v: string)
+    if 0 == strchars(v)
         retu
     en
-    if 34 == strgetchar(val, 0)
-        exe printf("sil grep! -rn  '%s' *", trim(val, '"'))
+    if 34 == strgetchar(v, 0)
+        exe "sil grep! -rn  '" .. trim(v, '"') .. "' *"
     el
-        exe printf("sil grep! -rni '%s' *", val)
+        exe "sil grep! -rni '" .. v .. "' *"
     en
     copen 35
 enddef
 command! -nargs=1 Find :cal <SID>FindInFile('<args>')
 
-
 def Rename(): void
     let v = input('Value: ')
     if '' != v
-        exe '%s/' .. expand('<cword>') .. '/' .. v .. '/g'
+        exe '%s/' .. T9() .. '/' .. v .. '/g'
     en
 enddef
-nn <silent><F2> :cal <SID>Rename()<CR>
-
-let Orient = 'H'
-def Rotate()
-    Orient = Orient == 'H' ? 'K' : 'H'
-    exe 'wincmd ' .. Orient
-enddef
-nn <silent><S-F12> :cal <SID>Rotate()<CR>
-
-
-
-def SayShell(h: number, cmd: string)
-    let f = funcref("s:SayCallback", [h])
-    job_start(cmd, #{out_cb: f, err_cb: f})
-enddef
+T0('F2', 'Rename')
 
 # EXPAND TAB TO SPACE
 def F6()
@@ -118,7 +130,7 @@ enddef
 
 # REMOVE DUPLICATES FROM CURRENT SELECTION
 def F22()
-    let src = getline("'<", "'>")
+    let src = T8()
     let dst: list<string>
     for l in src
         if index(dst, l, 0, 0) < 0
@@ -141,31 +153,21 @@ enddef
 
 # SORT SELECTION ASCENDING
 def F24()
-    setline("'<", getline("'<", "'>")->sort())
+    setline("'<", T8()->sort())
 enddef
 
 # SORT SELECTION ASCENDING (IGNORE CASE)
 def F25()
-    setline("'<", getline("'<", "'>")->sort(1))
+    setline("'<", T8()->sort(1))
 enddef
 
 # SORT SELECTION DESCENDING
 def F26()
-    setline("'<", getline("'<", "'>")->sort()->reverse())
+    setline("'<", T8()->sort()->reverse())
 enddef
 
 # SORT SELECTION DESCENDING (IGNORE CASE)
 def F27()
-    setline("'<", getline("'<", "'>")->sort(1)->reverse())
+    setline("'<", T8()->sort(1)->reverse())
 enddef
 
-
-if has('linux')
-    def VimDir(): string
-        retu $HOME .. '/.vim/'
-    enddef
-else
-    def VimDir(): string
-        retu $HOME .. '/vimfiles/'
-    enddef
-en

@@ -73,7 +73,7 @@ def GitCommit()
     :star
 
     exe printf('au! BufWritePost <buffer=%d> ++once :cal GC3(%d, %d)', hT, hT, hB)
-    MapKey(hT, hB, 'F3', 'GC2')
+    G1(hT, hB, 'F3', 'GC2')
 
     # PERFORMANCE
     Say(hT, '# Time:' .. reltimestr(reltime(n, reltime())))

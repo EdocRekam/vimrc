@@ -39,5 +39,5 @@ def GitShow2(objL: string, patL: string, objR: string, patR: string)
     GShow(hL, objL, patL)
 
     # LOCAL KEY BINDS
-    MapClose(hL, hR)
+    G0(hL, hR)
 enddef

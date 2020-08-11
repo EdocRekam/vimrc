@@ -6,5 +6,5 @@ def GotoDef()
     # else
     # OmniSharpGotoDefinition()
 enddef
-nn <silent><F4> :cal GotoDef()<CR>
+T0('F4', 'GotoDef')
 

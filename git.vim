@@ -1,3 +1,15 @@
+# MAP F3 KEY TO CLOSE TOP AND BOTTOM WINDOW AND DELETE BUFFERS
+# ASSOCIATED WITH THEM
+def G0(hT: number, hB: number)
+    let f = "no <silent><buffer><F3> :sil bw! %d %d<CR>"
+    win_execute(win_getid(1), printf(f, hT, hB))
+    win_execute(win_getid(2), printf(f, hT, hB))
+enddef
+
+# COMMON KEY MAPPING USED IN GIT FUNCTIONS
+def G1(hT: number, hB: number, k: string, f: string)
+    win_execute(win_getid(1), printf('nn <silent><buffer><%s> :sil cal <SID>%s(%d, %d)<CR>', k, f, hT, hB))
+enddef
 
 # GENERALLY SYNTAX HIGHLIGHTING WORKS A LOT FASTER WITH A BUNCH OF
 # KEYWORDS INSTEAD OF REGULAR EXPRESSIONS. MY GIT FUNCTIONS BUILD UP
@@ -151,15 +163,7 @@ def GitK()
         sil !gitk&
     en
 enddef
-nn <silent><S-F7> :cal <SID>GitK()<CR>
+T0('S-F7', 'GitK')
 
 
-def MapClose(hT: number, hB: number)
-    win_execute(win_getid(1), printf("no <silent><buffer><F3> :sil bw! %d %d<CR>", hT, hB))
-    win_execute(win_getid(2), printf("no <silent><buffer><F3> :sil bw! %d %d<CR>", hT, hB))
-enddef
-
-def MapKey(hT: number, hB: number, k: string, f: string)
-    win_execute(win_getid(1), printf('nn <silent><buffer><%s> :sil cal <SID>%s(%d, %d)<CR>', k, f, hT, hB))
-enddef
 

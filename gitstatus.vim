@@ -28,7 +28,7 @@ def GSRef(hT: number, hB: number, b = 1)
 
     extend(l, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
     Say(hT, l)
-    win_execute(win_getid(1), 'norm gg')
+    win_execute(win_getid(1), ':1')
 enddef
 
 def GSeXit(hT: number, hB: number, j: job, code: number)
@@ -54,12 +54,12 @@ def GCAmd(hT: number, hB: number)
 enddef
 
 def GSFet(hT: number, hB: number)
-    let o = expand('<cword>')
+    let o = T9()
     GSex(hT, hB, IsR(o) ? 'git fetch ' .. o .. ' ' .. Head : 'git fetch')
 enddef
 
 def GSPsh(hT: number, hB: number)
-    let o = expand('<cword>')
+    let o = T9()
     GSex(hT, hB, IsR(o) ? 'git push -u ' .. o .. ' ' .. Head : 'git push')
 enddef
 
@@ -104,7 +104,7 @@ def GSIns(hT: number, hB: number)
         windo set scb
 
         # LOCAL KEY BINDS
-        MapClose(hL, hR)
+        G0(hL, hR)
     en
 enddef
 
@@ -143,18 +143,18 @@ def GitStatus()
         sy keyword LBL author commit date
 
         # LOCAL KEY BINDS
-        MapClose(hT, hB)
-        MapKey(hT, hB, 'F2', 'GCAmd')
-        MapKey(hT, hB, 'F4', 'GSIns')
-        MapKey(hT, hB, 'F8', 'GSRef')
-        MapKey(hT, hB, 'c-i', 'GSIg')
-        MapKey(hT, hB, 'DEL', 'GSUns')
-        MapKey(hT, hB, 'INS', 'GSAdd')
-        MapKey(hT, hB, 'S-HOME', 'GSRes')
-        MapKey(hT, hB, 'PageDown', 'GSFet')
-        MapKey(hT, hB, 'PageUp', 'GSPsh')
+        G0(hT, hB)
+        G1(hT, hB, 'F2', 'GCAmd')
+        G1(hT, hB, 'F4', 'GSIns')
+        G1(hT, hB, 'F8', 'GSRef')
+        G1(hT, hB, 'c-i', 'GSIg')
+        G1(hT, hB, 'DEL', 'GSUns')
+        G1(hT, hB, 'INS', 'GSAdd')
+        G1(hT, hB, 'S-HOME', 'GSRes')
+        G1(hT, hB, 'PageDown', 'GSFet')
+        G1(hT, hB, 'PageUp', 'GSPsh')
 
         nn <silent><buffer><END> :cal <SID>GitCommit()<CR>
     en
 enddef
-nn <F8> :sil cal <SID>GitStatus()<CR>
+T0('F8', 'GitStatus')

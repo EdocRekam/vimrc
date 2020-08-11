@@ -133,7 +133,7 @@ def GBDel(hT: number, hB: number)
 enddef
 
 def GBFet(hT = 0, hB = 0)
-    let o = expand('<cword>')
+    let o = T9()
     GBExe(hT, hB, IsR(o) ? 'git fetch ' .. o .. ' ' .. Head : 'git fetch')
 enddef
 
@@ -150,12 +150,12 @@ def GBNew(hT: number, hB: number)
 enddef
 
 def GBPsh(hT: number, hB: number)
-    let o = expand('<cword>')
+    let o = T9()
     GBExe(hT, hB, IsR(o) ? 'git push ' .. o .. ' ' .. Head : 'git push')
 enddef
 
 def GBPru(hT: number, hB: number)
-    GBExe(hT, hB, 'git remote prune ' .. expand('<cword>'))
+    GBExe(hT, hB, 'git remote prune ' .. T9())
 enddef
 
 def GBRes(hT: number, hB: number)
@@ -163,7 +163,7 @@ def GBRes(hT: number, hB: number)
 enddef
 
 def GBTag(hT: number, hB: number)
-    GBExe(hT, hB, 'git fetch --tags ' .. expand('<cword>'))
+    GBExe(hT, hB, 'git fetch --tags ' .. T9())
 enddef
 
 def GitBranch()
@@ -194,16 +194,16 @@ def GitBranch()
     sy keyword LBL author branch commit date merge remote subject
 
     # LOCAL KEY BINDS
-    MapClose(hT, hB)
-    MapKey(hT, hB, 'F4', 'GBNav')
-    MapKey(hT, 1, 'F5', 'GBRef')
-    MapKey(hT, hB, 'c-p', 'GBPru')
-    MapKey(hT, hB, 'c-t', 'GBTag')
-    MapKey(hT, hB, 's-DEL', 'GBDel')
-    MapKey(hT, hB, 's-END', 'GBRes')
-    MapKey(hT, hB, 's-HOME', 'GBCln')
-    MapKey(hT, hB, 's-INS', 'GBNew')
-    MapKey(hT, hB, 's-PageDown', 'GBFet')
-    MapKey(hT, hB, 's-PageUp', 'GBPsh')
+    G0(hT, hB)
+    G1(hT, hB, 'F4', 'GBNav')
+    G1(hT, 1, 'F5', 'GBRef')
+    G1(hT, hB, 'c-p', 'GBPru')
+    G1(hT, hB, 'c-t', 'GBTag')
+    G1(hT, hB, 's-DEL', 'GBDel')
+    G1(hT, hB, 's-END', 'GBRes')
+    G1(hT, hB, 's-HOME', 'GBCln')
+    G1(hT, hB, 's-INS', 'GBNew')
+    G1(hT, hB, 's-PageDown', 'GBFet')
+    G1(hT, hB, 's-PageUp', 'GBPsh')
 enddef
 nn <F5> :sil cal <SID>GitBranch()<CR>

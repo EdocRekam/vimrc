@@ -264,7 +264,7 @@ def GitInspect(obj: string)
     hi link BAH Keyword
 
     # LOCAL KEY BINDS
-    MapClose(hT, hB)
+    G0(hT, hB)
     let cmd = 'nn <silent><buffer><'
     exe printf("%s2-LeftMouse> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
     exe printf("%sF4> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)

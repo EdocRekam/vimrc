@@ -122,7 +122,7 @@ def GLog(obj: string)
     sy keyword Identifier author commit date tag tree
 
     # LOCAL KEY BINDS
-    MapClose(hT, hB)
+    G0(hT, hB)
     let m = 'nn <silent><buffer><'
     exe printf('%sF4> :cal <SID>GLNav()<CR>', m)
     exe printf("%sF7> :cal <SID>GLRef(%d, '%s')<CR>", m, hT, obj)
@@ -141,6 +141,6 @@ def GLNav()
     if col('.') > L[0] + L[1] + 4
         GLog(get(split(getline('.')), 1))
     else
-        GitInspect(expand('<cword>'))
+        GitInspect(T9())
     en
 enddef

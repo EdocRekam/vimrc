@@ -39,7 +39,14 @@ printf "Building .vimrc . . .\n"
 cat "${CWD}/vimrc.vim" > "${HOME}/.vimrc"
 cat "${CWD}/nerdtree.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/keymap.vim" >> "${HOME}/.vimrc"
+
 cat "${CWD}/trivial.vim" >> "${HOME}/.vimrc"
+if [ "${OSTYPE}" == "linux" ]; then
+    cat "${CWD}/trivial-linux.vim" >> "${HOME}/.vimrc"
+else
+    cat "${CWD}/trivial-win32.vim" >> "${HOME}/.vimrc"
+fi
+
 cat "${CWD}/functions.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/debug.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/git.vim" >> "${HOME}/.vimrc"
