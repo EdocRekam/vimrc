@@ -116,7 +116,7 @@ def GLog(obj: string)
     T3(hT)
 
     # BASIC SYNTAX/COLOR
-    GColor()
+    G7()
 
     # LABELS
     sy keyword Identifier author commit date tag tree

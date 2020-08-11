@@ -65,7 +65,7 @@ enddef
 # LAUNCH GIT GUI
 nn <silent><F6> :sil !git gui&<CR>
 
-def GColor()
+def G7()
     sy case ignore
 
     # COMMENTS
@@ -153,6 +153,7 @@ def GWin(cmd: string, title: string, msg: string)
     SayShell(h, cmd)
 enddef
 
+# LAUNCH GITK USING FILE UNDER CURSOR
 def GitK()
     let p = T1()
     if filereadable(p)

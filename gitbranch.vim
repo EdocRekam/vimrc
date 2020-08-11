@@ -188,7 +188,7 @@ def GitBranch()
     T3(hT)
 
     # SYNTAX
-    GColor()
+    G7()
 
     # LABELS
     sy keyword LBL author branch commit date merge remote subject

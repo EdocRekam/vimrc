@@ -137,7 +137,7 @@ def GitStatus()
         # SYNTAX
         sy match L "modified:.*$" display
         sy match DiffDelete "deleted:.*$" display
-        GColor()
+        G7()
 
         # LABELS
         sy keyword LBL author commit date

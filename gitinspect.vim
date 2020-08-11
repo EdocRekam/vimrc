@@ -255,7 +255,7 @@ def GitInspect(obj: string)
     T3(hT)
 
     # SYNTAX
-    GColor()
+    G7()
 
     # LABELS
     sy keyword LBL after author before by commit compare date file head side
