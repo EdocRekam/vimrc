@@ -11,7 +11,7 @@ def GSRef(hT: number, hB: number, b = 1)
 
     let l = systemlist('git status')
 
-    Region('M', len(l) + 2, 5, 'l', 'contains=@NoSpell,P,MC,MK')
+    T2('M', len(l) + 2, 5, 'l', 'contains=@NoSpell,P,MC,MK')
     extend(l, ['',
     '<INS>  ADD ALL  |  <S-HOME> RESTORE  |  <PGUP>  PUSH      |',
     '<DEL>  UNSTAGE  |  <END>    COMMIT   |  <PGDN>  FETCH     |',
@@ -21,7 +21,7 @@ def GSRef(hT: number, hB: number, b = 1)
     '', 'Remotes: ' .. R, repeat('-', 79)])
 
     let log = systemlist('git log --date=short -n5')
-    Region('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,LBL,L,P')
+    T2('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,LBL,L,P')
     for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
     endfo
@@ -64,21 +64,21 @@ def GSPsh(hT: number, hB: number)
 enddef
 
 def GSRes(hT: number, hB: number)
-    let o = Cfile()
+    let o = T1()
     if filereadable(o)
         GSex(hT, hB, 'git restore ' .. o)
     en
 enddef
 
 def GSUns(hT: number, hB: number)
-    let o = Cfile()
+    let o = T1()
     if filereadable(o)
         GSex(hT, hB, 'git restore --staged ' .. o)
     en
 enddef
 
 def GSIg(hT: number, hB: number)
-    let o = Cfile()
+    let o = T1()
     :tabnew .gitignore
     if filereadable(o)
         append('$', o)
@@ -88,7 +88,7 @@ enddef
 
 # INSPECT THE FILE UNDER CURSOR (BEFORE|AFTER)
 def GSIns(hT: number, hB: number)
-    let o = Cfile()
+    let o = T1()
     if filereadable(o)
         # RIGHT = AFTER
         exe 'tabnew ' .. o
@@ -98,7 +98,7 @@ def GSIns(hT: number, hB: number)
         # LEFT = BEFORE
         exe 'vsplit B:' .. o
         let hL = bufnr()
-        Sbo(hL)
+        T3(hL)
         GShow(hL, 'HEAD', o)
         windo :1
         windo set scb
@@ -122,7 +122,7 @@ def GitStatus()
         settabvar(tabpagenr(), 'title', 'STATUS')
         let hB = bufnr()
         Say(hB, 'Ready...')
-        Sbo(hB)
+        T3(hB)
         setbufvar(hB, '&colorcolumn', '')
 
         # TOP ------------------------------------------------------------
@@ -132,7 +132,7 @@ def GitStatus()
         ownsyntax gitstatus
         :2resize 20
         GSRef(hT, hB, 0)
-        Sbo(hT)
+        T3(hT)
 
         # SYNTAX
         sy match L "modified:.*$" display

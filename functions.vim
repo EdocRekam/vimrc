@@ -60,7 +60,7 @@ def OpenWin(title: string, blank = 1): number
         :norm gg\<c-w>J
         resize 20
         h = bufnr(title)
-        Sbo(h)
+        T3(h)
     else
         win_gotoid(get(ids, 0))
         if blank

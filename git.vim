@@ -24,14 +24,14 @@ let R = 'hub origin vso'
 # vso/1.1 -> ['vso', '1.1']
 def Ab(val: string)
     for p in split(val, '[/]')
-        B = Appendif(B, p)
+        B = T4(B, p)
     endfo
 enddef
 
 # REMOTES
 def GRemotes()
     for r in systemlist('git remote')
-        R = Appendif(R, r)
+        R = T4(R, r)
     endfo
 enddef
 
@@ -142,11 +142,11 @@ def GWin(cmd: string, title: string, msg: string)
 enddef
 
 def GitK()
-    let pat = Cfile()
-    if filereadable(pat)
-        sil printf("!gitk -- '%s'& ", pat)
-    elsei strchars(pat) > 0
-        sil printf("!gitk %s&", pat)
+    let p = T1()
+    if filereadable(p)
+        sil printf("!gitk -- '%s'& ", p)
+    elsei strchars(p) > 0
+        sil printf("!gitk %s&", p)
     else
         sil !gitk&
     en

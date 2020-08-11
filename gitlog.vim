@@ -33,10 +33,10 @@ def GLRef(h: number, obj: string, b = 1)
         let s = r[2]->strcharpart(0, 85)->tr("\t", " ")
 
         # UPDATE COLUMN LENGTHS
-        L0 = AddIf(L0, r[0])
-        L1 = AddIf(L1, r[1])
-        L2 = AddIf(L2, s)
-        L4 = AddIf(L4, r[4])
+        L0 = T7(L0, r[0])
+        L1 = T7(L1, r[1])
+        L2 = T7(L2, s)
+        L4 = T7(L4, r[4])
         settabvar(tabpagenr(), 'L', [L0, L1, L2, L3, L4])
 
         add(rs, [ r[0], r[1], s, r[3], r[4]])
@@ -62,7 +62,7 @@ def GLRef(h: number, obj: string, b = 1)
 
         # SYNTAX: AUTHOR NAMES
         for at in split(r[4])
-            A = Appendif(A, at)
+            A = T4(A, at)
         endfo
 
         add(l, printf(f, r[0], r[1], r[2], r[3], r[4]))
@@ -83,14 +83,14 @@ def GLRef(h: number, obj: string, b = 1)
     #     D  DATE
     #     A  AUTHOR
     #     K  KEYWORDS
-    Region('TC', 1, L0 + L1 + 2, 'c', 'contains=@NoSpell contained display oneline')
-    Region('S', L0 + L1 + 5, L2 + 1, 'c', 'contains=K,P contained display oneline')
-    Region('D', L0 + L1 + L2 + 7, 10)
+    T2('TC', 1, L0 + L1 + 2, 'c', 'contains=@NoSpell contained display oneline')
+    T2('S', L0 + L1 + 5, L2 + 1, 'c', 'contains=K,P contained display oneline')
+    T2('D', L0 + L1 + L2 + 7, 10)
     exe 'sy keyword K ' .. K
 
-    Region('M', nlog + nbr + 8, 2, 'l', 'contains=@NoSpell,P,MC,MK')
-    Region('T', 3, nlog, 'l', 'contains=TC,S,D,A')
-    Region('T', nlog + 6, nbr, 'l', 'contains=TC,S,D,A')
+    T2('M', nlog + nbr + 8, 2, 'l', 'contains=@NoSpell,P,MC,MK')
+    T2('T', 3, nlog, 'l', 'contains=TC,S,D,A')
+    T2('T', nlog + 6, nbr, 'l', 'contains=TC,S,D,A')
 
     # POSITION
     win_execute(win_getid(1), printf(':3 | norm %s|', L1 + 3))
@@ -104,7 +104,7 @@ def GLog(obj: string)
     settabvar(tabpagenr(), 'title', obj)
     let hB = bufnr()
     Say(hB, 'Ready...')
-    Sbo(hB)
+    T3(hB)
     setbufvar(hB, '&colorcolumn', '')
 
     # TOP ----------------------------------------------------------------
@@ -113,7 +113,7 @@ def GLog(obj: string)
     setbufvar(hT, '&colorcolumn', '')
     :2resize 20
     GLRef(hT, obj, 0)
-    Sbo(hT)
+    T3(hT)
 
     # BASIC SYNTAX/COLOR
     GColor()
@@ -131,7 +131,7 @@ enddef
 
 def GitLog()
     GHead()
-    let o = Cfile()
+    let o = T1()
     GLog(strchars(o) > 5 ? o : 'HEAD')
 enddef
 nn <F7> :sil cal <SID>GitLog()<CR>

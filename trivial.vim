@@ -1,24 +1,59 @@
-
-def Cfile(): string
+# EXPAND CURSOR UNDER STRING TO FILE. SYNTAX SUGAR
+def T1(): string
     retu expand('<cfile>')
 enddef
 
 # CREATE A SYNTAX REGION STARTING/ENDING ON A COLUMN OR LINE
-def Region(grp: string, x: number, y: number, t = 'c', extra = 'contained display oneline')
+def T2(grp: string, x: number, y: number, t = 'c', extra = 'contained display oneline')
     let f = 'sy region %s start="%s" end="%s" %s'
     let z = x + y
     exe printf(f, grp, '\%' .. x .. t, '\%' .. z .. t, extra)
 enddef
 
+# SET COMMON BUFFER OPTIONS FOR GIT FUNCTIONS
+def T3(h: number)
+    setbufvar(h, '&buflisted', '0')
+    setbufvar(h, '&buftype', 'nofile')
+    setbufvar(h, '&ff', 'unix')
+    setbufvar(h, '&swapfile', '0')
+enddef
+
+# APPEND Y TO X IF IT DOES NOT EXIST; OTHERWISE X
+def T4(x: string, y: string): string
+    return stridx(x, y) >= 0 ? x : printf('%s %s', x, y)
+enddef
+
+# UPDATE AND SOURCE CURRENT FILE
+def T5()
+    up
+    so %
+enddef
+nn <silent><S-F5> :cal <SID>T5()<CR>
+
+# SOURCE SESSION.VIM IF PRESENT
+def T6()
+    if filereadable('session.vim')
+        so session.vim
+    en
+enddef
+au VimEnter * ++once : cal T6()
+
 # RETURN X OR THE LENGTH OF VAL; WHICHEVER IS GREATER
-def AddIf(x: number, val: string): number
+def T7(x: number, val: string): number
     let y = strchars(val)
     return y > x ? y : x
 enddef
 
-# APPEND Y TO X IF IT DOES NOT EXIST; OTHERWISE X
-def Appendif(x: string, y: string): string
-    return stridx(x, y) >= 0 ? x : printf('%s %s', x, y)
+# WRITE MSG TO END OF BUFFER
+def Say(h: number, msg: any)
+    let c = get(get(getbufinfo(h), 0), 'linecount')
+    let l = strchars(get(getbufline(h, '$'), 0))
+    appendbufline(h, l > 1 ? c : c - 1, msg)
+enddef
+
+# CALLBACK FOR JOB THAT ECHOS TEXT
+def SayCallback(h: number, c: channel, msg: string)
+    Say(h, msg)
 enddef
 
 def FindInFile(val: string)
@@ -34,32 +69,11 @@ def FindInFile(val: string)
 enddef
 command! -nargs=1 Find :cal <SID>FindInFile('<args>')
 
-def Sbo(h: number)
-    setbufvar(h, '&buflisted', '0')
-    setbufvar(h, '&buftype', 'nofile')
-    setbufvar(h, '&ff', 'unix')
-    setbufvar(h, '&swapfile', '0')
-enddef
-
-def NoTabs()
-    update
-    setl expandtab
-    retab
-    update
-enddef
-
-def NoTrails()
-    :%s/\s\+$//e
-enddef
-
-def Lower()
-    norm gvugv
-enddef
 
 def Rename(): void
-    let val = input('Value: ')
-    if '' != val
-        exe '%s/' .. expand('<cword>') .. '/' .. val .. '/g'
+    let v = input('Value: ')
+    if '' != v
+        exe '%s/' .. expand('<cword>') .. '/' .. v .. '/g'
     en
 enddef
 nn <silent><F2> :cal <SID>Rename()<CR>
@@ -71,73 +85,39 @@ def Rotate()
 enddef
 nn <silent><S-F12> :cal <SID>Rotate()<CR>
 
-def Say(h: number, msg: any)
-    let c = get(get(getbufinfo(h), 0), 'linecount')
-    let l = strchars(get(getbufline(h, '$'), 0))
-    appendbufline(h, l > 1 ? c : c - 1, msg)
-enddef
 
-def SayCallback(h: number, c: channel, msg: string)
-    Say(h, msg)
-enddef
 
 def SayShell(h: number, cmd: string)
     let f = funcref("s:SayCallback", [h])
     job_start(cmd, #{out_cb: f, err_cb: f})
 enddef
 
-def SourceFile()
+# EXPAND TAB TO SPACE
+def F6()
     up
-    so %
-enddef
-nn <silent><S-F5> :cal <SID>SourceFile()<CR>
-
-def Sort()
-    norm gv
-    # :sil '<,'>sort
-    norm gv
+    setl expandtab
+    retab
+    up
 enddef
 
-def SortD()
-    norm gv
-    # :sil '<,'>sort!
-    norm gv
-enddef
-
-def SortDI()
-    norm gv
-    # :sil '<,'>sort! i
-    norm gv
-enddef
-
-def SortI()
-    norm gv
-    # :sil '<,'>sort i
-    norm gv
-enddef
-
-def Startup()
-    if filereadable('session.vim')
-        so session.vim
-    en
-enddef
-au VimEnter * ++once : cal Startup()
-
-def ToCrlf()
+# CONVERT LINE ENDINGS TO CRLF
+def F7()
    up
    :e ++ff=unix
    setl ff=dos
    up
 enddef
 
-def ToLf()
+# CONVERT LINE ENDINGS TO LF
+def F8()
     up
     :e ++ff=dos
     setl ff=unix
     up
 enddef
 
-def Unique()
+# REMOVE DUPLICATES FROM CURRENT SELECTION
+def F22()
     let src = getline("'<", "'>")
     let dst: list<string>
     for l in src
@@ -154,9 +134,31 @@ def Unique()
     norm gv
 enddef
 
-def Upper()
-    norm gvUgv
+# REMOVE TRAILING WHITESPACE FROM FILE
+def F23()
+    :%s/\s\+$//e
 enddef
+
+# SORT SELECTION ASCENDING
+def F24()
+    setline("'<", getline("'<", "'>")->sort())
+enddef
+
+# SORT SELECTION ASCENDING (IGNORE CASE)
+def F25()
+    setline("'<", getline("'<", "'>")->sort(1))
+enddef
+
+# SORT SELECTION DESCENDING
+def F26()
+    setline("'<", getline("'<", "'>")->sort()->reverse())
+enddef
+
+# SORT SELECTION DESCENDING (IGNORE CASE)
+def F27()
+    setline("'<", getline("'<", "'>")->sort(1)->reverse())
+enddef
+
 
 if has('linux')
     def VimDir(): string

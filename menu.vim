@@ -137,15 +137,20 @@ def MnuCallback(wid: number, result: number): number
     elseif 3 == id
         DotnetRestore()
     elsei 4 == id
-        Lower()
+        # CONVERT SELECTION TO LOWER
+        norm gvugv
     elsei 5 == id
-        Upper()
+        # CONVERT SELECTION TO UPPER
+        norm gvUgv
     elsei 6 == id
-        NoTabs()
+        # EXPAND TAB TO SPACE
+        F6()
     elsei 7 == id
-        ToCrlf()
+        # CONVERT LINE ENDINGS TO CRLF
+        F7()
     elsei 8 == id
-        ToLf()
+        # CONVERT LINE ENDINGS TO LF
+        F8()
     elsei 9 == id
         MnuEnum()
     elseif 10 == id
@@ -165,17 +170,23 @@ def MnuCallback(wid: number, result: number): number
     elseif 21 == id
         CsUse()
     elseif 22 == id
-        Unique()
+        # REMOVE DUPLICATES
+        F22()
     elseif 23 == id
-        NoTrails()
+        # REMOVE TRAILING WHITESPACE
+        F23()
     elseif 24 == id
-        Sort()
+        # SORT ASCENDING
+        F24()
     elseif 25 == id
-        SortI()
+        # SORT ASCENDING IGNORE CASE
+        F25()
     elseif 26 == id
-        SortD()
+        # SORT DESCENDING
+        F26()
     elseif 27 == id
-        SortDI()
+        # SORT DESCENDING IGNORE CASE
+        F27()
     elseif 28 == id
         GotoDef()
     elseif 29 == id
@@ -213,11 +224,11 @@ let MnuOpt["callback"] = funcref('MnuCallback')
 
 def MnuLoad()
     Mnu0 = bufadd(VimDir() .. 'menu.txt')
-    Sbo(Mnu0)
+    T3(Mnu0)
     bufload(Mnu0)
 
     Mnu1 = bufadd('ea9b0beae51540edb1a0')
-    Sbo(Mnu1)
+    T3(Mnu1)
     bufload(Mnu1)
 enddef
 

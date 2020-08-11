@@ -172,17 +172,17 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
 
         # DIG OUT AUTHORS FROM PAST (IF POSSIBLE)
         for at in split(get(split(get(past, 1), ' | '), 1))
-            A = Appendif(A, at)
+            A = T4(A, at)
         endfo
 
         # IF FILE EXISTS MEANS THAT ITS STILL IN LATEST HEAD
         let hed = filereadable(c) ? Head : 'DELETED'
 
         # UPDATE COLUMN LENGTHS
-        L0 = AddIf(L0, c)
-        L1 = AddIf(L1, bef)
-        L2 = AddIf(L2, aft)
-        L3 = AddIf(L3, hed)
+        L0 = T7(L0, c)
+        L1 = T7(L1, bef)
+        L2 = T7(L2, aft)
+        L3 = T7(L3, hed)
         settabvar(tabpagenr(), 'lens', [L0, L1, L2, L3, L4, L5])
 
         add(rs, [c, bef, aft, hed])
@@ -204,15 +204,15 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
     #     F    FILE
     #     BAH  BEFORE + AFTER + HEAD + PADDING
     #     AUTHORS FOUND IN LOGS
-    Region('F', 1, L0)
-    Region('BAH', L0 + 3, L1 + L2 + L3 + L4 + L5 + 8)
+    T2('F', 1, L0)
+    T2('BAH', L0 + 3, L1 + L2 + L3 + L4 + L5 + 8)
 
     #     T  TOP LINES
     #     M  MENU
     #     R  REMOTES
     let rc = len(l)
-    Region('T', 3, rc - 2, 'l', 'contains=F,BAH')
-    Region('M', rc + 3, 2, 'l', 'contains=@NoSpell,P,MC,MK')
+    T2('T', 3, rc - 2, 'l', 'contains=F,BAH')
+    T2('M', rc + 3, 2, 'l', 'contains=@NoSpell,P,MC,MK')
 
     extend(l, [sep, '',
     '<F1> MENU      | <F2> -------  | <F3> CLOSE    | <F4> INSPECT',
@@ -242,7 +242,7 @@ def GitInspect(obj: string)
     settabvar(tabpagenr(), 'title', tT)
     let hB = bufnr()
     Say(hB, 'Ready...')
-    Sbo(hB)
+    T3(hB)
     setbufvar(hB, '&colorcolumn', '')
 
     # TOP ----------------------------------------------------------------
@@ -252,7 +252,7 @@ def GitInspect(obj: string)
     :ownsyntax gitinspect
     :2resize 20
     GIRef(hT, hB, obj, 0)
-    Sbo(hT)
+    T3(hT)
 
     # SYNTAX
     GColor()

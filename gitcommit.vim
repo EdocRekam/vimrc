@@ -24,8 +24,8 @@ enddef
 # THE TOP WINDOW AND RUN THE ACTUAL COMMIT
 def GC3(hT: number, hB: number)
     # LOCK TOP WINDOW
-    :stopi
     Say(hB, 'Switching to read-only mode.')
+    :stopi
     setbufvar(hT, '&modifiable', 0)
 
     let c = 'git commit --cleanup=strip -F ' .. ct
@@ -42,7 +42,7 @@ def GitCommit()
     exe 'tabnew Commit - ' .. reltimestr(n)
     settabvar(tabpagenr(), 'title', 'COMMIT')
     let hB = bufnr()
-    Sbo(hB)
+    T3(hB)
     setbufvar(hB, '&colorcolumn', '')
     Say(hB, 'Waiting for save ...')
 

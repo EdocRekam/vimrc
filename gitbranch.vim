@@ -45,14 +45,14 @@ def GBRef(h: number, b = 1)
 
         # SYNTAX: AUTHOR NAMES
         for at in split(p[4])
-            A = Appendif(A, at)
+            A = T4(A, at)
         endfo
 
         # UPDATE COLUMN LENGTHS
-        L0 = AddIf(L0, p[0])
-        L1 = AddIf(L1, ref)
-        L2 = AddIf(L2, s)
-        L4 = AddIf(L4, p[4])
+        L0 = T7(L0, p[0])
+        L1 = T7(L1, ref)
+        L2 = T7(L2, s)
+        L4 = T7(L4, p[4])
         add(rs, [ p[0], ref, s, p[3], p[4]])
     endfo
 
@@ -73,17 +73,17 @@ def GBRef(h: number, b = 1)
     #     S  SUBJECT
     #     D  DATE
     #     A  AUTHOR
-    Region('C', 1, L0 + L1 + 3)
-    Region('S', L0 + L1 + 4, L2 + 1, 'c', 'contained display contains=L,P oneline')
+    T2('C', 1, L0 + L1 + 3)
+    T2('S', L0 + L1 + 4, L2 + 1, 'c', 'contained display contains=L,P oneline')
 
     #     T  TOP LINES
     #     M  MENU
     #     R  REMOTES
     let rc = len(l)
-    Region('T', 3, len(rs), 'l', 'contains=C,S,D,A,R')
-    Region('M', rc + 3, 5, 'l', 'contains=@NoSpell,P,MC,MK')
-    Region('M', rc + 11, 1, 'l', 'contains=@NoSpell,P,MC,MK')
-    Region('R', rc + 9, 1, 'l', 'contains=@NoSpell display oneline')
+    T2('T', 3, len(rs), 'l', 'contains=C,S,D,A,R')
+    T2('M', rc + 3, 5, 'l', 'contains=@NoSpell,P,MC,MK')
+    T2('M', rc + 11, 1, 'l', 'contains=@NoSpell,P,MC,MK')
+    T2('R', rc + 9, 1, 'l', 'contains=@NoSpell display oneline')
 
     # ADD MENU + REMOTES + BRANCH NAME
     extend(l, ['', '',
@@ -98,7 +98,7 @@ def GBRef(h: number, b = 1)
 
     # ADD LAST FIVE LOG ENTRIES
     let log = systemlist('git log --date=short -n5')
-    Region('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,L,P')
+    T2('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,L,P')
     for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
     endfo
@@ -129,7 +129,7 @@ def GBCln(hT: number, hB: number)
 enddef
 
 def GBDel(hT: number, hB: number)
-    GBExe(hT, hB, 'git branch -d ' .. Cfile())
+    GBExe(hT, hB, 'git branch -d ' .. T1())
 enddef
 
 def GBFet(hT = 0, hB = 0)
@@ -141,12 +141,12 @@ def GBNav(hT: number, hB: number)
     if col('.') < 10
         GitLog()
     el
-        GBExe(hT, hB, 'git checkout ' .. Sr(Cfile()))
+        GBExe(hT, hB, 'git checkout ' .. Sr(T1()))
     en
 enddef
 
 def GBNew(hT: number, hB: number)
-    GBExe(hT, hB, 'git branch ' .. Cfile())
+    GBExe(hT, hB, 'git branch ' .. T1())
 enddef
 
 def GBPsh(hT: number, hB: number)
@@ -159,7 +159,7 @@ def GBPru(hT: number, hB: number)
 enddef
 
 def GBRes(hT: number, hB: number)
-    GBExe(hT, hB, 'git reset --hard ' .. Cfile())
+    GBExe(hT, hB, 'git reset --hard ' .. T1())
 enddef
 
 def GBTag(hT: number, hB: number)
@@ -175,7 +175,7 @@ def GitBranch()
     settabvar(tabpagenr(), 'title', 'BRANCH')
     let hB = bufnr()
     Say(hB, 'Ready...')
-    Sbo(hB)
+    T3(hB)
     setbufvar(hB, '&colorcolumn', '')
 
     # TOP ----------------------------------------------------------------
@@ -185,7 +185,7 @@ def GitBranch()
     :ownsyntax gitbranch
     :2resize 20
     GBRef(hT, 0)
-    Sbo(hT)
+    T3(hT)
 
     # SYNTAX
     GColor()
