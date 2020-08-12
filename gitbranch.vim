@@ -112,7 +112,7 @@ def GBRef(h: number, b = 1)
 enddef
 
 def GBExeExit(hT: number, hB: number, j: job, code: number)
-    GHead()
+    G8()
     GBRef(hT, 1)
 enddef
 
@@ -167,11 +167,12 @@ def GBTag(hT: number, hB: number)
 enddef
 
 def GitBranch()
-    let now = reltimestr(reltime())
-    GHead()
+    # NOW
+    let n = reltimestr(reltime())
+    G8()
 
     # BOTTOM -------------------------------------------------------------
-    exe 'tabnew BranchB' .. now
+    exe 'tabnew BranchB' .. n
     settabvar(tabpagenr(), 'title', 'BRANCH')
     let hB = bufnr()
     Say(hB, 'Ready...')
@@ -179,7 +180,7 @@ def GitBranch()
     setbufvar(hB, '&colorcolumn', '')
 
     # TOP ----------------------------------------------------------------
-    exe 'split BranchT' .. now
+    exe 'split BranchT' .. n
     let hT = bufnr()
     setbufvar(hT, '&colorcolumn', '')
     :ownsyntax gitbranch

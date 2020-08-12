@@ -109,7 +109,8 @@ def GSIns(hT: number, hB: number)
 enddef
 
 def GitStatus()
-    GHead()
+    # HEAD
+    G8()
 
     # OPEN EXISTING WINDOW
     let hT = bufnr('Git Status')

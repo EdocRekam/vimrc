@@ -66,6 +66,23 @@ def T10()
 enddef
 T0('S-F12', 'T10')
 
+# FIND v IN FILES
+def T11(v: string)
+    if 0 == strchars(v)
+        retu
+    en
+    :try
+        if 34 == strgetchar(v, 0)
+            exe 'lv /\C' .. trim(v, '"') .. '/gj **'
+        el
+            exe 'lv /\c' .. v .. '/gj **'
+        en
+        lopen 35
+    :catch
+    :endtry
+enddef
+command! -nargs=1 Find :cal <SID>T11('<args>')
+
 # WRITE MSG TO END OF BUFFER
 def Say(h: number, msg: any)
     let c = get(get(getbufinfo(h), 0), 'linecount')
@@ -83,18 +100,6 @@ def SayShell(h: number, cmd: string)
     job_start(cmd, #{out_cb: f, err_cb: f})
 enddef
 
-def FindInFile(v: string)
-    if 0 == strchars(v)
-        retu
-    en
-    if 34 == strgetchar(v, 0)
-        exe 'sil vimgrep /\C' .. trim(v, '"') .. '/gj **'
-    el
-        exe 'sil vimgrep /\c' .. v .. '/gj **'
-    en
-    copen 35
-enddef
-command! -nargs=1 Find :cal <SID>FindInFile('<args>')
 
 def Rename(): void
     let v = input('Value: ')

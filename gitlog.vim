@@ -130,7 +130,7 @@ def GLog(obj: string)
 enddef
 
 def GitLog()
-    GHead()
+    G8()
     let o = T1()
     GLog(strchars(o) > 5 ? o : 'HEAD')
 enddef

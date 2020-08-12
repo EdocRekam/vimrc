@@ -140,7 +140,7 @@ def G7()
     hi link TC Keyword
 enddef
 
-def GHead(): string
+def G8(): string
     Head = trim(system('git rev-parse --abbrev-ref HEAD'))
     Ab(Head)
     GRemotes()

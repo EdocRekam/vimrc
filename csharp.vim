@@ -39,9 +39,9 @@ def DotnetTest(filter: string = '')
         cmd = printf("dotnet test --filter '%s'", filter)
     en
     DotnetAsyncWin(cmd, 'DOTNET', 'Testing . . .')
-    syn case ignore
-    syn match Bad "Failed:\s\d\+"
-    syn match Good "Passed:\s\d\+"
+    sy case ignore
+    sy match Bad "Failed:\s\d\+"
+    sy match Good "Passed:\s\d\+"
     hi Bad guifg=#ee3020
     hi Good guifg=#00b135
 enddef

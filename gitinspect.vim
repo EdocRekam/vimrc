@@ -233,7 +233,8 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
 enddef
 
 def GitInspect(obj: string)
-    GHead()
+    # FIND HEAD
+    G8()
 
     # BOTTOM -------------------------------------------------------------
     let tT = 'I:' .. obj
