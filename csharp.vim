@@ -1,6 +1,6 @@
 
 # POPUP FUNCTIONS
-def CsUse()
+def F21()
     setf cs
     setl expandtab
     setl ff=unix
@@ -14,15 +14,17 @@ enddef
 def DotnetAsyncWin(cmd: string, title: string, msg: string)
     let h = OpenWin(title, 0)
     Say(h, [msg, cmd])
-    SayShell(h, cmd)
+    SayEx(h, cmd)
     setbufvar(h, '&colorcolumn', '0')
 enddef
 
-def DotnetRestore()
+# DOTNET RESTORE
+def F3()
     DotnetAsyncWin('dotnet restore', 'DOTNET', 'Restoring . . .')
 enddef
 
-def DotnetBuild()
+# DOTNET BUILD
+def F2()
     DotnetAsyncWin('dotnet build', 'DOTNET', 'Building . . .')
     sy case ignore
     sy match Caution "\d\+\sWarn.*"
@@ -31,7 +33,8 @@ def DotnetBuild()
     hi Bad guifg=#ee3020
 enddef
 
-def DotnetTest(filter: string = '')
+# RUN ALL DOTNET UNIT TESTS
+def F29(filter = '')
     let cmd: string
     if filter == ''
         cmd = 'dotnet test'
@@ -46,7 +49,8 @@ def DotnetTest(filter: string = '')
     hi Good guifg=#00b135
 enddef
 
-def CsNoFold()
+# DISABLE CSHARP CODE FOLDING
+def F40()
     setl nofoldenable
     setl foldcolumn=0
     setl foldmethod=manual
@@ -64,7 +68,8 @@ def g:CsIndent(n: number): any
     retu 1
 enddef
 
-def CsFold()
+# TURN ON CSHARP CODE FOLDING
+def F39()
     setl foldlevel=1
     setl fillchars+=fold:\
     setl foldcolumn=1

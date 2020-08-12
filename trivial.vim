@@ -104,7 +104,7 @@ def SayCb(h: number, c: channel, msg: string)
     Say(h, msg)
 enddef
 
-def SayShell(h: number, cmd: string)
+def SayEx(h: number, cmd: string)
     let f = funcref(SayCb, [h])
     job_start(cmd, #{out_cb: f, err_cb: f})
 enddef
@@ -120,7 +120,7 @@ enddef
 # CONVERT LINE ENDINGS TO CRLF
 def F7()
    up
-   :e ++ff=unix
+   e ++ff=unix
    setl ff=dos
    up
 enddef
@@ -128,7 +128,7 @@ enddef
 # CONVERT LINE ENDINGS TO LF
 def F8()
     up
-    :e ++ff=dos
+    e ++ff=dos
     setl ff=unix
     up
 enddef

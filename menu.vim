@@ -110,17 +110,19 @@ def MnuZoom(val: number)
     en
 enddef
 
-def MnuSyntax()
+# VIM SYNTAX FILE
+def F35()
     let pat = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
     if filereadable(pat)
         exe 'tabnew ' .. pat
     en
 enddef
 
-def MnuCheatsheet()
-    let pat = VimDir() .. 'keys.html'
-    if filereadable(pat)
-        exe printf("!firefox --new-window '%s'&", pat)
+# MENU CHEAT SHEET
+def F41()
+    let f = VimDir() .. 'keys.html'
+    if filereadable(f)
+        exe printf("!firefox --new-window '%s'&", f)
     en
 enddef
 
@@ -133,9 +135,11 @@ def MnuCallback(wid: number, result: number): number
     if 1 == id
         Align(input('ALIGN ON: ', '='))
     elseif 2 == id
-        DotnetBuild()
+        # DOTNET BUILD
+        F2()
     elseif 3 == id
-        DotnetRestore()
+        # DOTNET RESTORE
+        F3()
     elsei 4 == id
         # CONVERT SELECTION TO LOWER
         norm gvugv
@@ -168,7 +172,8 @@ def MnuCallback(wid: number, result: number): number
     elsei 19 == id
         GLog(Head)
     elseif 21 == id
-        CsUse()
+        # USE CSHARP SETTINGS
+        F21()
     elseif 22 == id
         # REMOVE DUPLICATES
         F22()
@@ -190,13 +195,15 @@ def MnuCallback(wid: number, result: number): number
     elseif 28 == id
         GotoDef()
     elseif 29 == id
-        DotnetTest()
+        # RUN ALL DOTNET UNIT TESTS
+        F29()
     elseif 30 == id
-        DotnetTest(T9())
+        F29(T9())
     elsei 32 == id
         :so $VIMRUNTIME/syntax/hitest.vim
     elseif 35 == id
-        MnuSyntax()
+        # OPEN VIM SYNTAX FILE
+        F35()
     elsei 36 == id
         :options
     elsei 37 == id
@@ -204,11 +211,14 @@ def MnuCallback(wid: number, result: number): number
     elseif 38 == id
         exe ':OmniSharpStartServer'
     elseif 39 == id
-        CsFold()
+        # TURN ON CSHARP CODE FOLDING
+        F39()
     elseif 40 == id
-        CsNoFold()
+        # DISABLE CSHARP CODE FOLDING
+        F40()
     elseif 41 == id
-        MnuCheatsheet()
+        # MENU CHEAT SHEET
+        F41()
     elsei 42 == id
         setl wrap!
     elsei 44 == id

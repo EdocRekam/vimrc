@@ -150,7 +150,7 @@ enddef
 def GWin(cmd: string, title: string, msg: string)
     let h = OpenWin(title, 0)
     Say(h, [msg, cmd])
-    SayShell(h, cmd)
+    SayEx(h, cmd)
 enddef
 
 # LAUNCH GITK USING FILE UNDER CURSOR
