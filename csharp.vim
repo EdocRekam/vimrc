@@ -1,3 +1,24 @@
+def DotnetAsyncWin(cmd: string, title: string, msg: string)
+    let h = OpenWin(title, 0)
+    Say(h, [msg, cmd])
+    SayEx(h, cmd)
+    setbufvar(h, '&colorcolumn', '0')
+enddef
+
+# DOTNET BUILD
+def F2()
+    DotnetAsyncWin('dotnet build', 'DOTNET', 'Building . . .')
+    sy case ignore
+    sy match Caution "\d\+\sWarn.*"
+    sy match Bad "\d\+\sError.*"
+    hi Caution guifg=#eed320
+    hi Bad guifg=#ee3020
+enddef
+
+# DOTNET RESTORE
+def F3()
+    DotnetAsyncWin('dotnet restore', 'DOTNET', 'Restoring . . .')
+enddef
 
 # POPUP FUNCTIONS
 def F21()
@@ -9,28 +30,6 @@ def F21()
     setl shiftwidth=4
     setl softtabstop=4
     setl tabstop=4
-enddef
-
-def DotnetAsyncWin(cmd: string, title: string, msg: string)
-    let h = OpenWin(title, 0)
-    Say(h, [msg, cmd])
-    SayEx(h, cmd)
-    setbufvar(h, '&colorcolumn', '0')
-enddef
-
-# DOTNET RESTORE
-def F3()
-    DotnetAsyncWin('dotnet restore', 'DOTNET', 'Restoring . . .')
-enddef
-
-# DOTNET BUILD
-def F2()
-    DotnetAsyncWin('dotnet build', 'DOTNET', 'Building . . .')
-    sy case ignore
-    sy match Caution "\d\+\sWarn.*"
-    sy match Bad "\d\+\sError.*"
-    hi Caution guifg=#eed320
-    hi Bad guifg=#ee3020
 enddef
 
 # RUN ALL DOTNET UNIT TESTS
@@ -77,9 +76,6 @@ def F39()
     setl foldexpr=CsIndent(v:lnum)
     setl foldtext=CsFoldText()
     setl foldenable
-enddef
-
-def CsStartServer()
 enddef
 
 # XML
