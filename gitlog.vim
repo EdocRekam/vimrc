@@ -39,6 +39,11 @@ def GLRef(h: number, obj: string, b = 1)
         L4 = T7(L4, r[4])
         settabvar(tabpagenr(), 'L', [L0, L1, L2, L3, L4])
 
+        # SYNTAX: AUTHOR NAMES
+        for at in split(r[4])
+            A = T4(A, at)
+        endfo
+
         add(rs, [ r[0], r[1], s, r[3], r[4]])
     endfo
 
@@ -59,11 +64,6 @@ def GLRef(h: number, obj: string, b = 1)
     for i in br
         let line = trim(system("git log -n1 --pretty='%t | %h | %D | %as | %an' " .. i))
         let r = split(line, ' | ')
-
-        # SYNTAX: AUTHOR NAMES
-        for at in split(r[4])
-            A = T4(A, at)
-        endfo
 
         add(l, printf(f, r[0], r[1], r[2], r[3], r[4]))
     endfo
