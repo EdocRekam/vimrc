@@ -88,9 +88,9 @@ def FindInFile(v: string)
         retu
     en
     if 34 == strgetchar(v, 0)
-        exe "sil grep! -rn  '" .. trim(v, '"') .. "' *"
+        exe 'sil vimgrep /\C' .. trim(v, '"') .. '/gj **'
     el
-        exe "sil grep! -rni '" .. v .. "' *"
+        exe 'sil vimgrep /\c' .. v .. '/gj **'
     en
     copen 35
 enddef
