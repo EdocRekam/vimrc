@@ -1,7 +1,11 @@
 def GotoDef()
-    let pat = T1()
-    if filereadable(pat)
-        exe 'e! %s' .. pat
+    # CFILE
+    let f = T1()
+    if filereadable(f)
+        exe 'tabnew ' .. f
+    el
+        # FIND WORD IN FILES
+        T11(T9())
     en
     # else
     # OmniSharpGotoDefinition()

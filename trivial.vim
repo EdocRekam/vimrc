@@ -83,6 +83,15 @@ def T11(v: string)
 enddef
 command! -nargs=1 Find :cal <SID>T11('<args>')
 
+# RENAME WORD UNDER CURSOR ALL FILE OCCURRENCES WITH INPUT
+def T12(): void
+    let v = input('Value: ')
+    if '' != v
+        exe '%s/' .. T9() .. '/' .. v .. '/g'
+    en
+enddef
+T0('F2', 'T12')
+
 # WRITE MSG TO END OF BUFFER
 def Say(h: number, msg: any)
     let c = get(get(getbufinfo(h), 0), 'linecount')
@@ -100,14 +109,6 @@ def SayShell(h: number, cmd: string)
     job_start(cmd, #{out_cb: f, err_cb: f})
 enddef
 
-
-def Rename(): void
-    let v = input('Value: ')
-    if '' != v
-        exe '%s/' .. T9() .. '/' .. v .. '/g'
-    en
-enddef
-T0('F2', 'Rename')
 
 # EXPAND TAB TO SPACE
 def F6()
