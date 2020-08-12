@@ -30,7 +30,7 @@ def GC3(hT: number, hB: number)
 
     let c = 'git commit --cleanup=strip -F ' .. ct
     Say(hB, c)
-    let f = funcref("SayCallback", [hB])
+    let f = funcref(SayCb, [hB])
     job_start(c, #{out_cb: f, err_cb: f, exit_cb: GC1})
 enddef
 

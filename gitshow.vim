@@ -6,8 +6,8 @@ def GShowExit(h: number, j: job, code: number)
 enddef
 
 def GShow(h: number, obj: string, pat: string)
-    let f = funcref("s:SayCallback", [h])
-    let e = funcref("s:GShowExit", [h])
+    let f = funcref(SayCb, [h])
+    let e = funcref(GShowExit, [h])
     job_start('git show ' .. obj .. ':' .. pat,  #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 

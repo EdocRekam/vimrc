@@ -100,15 +100,14 @@ def Say(h: number, msg: any)
 enddef
 
 # CALLBACK FOR JOB THAT ECHOS TEXT
-def SayCallback(h: number, c: channel, msg: string)
+def SayCb(h: number, c: channel, msg: string)
     Say(h, msg)
 enddef
 
 def SayShell(h: number, cmd: string)
-    let f = funcref(SayCallback, [h])
+    let f = funcref(SayCb, [h])
     job_start(cmd, #{out_cb: f, err_cb: f})
 enddef
-
 
 # EXPAND TAB TO SPACE
 def F6()

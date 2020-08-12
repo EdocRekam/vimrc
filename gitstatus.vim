@@ -37,8 +37,8 @@ enddef
 
 def GSex(hT: number, hB: number, cmd: string)
     Say(hB, cmd)
-    let f = funcref("s:SayCallback", [hB])
-    let e = funcref("s:GSeXit", [hT, hB])
+    let f = funcref(SayCb, [hB])
+    let e = funcref(GSeXit, [hT, hB])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 

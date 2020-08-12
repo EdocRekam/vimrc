@@ -119,8 +119,8 @@ enddef
 def GBExe(hT: number, hB: number, cmd: string)
     Say(hB, cmd)
     win_execute(win_getid(2), 'norm G')
-    let f = funcref("s:SayCallback", [hB])
-    let e = funcref("s:GBExeExit", [hT, hB])
+    let f = funcref(SayCb, [hB])
+    let e = funcref(GBExeExit, [hT, hB])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
