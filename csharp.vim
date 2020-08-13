@@ -1,6 +1,6 @@
 def DotnetAsyncWin(cmd: string, title: string, msg: string)
     let h = OpenWin(title, 0)
-    Say(h, [msg, cmd])
+    Say(h, msg)
     SayEx(h, cmd)
     setbufvar(h, '&colorcolumn', '0')
 enddef

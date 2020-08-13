@@ -52,14 +52,14 @@ def Widest(rows: list<list<string>>, col: number, min: number, max = 85): number
     retu c
 enddef
 
-def OpenWin(title: string, blank = 1): number
-    let h = bufnr(title)
+def OpenWin(t = '', blank = 1): number
+    let h = bufnr(t)
     let ids = win_findbuf(h)
     if empty(ids)
-        sil 'new ' .. title
-        :norm gg\<c-w>J
+        exe 'new ' .. t
+        norm gg\<c-w>J
         resize 20
-        h = bufnr(title)
+        h = bufnr(t)
         T3(h)
     else
         win_gotoid(get(ids, 0))
