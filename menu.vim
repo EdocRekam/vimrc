@@ -122,7 +122,7 @@ enddef
 def F41()
     let f = VimDir() .. 'keys.html'
     if filereadable(f)
-        exe printf("!firefox --new-window '%s'&", f)
+        job_start('firefox --new-window ' .. f)
     en
 enddef
 
@@ -168,7 +168,7 @@ def MnuCallback(wid: number, result: number): number
     elsei 17 == id
         GitK()
     elseif 18 == id
-        sil !git gui&
+        job_start('git gui')
     elsei 19 == id
         GLog(Head)
     elseif 21 == id

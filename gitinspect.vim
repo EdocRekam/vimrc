@@ -125,7 +125,7 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
     let L5 = 13
 
     let rs: list<list<string>>
-    for i in systemlist('git diff --numstat ' .. obj .. '~1 ' .. obj)
+    for i in S('git diff --numstat ' .. obj .. '~1 ' .. obj)
 
         # SAMPLE OUTPUT
         # ADD(A)  DEL(B)  PATH(C)
@@ -156,7 +156,7 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
         #   ONE PAST ENTRY MEANS FILE WAS ADDED IN THIS `obj` COMMIT
         #   TWO PAST ENTRY MEANS ?
         #   THREE PAST ENTRY MEANS ?
-        let past = systemlist("git log -n3 --pretty='%h | %an' " .. obj .. ' -- ' .. c)
+        let past = S("git log -n3 --pretty='%h | %an' " .. obj .. ' -- ' .. c)
         if len(past) == 1
             bef = 'ADDED'
             aft = obj
@@ -220,7 +220,7 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
     ''])
 
     # LOG ENTRY
-    extend(l, systemlist('git log -n1 ' .. obj))
+    extend(l, S('git log -n1 ' .. obj))
 
     # PERFORMANCE
     extend(l, ['', 'Time:' .. reltimestr(reltime(now, reltime()))])

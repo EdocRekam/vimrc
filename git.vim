@@ -42,7 +42,7 @@ enddef
 
 # REMOTES
 def GRemotes()
-    for r in systemlist('git remote')
+    for r in S('git remote')
         R = T4(R, r)
     endfo
 enddef
@@ -63,7 +63,7 @@ def Sr(b: string): string
 enddef
 
 # LAUNCH GIT GUI
-nn <silent><F6> :sil !git gui&<CR>
+nn <silent><F6> :cal job_start('git gui')<CR>
 
 def G7()
     sy case ignore
@@ -156,13 +156,14 @@ enddef
 # LAUNCH GITK USING FILE UNDER CURSOR
 def GitK()
     let p = T1()
+    let c = 'gitk'
+
     if filereadable(p)
-        sil printf("!gitk -- '%s'& ", p)
+        c = c .. ' -- ' .. p
     elsei strchars(p) > 0
-        sil printf("!gitk %s&", p)
-    else
-        sil !gitk&
+        c = c .. ' ' .. p
     en
+    job_start(c)
 enddef
 T0('S-F7', 'GitK')
 

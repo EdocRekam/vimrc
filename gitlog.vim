@@ -24,9 +24,10 @@ def GLRef(h: number, obj: string, b = 1)
     let L4 = 7
 
     let rs: list<list<string>>
-    let log = systemlist("git log -n50 --pretty='%t | %h | %s | %as | %an' " .. obj)
+    let log = S(['git', 'log', '-n50', '--pretty=%t | %h | %s | %as | %an', obj])
     let nlog = len(log)
     for i in log
+        Trace(i)
         let r = split(i, ' | ')
 
         # FIX SUBJECT LENGTH+FORMAT
@@ -59,7 +60,7 @@ def GLRef(h: number, obj: string, b = 1)
     # BRANCHES
     extend(l, ['', printf(f, 'TREE', 'COMMIT', 'TAG', 'DATE', 'AUTHOR'), sep])
 
-    let br = systemlist('git rev-parse --short --tags HEAD')
+    let br = S('git rev-parse --short --tags HEAD')
     let nbr = len(br)
     for i in br
         let line = trim(system("git log -n1 --pretty='%t | %h | %D | %as | %an' " .. i))

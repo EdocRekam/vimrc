@@ -20,7 +20,7 @@ def GBRef(h: number, b = 1)
     let L4 = 10
 
     let rs: list<list<string>>
-    for i in systemlist("git branch -a --format='%(objectname:short) | %(refname) | %(subject) | %(authordate:short) | %(authorname)'")
+    for i in S(['git', 'branch', '-a', '--format=%(objectname:short) | %(refname) | %(subject) | %(authordate:short) | %(authorname)'])
         let p = split(i, ' | ')
 
         # HANDLE BAD REF
@@ -97,7 +97,7 @@ def GBRef(h: number, b = 1)
     '', 'BRANCH: ' .. Head, sep, ''])
 
     # ADD LAST FIVE LOG ENTRIES
-    let log = systemlist('git log --date=short -n5')
+    let log = S('git log --date=short -n5')
     T2('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,L,P')
     for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))

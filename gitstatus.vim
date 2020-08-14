@@ -9,7 +9,7 @@ def GSRef(hT: number, hB: number, b = 1)
         sy clear M LOG
     en
 
-    let l = systemlist('git status')
+    let l = S('git status')
 
     T2('M', len(l) + 2, 5, 'l', 'contains=@NoSpell,P,MC,MK')
     extend(l, ['',
@@ -20,7 +20,7 @@ def GSRef(hT: number, hB: number, b = 1)
     '<F5>   BRANCH   |  <F6>     GUI      |  <F7>    LOG/GITK  |  <F8>  REFRESH',
     '', 'Remotes: ' .. R, repeat('-', 79)])
 
-    let log = systemlist('git log --date=short -n5')
+    let log = S('git log --date=short -n5')
     T2('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,LBL,L,P')
     for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
@@ -48,7 +48,7 @@ enddef
 
 # SCRIPT VARIABLE `ct` DEFINED IN `gitcommit.vim`
 def GCAmd(hT: number, hB: number)
-    let log = systemlist("git log -n1 --format='%s%n%n%b'")
+    let log = S("git log -n1 --format='%s%n%n%b'")
     GSex(hT, hB, 'git reset --soft HEAD^')
     writefile(log, ct)
 enddef

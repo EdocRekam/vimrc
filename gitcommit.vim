@@ -63,7 +63,7 @@ def GitCommit()
     "# with '#' will be ignored, and an empty message aborts the commit.",
     '#'])
 
-    for i in systemlist('git status')
+    for i in S('git status')
         Say(hT, printf('#%s%s', '' == i ? '' : ' ', i))
     endfo
     Say(hT, ['#', '# PRESS <F3> TO ABORT OR CLOSE COMMIT WINDOW'])

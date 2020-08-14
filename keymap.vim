@@ -59,7 +59,7 @@ nn <silent><F3> :bd<CR>
 nn <silent><S-F3> :bd!<CR>
 
 # LAUNCH NEW INSTANCE                                   F9
-nn <silent><F9> :sil !gvim&<CR>
+nn <silent><F9> :cal job_start('gvim')<CR>
 
 # ROTATE WINDOWS RIGHT/LEFT                             F10
 nn <F10> <C-W>x
