@@ -92,6 +92,12 @@ def T12(): void
 enddef
 T0('F2', 'T12')
 
+# SWITCH ALL SPACING TO X
+def T13(v = '4')
+    exe printf("setl tabstop=%d | setl softtabstop=%d | setl shiftwidth=%d", v, v, v)
+enddef
+command! -nargs=1 Tabs :cal <SID>T13('<args>')
+
 # WRITE MSG TO END OF BUFFER
 def Say(h: number, msg: any)
     let c = get(get(getbufinfo(h), 0), 'linecount')
