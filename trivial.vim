@@ -108,7 +108,7 @@ def S(c: any): list<string>
     let f = funcref(SCB, [d])
     let j = job_start(c, #{out_cb: f, err_cb: f})
     while 'run' == j->job_status()
-        sleep 100m
+        sleep 25m
     endw
     if d->len() > 1
         d->remove(0)

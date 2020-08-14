@@ -141,7 +141,7 @@ def G7()
 enddef
 
 def G8(): string
-    Head = trim(system('git rev-parse --abbrev-ref HEAD'))
+    Head = get(S('git rev-parse --abbrev-ref HEAD'), 0)
     Ab(Head)
     GRemotes()
     retu Head

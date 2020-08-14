@@ -63,7 +63,7 @@ def GLRef(h: number, obj: string, b = 1)
     let br = S('git rev-parse --short --tags HEAD')
     let nbr = len(br)
     for i in br
-        let line = trim(system("git log -n1 --pretty='%t | %h | %D | %as | %an' " .. i))
+        let line = get(S(['git', 'log', '-n1', '--pretty=%t | %h | %D | %as | %an', i]), 0)
         let r = split(line, ' | ')
 
         add(l, printf(f, r[0], r[1], r[2], r[3], r[4]))

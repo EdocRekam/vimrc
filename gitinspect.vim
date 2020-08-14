@@ -156,7 +156,7 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
         #   ONE PAST ENTRY MEANS FILE WAS ADDED IN THIS `obj` COMMIT
         #   TWO PAST ENTRY MEANS ?
         #   THREE PAST ENTRY MEANS ?
-        let past = S("git log -n3 --pretty='%h | %an' " .. obj .. ' -- ' .. c)
+        let past = S(['git', 'log', '-n3', '--pretty=%h | %an', obj, '--', c])
         if len(past) == 1
             bef = 'ADDED'
             aft = obj
@@ -165,8 +165,7 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
             if b > 1
                 aft = obj
             else
-                system('git show ' .. obj .. ':' .. c)
-                aft = v:shell_error ? 'DELETED' : obj
+                aft = S('git show ' .. obj .. ':' .. c)->len() > 1 ? obj : 'DELETED'
             en
         en
 
