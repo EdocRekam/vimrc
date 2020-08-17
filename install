@@ -37,6 +37,12 @@ read -p "Press [Enter] key to install files into HOME directory at . . ."
 
 printf "Building .vimrc . . .\n"
 cat "${CWD}/vimrc.vim" > "${HOME}/.vimrc"
+if [ "${OSTYPE}" == "linux" ]; then
+    cat "${CWD}/vimrc-linux.vim" >> "${HOME}/.vimrc"
+else
+    cat "${CWD}/vimrc-win32.vim" >> "${HOME}/.vimrc"
+fi
+
 cat "${CWD}/nerdtree.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/keymap.vim" >> "${HOME}/.vimrc"
 

@@ -5,8 +5,7 @@ set guioptions +=M
 
 # NO VI COMPATIBILITY
 set nocp
-set encoding=utf-8
-scriptencoding utf-8
+scripte utf-8
 
 # MAKE BACKSPACE WORK CORRECTLY
 set backspace=indent,eol,start

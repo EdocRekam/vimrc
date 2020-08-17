@@ -38,6 +38,9 @@ def GitShow2(objL: string, patL: string, objR: string, patR: string)
     T3(hL)
     GShow(hL, objL, patL)
 
+    # SCROLLBIND WINDOWS TOGETEHER
+    windo set scb
+
     # LOCAL KEY BINDS
     G0(hL, hR)
 enddef
