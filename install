@@ -80,6 +80,12 @@ sed -i 's/^[ \t]*//;s/[ \t]*$//' "${HOME}/.vimrc"
 
 printf "Building .gvimrc . . .\n"
 cat "${CWD}/gvimrc.vim" > "${HOME}/.gvimrc"
+if [ "${OSTYPE}" == "linux" ]; then
+    cat "${CWD}/gvimrc-linux.vim" >> "${HOME}/.gvimrc"
+else
+    cat "${CWD}/gvimrc-win32.vim" >> "${HOME}/.gvimrc"
+fi
+
 
 if [ "${OSTYPE}" == "linux" ]; then
     VIMDIR=.vim

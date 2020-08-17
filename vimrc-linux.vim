@@ -1,2 +1,0 @@
-# WINDOWS SEEMS TO NOT LIKE THIS
-set enc=utf-8
