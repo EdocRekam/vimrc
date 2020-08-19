@@ -2,7 +2,7 @@
 let ct = '.git/GITGUI_MSG'
 
 # EXIT JOB CALLBACK - DELETE COMMIT TEMPLATE IS EXIT CODE IS 0
-def GC1(j: job, c: number)
+def GC1(j: job, c = 0)
     if 0 == c && filereadable(ct)
         delete(ct)
     en
@@ -11,7 +11,7 @@ enddef
 # F3 QUIT - THE USER SAVED COMMIT MESSAGE IF THE TOP WINDOW IS
 # LOCKED; OTHERWISE STRIP COMMENTS FROM COMMIT MESSAGE AND STASH IT
 # FOR FURTHER RECALL. CLOSE TOP/BOTTOM WINDOWS
-def GC2(hT: number, hB: number)
+def GC2(hT = 0, hB = 0)
     if 1 == getbufvar(hT, '&modifiable')
         exe 'au! BufWritePost <buffer=' .. hT .. '>'
         win_execute(win_getid(1), 'g/^#.*$/d')
@@ -22,7 +22,7 @@ enddef
 
 # RUN THIS WHEN THE COMMIT MESSAGE WAS SAVED. THIS MEANS WE CAN LOCK
 # THE TOP WINDOW AND RUN THE ACTUAL COMMIT
-def GC3(hT: number, hB: number)
+def GC3(hT = 0, hB = 0)
     # LOCK TOP WINDOW
     Say(hB, 'Switching to read-only mode.')
     stopi

@@ -26,7 +26,7 @@ def Align(value: string)
     norm gv
 enddef
 
-def Enum(base: number = 0)
+def Enum(base = 0)
     let nr = line("'<")
     let cnt = base
     for line in getline(nr, "'>")
@@ -38,7 +38,7 @@ def Enum(base: number = 0)
     norm gv
 enddef
 
-def Widest(rows: list<list<string>>, col: number, min: number, max = 85): number
+def Widest(rows: list<list<string>>, col = 0, min = 0, max = 85): number
     let c = min
     for r in rows
         let len = strchars(r[col])

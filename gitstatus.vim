@@ -1,5 +1,5 @@
 
-def GSRef(hT: number, hB: number, b = 1)
+def GSRef(hT = 0, hB = 0, b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
     let n = reltime()
 
@@ -31,46 +31,46 @@ def GSRef(hT: number, hB: number, b = 1)
     win_execute(win_getid(1), ':1')
 enddef
 
-def GSeXit(hT: number, hB: number, j: job, code: number)
+def GSeXit(hT: number, hB: number, j: job, c = 0)
     GSRef(hT, hB)
 enddef
 
-def GSex(hT: number, hB: number, cmd: string)
+def GSex(hT = 0, hB = 0, cmd = '')
     Say(hB, cmd)
     let f = funcref(SayCb, [hB])
     let e = funcref(GSeXit, [hT, hB])
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
-def GSAdd(hT: number, hB: number)
+def GSAdd(hT = 0, hB = 0)
     GSex(hT, hB, 'git add .')
 enddef
 
 # SCRIPT VARIABLE `ct` DEFINED IN `gitcommit.vim`
-def GCAmd(hT: number, hB: number)
+def GCAmd(hT = 0, hB = 0)
     let log = S(['git', 'log', '-n1', '--format=%s%n%n%b'])
     GSex(hT, hB, 'git reset --soft HEAD^')
     writefile(log, ct)
 enddef
 
-def GSFet(hT: number, hB: number)
+def GSFet(hT = 0, hB = 0)
     let o = T9()
     GSex(hT, hB, IsR(o) ? 'git fetch ' .. o .. ' ' .. Head : 'git fetch')
 enddef
 
-def GSPsh(hT: number, hB: number)
+def GSPsh(hT = 0, hB = 0)
     let o = T9()
     GSex(hT, hB, IsR(o) ? 'git push -u ' .. o .. ' ' .. Head : 'git push')
 enddef
 
-def GSRes(hT: number, hB: number)
+def GSRes(hT = 0, hB = 0)
     let o = T1()
     if filereadable(o)
         GSex(hT, hB, 'git restore ' .. o)
     en
 enddef
 
-def GSUns(hT: number, hB: number)
+def GSUns(hT = 0, hB = 0)
     let o = T1()
     if filereadable(o)
         GSex(hT, hB, 'git restore --staged ' .. o)
@@ -78,7 +78,7 @@ def GSUns(hT: number, hB: number)
 enddef
 
 # OPEN .gitignore IN TAB
-def GSIg(hT: number, hB: number)
+def GSIg(hT = 0, hB = 0)
     let o = T1()
     tabnew .gitignore
     if filereadable(o)
@@ -88,7 +88,7 @@ def GSIg(hT: number, hB: number)
 enddef
 
 # INSPECT THE FILE UNDER CURSOR (BEFORE|AFTER)
-def GSIns(hT: number, hB: number)
+def GSIns(hT = 0, hB = 0)
     let o = T1()
     if filereadable(o)
         # RIGHT = AFTER

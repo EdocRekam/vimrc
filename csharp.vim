@@ -59,7 +59,7 @@ def g:CsFoldText(): string
     retu getline(v:foldstart)
 enddef
 
-def g:CsIndent(n: number): any
+def g:CsIndent(n = 0): any
     let l = getline(n)
     if char2nr('n') == strgetchar(l, 0)
         retu '>1'

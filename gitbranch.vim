@@ -2,7 +2,7 @@
 #
 # h  BUFFER NUMBER TO WRITE TO
 # b  SHOULD WE CLEAR FIRST 0|1
-def GBRef(h: number, b = 1)
+def GBRef(h = 0, b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
 
@@ -111,12 +111,12 @@ def GBRef(h: number, b = 1)
     win_execute(win_getid(1), printf(':3 | norm %s|', L0 + 3))
 enddef
 
-def GBExeExit(hT: number, hB: number, j: job, code: number)
+def GBExeExit(hT: number, hB: number, j: job, c = 0)
     G8()
     GBRef(hT, 1)
 enddef
 
-def GBExe(hT: number, hB: number, cmd: string)
+def GBExe(hT = 0, hB = 0, cmd = '')
     Say(hB, cmd)
     win_execute(win_getid(2), 'norm G')
     let f = funcref(SayCb, [hB])
@@ -124,11 +124,11 @@ def GBExe(hT: number, hB: number, cmd: string)
     job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
 enddef
 
-def GBCln(hT: number, hB: number)
+def GBCln(hT = 0, hB = 0)
     GBExe(hT, hB, 'git clean -xdf -e *.swp')
 enddef
 
-def GBDel(hT: number, hB: number)
+def GBDel(hT = 0, hB = 0)
     GBExe(hT, hB, 'git branch -d ' .. T1())
 enddef
 
@@ -137,7 +137,7 @@ def GBFet(hT = 0, hB = 0)
     GBExe(hT, hB, IsR(o) ? 'git fetch ' .. o .. ' ' .. Head : 'git fetch')
 enddef
 
-def GBNav(hT: number, hB: number)
+def GBNav(hT = 0, hB = 0)
     if col('.') < 10
         GitLog()
     el
@@ -145,24 +145,24 @@ def GBNav(hT: number, hB: number)
     en
 enddef
 
-def GBNew(hT: number, hB: number)
+def GBNew(hT = 0, hB = 0)
     GBExe(hT, hB, 'git branch ' .. T1())
 enddef
 
-def GBPsh(hT: number, hB: number)
+def GBPsh(hT = 0, hB = 0)
     let o = T9()
     GBExe(hT, hB, IsR(o) ? 'git push ' .. o .. ' ' .. Head : 'git push')
 enddef
 
-def GBPru(hT: number, hB: number)
+def GBPru(hT = 0, hB = 0)
     GBExe(hT, hB, 'git remote prune ' .. T9())
 enddef
 
-def GBRes(hT: number, hB: number)
+def GBRes(hT = 0, hB = 0)
     GBExe(hT, hB, 'git reset --hard ' .. T1())
 enddef
 
-def GBTag(hT: number, hB: number)
+def GBTag(hT = 0, hB = 0)
     GBExe(hT, hB, 'git fetch --tags ' .. T9())
 enddef
 

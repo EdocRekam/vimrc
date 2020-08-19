@@ -1,14 +1,19 @@
 # MAP F3 KEY TO CLOSE TOP AND BOTTOM WINDOW AND DELETE BUFFERS
 # ASSOCIATED WITH THEM
-def G0(hT: number, hB: number)
+def G0(hT = 0, hB = 0)
     let f = "no <silent><buffer><F3> :sil bw! %d %d<CR>"
     win_execute(win_getid(1), printf(f, hT, hB))
     win_execute(win_getid(2), printf(f, hT, hB))
 enddef
 
 # COMMON KEY MAPPING USED IN GIT FUNCTIONS
-def G1(hT: number, hB: number, k: string, f: string)
+def G1(hT = 0, hB = 0, k = '', f = '')
     win_execute(win_getid(1), printf('nn <silent><buffer><%s> :sil cal <SID>%s(%d, %d)<CR>', k, f, hT, hB))
+enddef
+
+# GENERATE A SYNTAX REGION MEANT TO HIGHLIGHT DELIMITED TEXT
+def G2(l = '', r = '')
+    exe printf('sy region P start=|%s| end=|%s| contains=@NoSpell contained display oneline', l, r)
 enddef
 
 # GENERALLY SYNTAX HIGHLIGHTING WORKS A LOT FASTER WITH A BUNCH OF
@@ -34,7 +39,7 @@ let R = 'hub origin vso'
 
 # SPLIT BRANCH STRING INTO PARTS. ADD EACH PART AS REMOTE
 # vso/1.1 -> ['vso', '1.1']
-def Ab(val: string)
+def Ab(val = '')
     for p in split(val, '[/]')
         B = T4(B, p)
     endfo
@@ -48,13 +53,13 @@ def GRemotes()
 enddef
 
 # IS REMOTE
-def IsR(r: string): bool
+def IsR(r = ''): bool
     retu -1 != stridx(R, r)
 enddef
 
 # Sr - TrimRemoteName
 # TRIM THE LEADING REMOTE TEXT FROM THE SPECIFIED BRANCH NAME
-def Sr(b: string): string
+def Sr(b = ''): string
     let p = get(split(b, '/'), 0)
     if IsR(p)
         retu Sr(strcharpart(b, strchars(p) + 1))
@@ -72,12 +77,12 @@ def G7()
     sy match Comment "^\s\s\s\s.*$" contains=L,P,K
 
     # PAIRS
-    sy region P start="\[" end="\]" contains=@NoSpell,L contained display oneline
-    sy region P start="(" end=")" contains=@NoSpell,L contained display oneline
-    sy region P start="<" end=">" contains=@NoSpell contained display oneline
-    sy region P start="`" end="`" contains=@NoSpell contained display oneline
-    sy region P start='"' end='"' contains=@NoSpell contained display oneline
-    sy region P start="'" end="'" contains=@NoSpell contained display oneline
+    G2('\[', '\]')
+    G2('(', ')')
+    G2('<', '>')
+    G2('`', '`')
+    G2('"', '"')
+    G2("'", "'")
 
     # DATE
     sy match D "\d\d\d\d-\d\d-\d\d"
@@ -157,14 +162,11 @@ enddef
 # LAUNCH GITK USING FILE UNDER CURSOR
 def GitK()
     let p = T1()
-    let c = 'gitk'
-
     if filereadable(p)
-        c = c .. ' -- ' .. p
+        job_start(['gitk', '--', p])
     elsei strchars(p) > 0
-        c = c .. ' ' .. p
+        job_start(['gitk', p])
     en
-    job_start(c)
 enddef
 T0('S-F7', 'GitK')
 

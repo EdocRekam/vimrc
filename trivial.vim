@@ -98,6 +98,15 @@ def T13(v = '4')
 enddef
 command! -nargs=1 Tabs :cal <SID>T13('<args>')
 
+# MAP KEY
+# NORMAL MODE
+# LOCAL BUFFER
+# MAPKEY(KEY, FUNCTION_NAME, NUMBER1, NUMBER2, STRING1)
+#
+def T14(k = '', f = '', n1 = 0, n2 = 0, s1 = '')
+    exe printf("nn <silent><buffer><%s> :cal <SID>%s(%d, %d, '%s')<CR>", k, f, n1, n2, s1)
+enddef
+
 def SCB(d: list<string>, c: channel, msg = '')
     d->add(msg)
 enddef
@@ -124,11 +133,11 @@ def Say(h: number, msg: any)
 enddef
 
 # CALLBACK FOR JOB THAT ECHOS TEXT
-def SayCb(h: number, c: channel, msg: string)
+def SayCb(h: number, c: channel, msg = '')
     Say(h, msg)
 enddef
 
-def SayEx(h: number, cmd: string)
+def SayEx(h = 0, cmd = '')
     let f = funcref(SayCb, [h])
     job_start(cmd, #{out_cb: f, err_cb: f})
 enddef

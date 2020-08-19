@@ -2,7 +2,7 @@
 #
 # h  BUFFER NUMBER TO WRITE TO
 # b  SHOULD WE CLEAR FIRST 0|1
-def GLRef(h: number, obj: string, b = 1)
+def GLRef(h = 0, hB = 0, obj = '', b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
     let now = reltime()
 
@@ -97,7 +97,7 @@ def GLRef(h: number, obj: string, b = 1)
     win_execute(win_getid(1), printf(':3 | norm %s|', L1 + 3))
 enddef
 
-def GLog(obj: string)
+def GLog(obj = '')
     let now = reltimestr(reltime())
 
     # BOTTOM -------------------------------------------------------------
@@ -124,10 +124,9 @@ def GLog(obj: string)
 
     # LOCAL KEY BINDS
     G0(hT, hB)
-    let m = 'nn <silent><buffer><'
-    exe printf('%sF4> :cal <SID>GLNav()<CR>', m)
-    exe printf("%sF7> :cal <SID>GLRef(%d, '%s')<CR>", m, hT, obj)
-    exe printf("%s2-LeftMouse> :cal <SID>GLNav()<CR>", m)
+    T14('F4', 'GLNav', hT, hB, obj)
+    T14('F7', 'GLRef', hT, hB, obj)
+    T14('2-LeftMouse', 'GLNav', hT, hB, obj)
 enddef
 
 def GitLog()
@@ -137,7 +136,7 @@ def GitLog()
 enddef
 nn <F7> :sil cal <SID>GitLog()<CR>
 
-def GLNav()
+def GLNav(hT = 0, hB = 0, o = '')
     let L = gettabvar(tabpagenr(), 'L')
     if col('.') > L[0] + L[1] + 4
         GLog(get(split(getline('.')), 1))

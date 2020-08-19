@@ -20,7 +20,7 @@ def GInsCols(): list<number>
 enddef
 
 def GInsHitTest(): number
-    let cs: list<number> = GInsCols()
+    let cs = GInsCols()
     let c = col('.')
     let r = 1
     if c < cs[9] && c >= cs[8]
@@ -46,8 +46,8 @@ def GInsHitTest(): number
     retu r
 enddef
 
-def GINav(hT: number, hB: number, obj: string)
-    let cs: list<number> = GInsCols()
+def GINav(hT = 0, hB = 0, obj = '')
+    let cs = GInsCols()
 
     let lin = getline('.')
     let pat = trim(strcharpart(lin, 0, cs[0] - 1))
@@ -233,7 +233,7 @@ def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
     win_execute(win_getid(1), ':3')
 enddef
 
-def GitInspect(obj: string)
+def GitInspect(obj = '')
     # FIND HEAD
     G8()
 
@@ -267,8 +267,7 @@ def GitInspect(obj: string)
 
     # LOCAL KEY BINDS
     G0(hT, hB)
-    let cmd = 'nn <silent><buffer><'
-    exe printf("%s2-LeftMouse> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
-    exe printf("%sF4> :cal <SID>GINav(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
-    exe printf("%sF6> :cal <SID>GIRef(%d, %d, '%s')<CR>", cmd, hT, hB, obj)
+    T14('2-LeftMouse', 'GINav', hT, hB, obj)
+    T14('F4', 'GINav', hT, hB, obj)
+    T14('F6', 'GIRef', hT, hB, obj)
 enddef

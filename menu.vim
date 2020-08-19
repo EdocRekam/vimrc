@@ -12,7 +12,7 @@ let MnuOpt["maxwidth"] = 36
 let MnuOpt["wrap"] = 0
 let MnuOpt["padding"] = [0, 1, 0, 1]
 
-def MnuFilterBuf(buf: number)
+def MnuFilterBuf(buf = 0)
     let t = get(getbufline(buf, 1), 0)
     let idx = 1
     for i in getbufline(buf, 1, '$')
@@ -30,7 +30,7 @@ def MnuResetBuf()
     deletebufline(Mnu1, '$')
 enddef
 
-def MnuBackspace(wid: number)
+def MnuBackspace(wid = 0)
     let l = get(getbufline(Mnu1, 1), 0)
     let t = strcharpart(l, 0, strchars(l) - 1)
     if strchars(t) >= 0
@@ -40,13 +40,13 @@ def MnuBackspace(wid: number)
     en
 enddef
 
-def MnuPrintableChar(wid: number, k: string)
+def MnuPrintableChar(wid = 0, k = '')
     let t = printf('%s%s', get(getbufline(Mnu1, 1), 0), tolower(k))
     setbufline(Mnu1, 1, t)
     MnuFilterBuf(Mnu1)
 enddef
 
-def MnuFilter(wid: number, k: string): number
+def MnuFilter(wid = 0, k = ''): number
     let rc = 1
 
     if k == "\<F1>" || k == "\<ESC>"
@@ -86,7 +86,7 @@ def MnuFilter(wid: number, k: string): number
 enddef
 let MnuOpt["filter"] = funcref('MnuFilter')
 
-def MnuGetCmd(id: number): number
+def MnuGetCmd(id = 0): number
     let l = get(getbufline(Mnu1, id), 0)
     retu str2nr(strcharpart(l, 39, 4))
 enddef
@@ -98,7 +98,7 @@ def MnuEnum()
     en
 enddef
 
-def MnuZoom(val: number)
+def MnuZoom(val = 0)
     if !has('gui')
         retu
     en
@@ -126,7 +126,7 @@ def F41()
     en
 enddef
 
-def MnuCallback(wid: number, result: number): number
+def MnuCallback(wid = 0, result = 0): number
     let id = 0
     if result > 0
         id = MnuGetCmd(result)
