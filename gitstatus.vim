@@ -1,7 +1,7 @@
 
 def GSRef(hT: number, hB: number, b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
-    let now = reltime()
+    let n = reltime()
 
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if b
@@ -26,7 +26,7 @@ def GSRef(hT: number, hB: number, b = 1)
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
     endfo
 
-    extend(l, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
+    extend(l, ['', '', 'Time:' .. reltimestr(reltime(n, reltime()))])
     Say(hT, l)
     win_execute(win_getid(1), ':1')
 enddef
@@ -48,7 +48,7 @@ enddef
 
 # SCRIPT VARIABLE `ct` DEFINED IN `gitcommit.vim`
 def GCAmd(hT: number, hB: number)
-    let log = S("git log -n1 --format='%s%n%n%b'")
+    let log = S(['git', 'log', '-n1', '--format=%s%n%n%b'])
     GSex(hT, hB, 'git reset --soft HEAD^')
     writefile(log, ct)
 enddef
@@ -77,9 +77,10 @@ def GSUns(hT: number, hB: number)
     en
 enddef
 
+# OPEN .gitignore IN TAB
 def GSIg(hT: number, hB: number)
     let o = T1()
-    :tabnew .gitignore
+    tabnew .gitignore
     if filereadable(o)
         append('$', o)
     en

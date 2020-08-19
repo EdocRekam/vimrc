@@ -25,7 +25,7 @@ enddef
 def GC3(hT: number, hB: number)
     # LOCK TOP WINDOW
     Say(hB, 'Switching to read-only mode.')
-    :stopi
+    stopi
     setbufvar(hT, '&modifiable', 0)
 
     let c = 'git commit --cleanup=strip -F ' .. ct
@@ -70,7 +70,7 @@ def GitCommit()
 
     # POSITION
     norm gg
-    :star
+    star
 
     exe printf('au! BufWritePost <buffer=%d> ++once :cal GC3(%d, %d)', hT, hT, hB)
     G1(hT, hB, 'F3', 'GC2')
