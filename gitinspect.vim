@@ -109,10 +109,10 @@ enddef
 # hB   BOTTOM WINDOW BUFFER
 # obj  THE COMMIT TO INSPECT
 # b    CLEAR THE SCREEN BEFORE PRINTING
-def GIRef(hT: number, hB: number, obj: string, bl = 1)
+def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
 
     # GET THE CURRENT TIME FOR SPEED METRIC
-    let now = reltime()
+    let n = reltime()
 
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if bl
@@ -125,7 +125,7 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
     let L5 = 13
 
     let rs: list<list<string>>
-    for i in S('git diff --numstat ' .. obj .. '~1 ' .. obj)
+    for i in S(['git', 'diff', '--numstat', obj .. '~1', obj])
 
         # SAMPLE OUTPUT
         # ADD(A)  DEL(B)  PATH(C)
@@ -219,10 +219,12 @@ def GIRef(hT: number, hB: number, obj: string, bl = 1)
     ''])
 
     # LOG ENTRY
-    extend(l, S('git log -n1 ' .. obj))
+    let log = S(['git', 'log', '--date=short', '-n1', obj])
+    log[5] = ''
+    extend(l, log)
 
     # PERFORMANCE
-    extend(l, ['', 'Time:' .. reltimestr(reltime(now, reltime()))])
+    extend(l, ['', 'Time:' .. reltimestr(reltime(n, reltime()))])
 
     # FINALLY PRINT IT
     Say(hT, l)

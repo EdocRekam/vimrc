@@ -1,23 +1,21 @@
-def g:Trace(msg: string)
-    let h: number
+def g:Trace(msg = '')
+    let h = 0
     if !bufexists('TRACE')
         h = bufadd('TRACE')
         bufload(h)
         T3(h)
-    else
+    el
         h = bufnr('TRACE')
     en
 
-    let inf = getbufinfo(h)
-    let lnr = inf[0].linecount
-    appendbufline(h, lnr - 1, msg)
+    appendbufline(h, get(getbufinfo(h), 0).linecount - 1, msg)
 enddef
 
 def g:OpenTrace()
     if bufexists('TRACE')
         let h = bufnr('TRACE')
         if 0 == win_gotoid(h)
-            :tabnew
+            tabnew
             exe 'b' .. h
         en
     en

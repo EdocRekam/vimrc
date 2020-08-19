@@ -1,5 +1,4 @@
-set gfn=Consolas:h14:cANSI:qCLEARTYPE
-set rop=type:directx
+set gfn=Consolas:h13:cANSI:qCLEARTYPE
 
 def g:ZoomIn()
     let old = getfontname()
