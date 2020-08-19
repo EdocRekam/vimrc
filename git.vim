@@ -77,6 +77,7 @@ def G7()
     sy region P start="<" end=">" contains=@NoSpell contained display oneline
     sy region P start="`" end="`" contains=@NoSpell contained display oneline
     sy region P start='"' end='"' contains=@NoSpell contained display oneline
+    sy region P start="'" end="'" contains=@NoSpell contained display oneline
 
     # DATE
     sy match D "\d\d\d\d-\d\d-\d\d"
