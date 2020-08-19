@@ -1,5 +1,4 @@
 # SET PREFERRED FONT + GVIM OPTIONS
-set enc=utf-8
 set gfn=Inconsolata\ 14
 
 def g:ZoomIn()

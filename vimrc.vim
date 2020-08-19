@@ -5,6 +5,7 @@ set guioptions +=M
 
 # NO VI COMPATIBILITY
 set nocp
+set enc=utf-8
 scripte utf-8
 
 # MAKE BACKSPACE WORK CORRECTLY
