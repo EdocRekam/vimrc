@@ -100,7 +100,7 @@ def GSIns(hT = 0, hB = 0)
         exe 'vsplit B:' .. o
         let hL = bufnr()
         T3(hL)
-        GShow(hL, 'HEAD', o)
+        GS1(hL, 'HEAD', o)
         windo :1
         windo set scb
 
