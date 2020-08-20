@@ -4,7 +4,7 @@
 # b  SHOULD WE CLEAR FIRST 0|1
 def GLRef(h = 0, hB = 0, obj = '', b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
-    let now = reltime()
+    let n = reltime()
 
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if b
@@ -72,7 +72,7 @@ def GLRef(h = 0, hB = 0, obj = '', b = 1)
     extend(l, ['', '',
     '<F1>  MENU    |  <F2> -----  |  <F3>  CLOSE         |  <F4>  INSPECT',
     '<F5>  BRANCH  |  <F6> GUI    |  <F7>  REFRESH/GITK  |  <F8>  STATUS',
-    '', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
+    '', '', 'Time:' .. reltimestr(reltime(n, reltime()))])
     Say(h, l)
 
     # DYNAMIC SYNTAX GROUPS
@@ -98,10 +98,10 @@ def GLRef(h = 0, hB = 0, obj = '', b = 1)
 enddef
 
 def GLog(obj = '')
-    let now = reltimestr(reltime())
+    let n = reltimestr(reltime())
 
     # BOTTOM -------------------------------------------------------------
-    exe 'tabnew Log - ' .. now
+    exe 'tabnew Log - ' .. n
     settabvar(tabpagenr(), 'title', obj)
     let hB = bufnr()
     Say(hB, 'Ready...')
@@ -109,11 +109,11 @@ def GLog(obj = '')
     setbufvar(hB, '&colorcolumn', '')
 
     # TOP ----------------------------------------------------------------
-    exe 'split ' .. obj .. ':' .. now
+    exe 'split ' .. obj .. ':' .. n
     let hT = bufnr()
     setbufvar(hT, '&colorcolumn', '')
     :2resize 20
-    GLRef(hT, obj, 0)
+    GLRef(hT, hB, obj, 0)
     T3(hT)
 
     # BASIC SYNTAX/COLOR
