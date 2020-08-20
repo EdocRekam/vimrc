@@ -9,7 +9,7 @@ def T1(): string
 enddef
 
 # CREATE A SYNTAX REGION STARTING/ENDING ON A COLUMN OR LINE
-def T2(grp: string, x: number, y: number, t = 'c', extra = 'contained display oneline')
+def T2(grp = '', x = 0, y = 0, t = 'c', extra = 'contained display oneline')
     let f = 'sy region %s start="%s" end="%s" %s'
     let z = x + y
     exe printf(f, grp, '\%' .. x .. t, '\%' .. z .. t, extra)
@@ -44,7 +44,7 @@ enddef
 au VimEnter * ++once : cal T6()
 
 # RETURN X OR THE LENGTH OF VAL; WHICHEVER IS GREATER
-def T7(x: number, val: string): number
+def T7(x = 0, val = ''): number
     let y = strchars(val)
     return y > x ? y : x
 enddef

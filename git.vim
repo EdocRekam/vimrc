@@ -153,10 +153,11 @@ def G8(): string
     retu Head
 enddef
 
-def GWin(cmd: string, title: string, msg: string)
-    let h = OpenWin(title, 0)
-    Say(h, [msg, cmd])
-    SayEx(h, cmd)
+# COMMAND, TITLE, MESSAGE
+def GWin(c = '', t = '', m = '')
+    let h = OpenWin(t, 0)
+    Say(h, [m, c])
+    SayEx(h, c)
 enddef
 
 # LAUNCH GITK USING FILE UNDER CURSOR

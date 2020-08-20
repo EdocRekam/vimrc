@@ -1,4 +1,4 @@
-def DotnetAsyncWin(cmd: string, title: string, msg: string)
+def DotnetAsyncWin(cmd = '', title = '', msg = '')
     let h = OpenWin(title, 0)
     Say(h, msg)
     SayEx(h, cmd)
