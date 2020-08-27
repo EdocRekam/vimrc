@@ -11,7 +11,7 @@ sy keyword Keyword abstract as async await base checked class const event explic
 sy keyword Include using
 sy keyword Exception catch finally throw try
 sy keyword Repeat do for foreach in while
-sy keyword Conditional break case continue default else goto if ifen ifn ifne ifns return switch yield
+sy keyword Conditional break case continue default else goto if ife ifen ifn ifne ifnw return switch yield
 
 " VALUE TYPES
 sy keyword Type bool byte char decimal delegate double enum float int long object sbyte short string struct uint ulong ushort var void
@@ -19,7 +19,7 @@ sy keyword Type bool byte char decimal delegate double enum float int long objec
 sy keyword Identifier Int32 String
 sy keyword Identifier Fact Theory InlineData
 
-sy keyword Function IsNullOrEmpty ToInt32 ToString
+sy keyword Function IsNullOrEmpty IsNullOrWhiteSpace ToInt32 ToString
 
 " STRINGS
 sy region String start='"' end='"'
