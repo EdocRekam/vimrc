@@ -139,6 +139,7 @@ def GitStatus()
         # SYNTAX
         sy match D "deleted:.*$" display
         sy match LBL "modified:.*$" display
+        sy match LBL "both modified:.*$" display
         sy match MC "new file:.*$" display
         G7()
 

@@ -8,6 +8,7 @@ Case: Upper                            5
 Convert: Indentation To Spaces         6
 Convert: Line Endings To DOS           7
 Convert: Line Endings To Unix          8
+Convert: Encoding To UTF-8             13
 Font: Decrease Size                    10
 Font: Increase Size                    11
 Font: Dialog                           37
@@ -25,6 +26,7 @@ Sort: Ascending + Insensitive          25
 Sort: Descending                       26
 Sort: Descending + Insensitive         27
 Symbol: Goto Definition           F4   28
+Tab: Title                             12
 Test: All                              29
 Test: This                             30
 Test: This File                        31

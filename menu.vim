@@ -161,6 +161,12 @@ def MnuCallback(wid = 0, result = 0): number
         MnuZoom(1)
     elseif 11 == id
         MnuZoom(0)
+    elseif 12 == id
+        # SET TAB TITLE
+        F12()
+    elseif 13 == id
+        # REMOVE BOM
+        F13()
     elseif 14 == id
         GWin('git diff', 'DIFF', '')
     elsei 16 == id

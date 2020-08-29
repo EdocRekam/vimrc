@@ -166,6 +166,20 @@ def F8()
     up
 enddef
 
+# SET TAB TITLE
+def F12()
+    let i = input('TITLE: ', '')
+    if '' != i
+        settabvar(tabpagenr(), 'title', i)
+    en
+enddef
+
+# CONVERT TO UTF-8 NO BOM
+def F13()
+    setl nobomb
+    w ++enc=utf8
+enddef
+
 # REMOVE DUPLICATES FROM CURRENT SELECTION
 def F22()
     let src = T8()
