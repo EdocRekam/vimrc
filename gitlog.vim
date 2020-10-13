@@ -27,7 +27,6 @@ def GLRef(h = 0, hB = 0, obj = '', b = 1)
     let log = S(['git', 'log', '-n50', '--pretty=%t | %h | %s | %as | %an', obj])
     let nlog = len(log)
     for i in log
-        Trace(i)
         let r = split(i, ' | ')
 
         # FIX SUBJECT LENGTH+FORMAT
