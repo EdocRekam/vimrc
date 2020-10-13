@@ -162,11 +162,8 @@ def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
             aft = obj
         else
             bef = get(split(past[1], ' | '), 0)
-            if b > 1
-                aft = obj
-            else
-                aft = S('git show ' .. obj .. ':' .. c)->len() > 1 ? obj : 'DELETED'
-            en
+            let txt = S(['git', 'show', obj .. ':' c])
+            aft = 0 == stridx(txt[0], 'tree') ? obj : 'DELETED'
         en
 
         # DIG OUT AUTHORS FROM PAST (IF POSSIBLE)
