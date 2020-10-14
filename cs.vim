@@ -6,7 +6,7 @@ en
 
 " KEYWORDS
 " https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/
-sy keyword Keyword abstract as async await base checked class const event explicit extern false fixed fixed get implicit interface internal is lock namespace new null operator out override params private protected public readonly ref sealed set sizeof stackalloc static this true typeof unchecked unsafe virtual volatile
+sy keyword Keyword abstract as async await base checked class const event explicit extern false fixed fixed get implicit interface internal is lock nameof namespace new null operator out override params private protected public readonly ref sealed set sizeof stackalloc static this true typeof unchecked unsafe virtual volatile
 
 sy keyword Include using
 sy keyword Exception catch finally throw try
