@@ -94,3 +94,6 @@ vnoremap <S-Tab> < <CR>gv
 inoremap <C-Tab> <C-Q><Tab>
 nn <C-Tab> i<C-Q><Tab>
 
+# SCROLLBIND
+nn <silent><F21> :windo 1<CR> \| :windo set crb!<CR> \| :windo set scb!<CR>
+
