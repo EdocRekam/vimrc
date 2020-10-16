@@ -16,7 +16,7 @@ sy keyword Conditional break case continue default else goto if ife ifen ifn ifn
 " VALUE TYPES
 sy keyword Type bool byte char decimal delegate double enum float int long object sbyte short string struct uint ulong ushort var void
 
-sy keyword Identifier Int32 String
+sy keyword Identifier Int32 Int64 String Stream
 sy keyword Identifier Fact Theory InlineData
 
 sy keyword Function IsNullOrEmpty IsNullOrWhiteSpace ToInt32 ToString
