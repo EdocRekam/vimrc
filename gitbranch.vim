@@ -4,7 +4,7 @@
 # b  SHOULD WE CLEAR FIRST 0|1
 def GBRef(h = 0, b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
-    let now = reltime()
+    var now = reltime()
 
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if b
@@ -13,15 +13,15 @@ def GBRef(h = 0, b = 1)
     en
 
     # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
-    let L0 = 7
-    let L1 = 10
-    let L2 = 20
-    let L3 = 10
-    let L4 = 10
+    var L0 = 7
+    var L1 = 10
+    var L2 = 20
+    var L3 = 10
+    var L4 = 10
 
-    let rs: list<list<string>>
+    var rs: list<list<string>>
     for i in S(['git', 'branch', '-a', '--format=%(objectname:short) | %(refname) | %(subject) | %(authordate:short) | %(authorname)'])
-        let p = split(i, ' | ')
+        var p = split(i, ' | ')
 
         # HANDLE BAD REF
         if len(p) != 5
@@ -29,14 +29,14 @@ def GBRef(h = 0, b = 1)
         en
 
         # SHORTEN REF NAME
-        let ref = substitute(p[1], 'refs/remotes/', '', '')
+        var ref = substitute(p[1], 'refs/remotes/', '', '')
         ref = substitute(ref, 'refs/heads/', '', '')
 
         # FIX SUBJECT LENGTH+FORMAT
-        let s = p[2]->strcharpart(0, 85)->tr("\t", " ")
+        var s = p[2]->strcharpart(0, 85)->tr("\t", " ")
 
         # SYNTAX: BRANCH KEYWORDS
-        let p1 = split(ref, '/')
+        var p1 = split(ref, '/')
         for br in p1
             if !IsR(br)
                 Ab(br)
@@ -56,10 +56,10 @@ def GBRef(h = 0, b = 1)
         add(rs, [ p[0], ref, s, p[3], p[4]])
     endfo
 
-    let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3)
-    let hl = L0 + L1 + L2 + L3 + L4 + 8
-    let sep = repeat('-', hl)
-    let l = [ printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR'), sep]
+    var f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3)
+    var hl = L0 + L1 + L2 + L3 + L4 + 8
+    var sep = repeat('-', hl)
+    var l = [ printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR'), sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], i[4]))
     endfo
@@ -79,7 +79,7 @@ def GBRef(h = 0, b = 1)
     #     T  TOP LINES
     #     M  MENU
     #     R  REMOTES
-    let rc = len(l)
+    var rc = len(l)
     T2('T', 3, len(rs), 'l', 'contains=C,S,D,A,R')
     T2('M', rc + 3, 5, 'l', 'contains=@NoSpell,P,MC,MK')
     T2('M', rc + 11, 1, 'l', 'contains=@NoSpell,P,MC,MK')
@@ -97,7 +97,7 @@ def GBRef(h = 0, b = 1)
     '', 'BRANCH: ' .. Head, sep, ''])
 
     # ADD LAST FIVE LOG ENTRIES
-    let log = S('git log --date=short -n5')
+    var log = S('git log --date=short -n5')
     T2('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,L,P')
     for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
@@ -119,9 +119,9 @@ enddef
 def GBExe(hT = 0, hB = 0, cmd = '')
     Say(hB, cmd)
     win_execute(win_getid(2), 'norm G')
-    let f = funcref(SayCb, [hB])
-    let e = funcref(GBExeExit, [hT, hB])
-    job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
+    var F = funcref(SayCb, [hB])
+    var E = funcref(GBExeExit, [hT, hB])
+    job_start(cmd, {out_cb: F, err_cb: F, exit_cb: E})
 enddef
 
 def GBCln(hT = 0, hB = 0)
@@ -133,7 +133,7 @@ def GBDel(hT = 0, hB = 0)
 enddef
 
 def GBFet(hT = 0, hB = 0)
-    let o = T9()
+    var o = T9()
     GBExe(hT, hB, IsR(o) ? 'git fetch ' .. o .. ' ' .. Head : 'git fetch')
 enddef
 
@@ -150,7 +150,7 @@ def GBNew(hT = 0, hB = 0)
 enddef
 
 def GBPsh(hT = 0, hB = 0)
-    let o = T9()
+    var o = T9()
     GBExe(hT, hB, IsR(o) ? 'git push ' .. o .. ' ' .. Head : 'git push')
 enddef
 
@@ -168,20 +168,20 @@ enddef
 
 def GitBranch()
     # NOW
-    let n = reltimestr(reltime())
+    var n = reltimestr(reltime())
     G8()
 
     # BOTTOM -------------------------------------------------------------
     exe 'tabnew BranchB' .. n
     settabvar(tabpagenr(), 'title', 'BRANCH')
-    let hB = bufnr()
+    var hB = bufnr()
     Say(hB, 'Ready...')
     T3(hB)
     setbufvar(hB, '&colorcolumn', '')
 
     # TOP ----------------------------------------------------------------
     exe 'split BranchT' .. n
-    let hT = bufnr()
+    var hT = bufnr()
     setbufvar(hT, '&colorcolumn', '')
     :ownsyntax gitbranch
     :2resize 20

@@ -3,23 +3,23 @@ def Align(value: string)
         retu
     en
 
-    let nr = line("'<")
-    let colAlign = 0
+    var nr = line("'<")
+    var colAlign = 0
     for line in getline(nr, "'>")
-        let col = stridx(line, value)
+        var col = stridx(line, value)
         if col > colAlign
             colAlign = col + 1
         en
     endfo
-    let cnt = 0
+    var cnt = 0
     for line in getline(nr, "'>")
-        let col = stridx(line, value)
-        let diff = colAlign - col
-        let fmt = '%s%' .. printf('%d', diff) .. 's%s'
-        let front = strcharpart(line, 0, col)
-        let back = strcharpart(line, col, strchars(line))
-        line = printf(fmt, front, ' ', back)
-        setline(nr, line)
+        var col = stridx(line, value)
+        var diff = colAlign - col
+        var fmt = '%s%' .. printf('%d', diff) .. 's%s'
+        var front = strcharpart(line, 0, col)
+        var back = strcharpart(line, col, strchars(line))
+        var newline = printf(fmt, front, ' ', back)
+        setline(nr, newline)
         nr += 1
         cnt += 1
     endfo
@@ -27,11 +27,11 @@ def Align(value: string)
 enddef
 
 def Enum(base = 0)
-    let nr = line("'<")
-    let cnt = base
+    var nr = line("'<")
+    var cnt = base
     for line in getline(nr, "'>")
-        line = printf('%04d %s', cnt, line)
-        setline(nr, line)
+        var newline = printf('%04d %s', cnt, line)
+        setline(nr, newline)
         nr += 1
         cnt += 1
     endfo
@@ -39,9 +39,9 @@ def Enum(base = 0)
 enddef
 
 def Widest(rows: list<list<string>>, col = 0, min = 0, max = 85): number
-    let c = min
+    var c = min
     for r in rows
-        let len = strchars(r[col])
+        var len = strchars(r[col])
         if len > c
             c = len
             if c > max
@@ -53,8 +53,8 @@ def Widest(rows: list<list<string>>, col = 0, min = 0, max = 85): number
 enddef
 
 def OpenWin(t = '', blank = 1): number
-    let h = bufnr(t)
-    let ids = win_findbuf(h)
+    var h = bufnr(t)
+    var ids = win_findbuf(h)
     if empty(ids)
         exe 'new ' .. t
         norm gg\<c-w>J

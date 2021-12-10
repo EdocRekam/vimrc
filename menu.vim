@@ -1,20 +1,20 @@
-let MnuWid = 0
-let Mnu0 = 0
-let Mnu1 = 1
+var MnuWid = 0
+var Mnu0 = 0
+var Mnu1 = 1
 
-let MnuOpt = #{}
-let MnuOpt["cursorline"] = 1
-let MnuOpt["filtermode"] = 'a'
-let MnuOpt["line"] = 2
-let MnuOpt["mapping"] = 0
-let MnuOpt["maxheight"] = 25
-let MnuOpt["maxwidth"] = 36
-let MnuOpt["wrap"] = 0
-let MnuOpt["padding"] = [0, 1, 0, 1]
+var MnuOpt = {}
+MnuOpt["cursorline"] = 1
+MnuOpt["filtermode"] = 'a'
+MnuOpt["line"] = 2
+MnuOpt["mapping"] = 0
+MnuOpt["maxheight"] = 25
+MnuOpt["maxwidth"] = 36
+MnuOpt["wrap"] = 0
+MnuOpt["padding"] = [0, 1, 0, 1]
 
 def MnuFilterBuf(buf = 0)
-    let t = get(getbufline(buf, 1), 0)
-    let idx = 1
+    var t = get(getbufline(buf, 1), 0)
+    var idx = 1
     for i in getbufline(buf, 1, '$')
         if stridx(tolower(i), t) != -1
             idx += 1
@@ -31,8 +31,8 @@ def MnuResetBuf()
 enddef
 
 def MnuBackspace(wid = 0)
-    let l = get(getbufline(Mnu1, 1), 0)
-    let t = strcharpart(l, 0, strchars(l) - 1)
+    var l = get(getbufline(Mnu1, 1), 0)
+    var t = strcharpart(l, 0, strchars(l) - 1)
     if strchars(t) >= 0
         MnuResetBuf()
         setbufline(Mnu1, 1, t)
@@ -41,20 +41,24 @@ def MnuBackspace(wid = 0)
 enddef
 
 def MnuPrintableChar(wid = 0, k = '')
-    let t = printf('%s%s', get(getbufline(Mnu1, 1), 0), tolower(k))
+    var t = printf('%s%s', get(getbufline(Mnu1, 1), 0), tolower(k))
     setbufline(Mnu1, 1, t)
     MnuFilterBuf(Mnu1)
 enddef
 
 def MnuFilter(wid = 0, k = ''): number
-    let rc = 1
+    var rc = 1
 
     if k == "\<F1>" || k == "\<ESC>"
         popup_close(wid, -1)
 
     # PASS THESE ON TO SYSTEM
     elsei k == "\<Down>" || k == "\<Up>"
-        rc = popup_filter_menu(wid, k)
+        if (popup_filter_menu(wid, k))
+            rc = 1
+        else
+            rc = 0
+        en
 
     # BACKUP
     elsei k == "\<BS>"
@@ -79,20 +83,24 @@ def MnuFilter(wid = 0, k = ''): number
 
     # NONPRINTABLE
     else
-        rc = popup_filter_menu(wid, k)
+        if (popup_filter_menu(wid, k))
+            rc = 1
+        else
+            rc = 0
+        en
     en
 
     retu rc
 enddef
-let MnuOpt["filter"] = funcref('MnuFilter')
+MnuOpt["filter"] = funcref('MnuFilter')
 
 def MnuGetCmd(id = 0): number
-    let l = get(getbufline(Mnu1, id), 0)
+    var l = get(getbufline(Mnu1, id), 0)
     retu str2nr(strcharpart(l, 39, 4))
 enddef
 
 def MnuEnum()
-    let ask = input('START: ', '0')
+    var ask = input('START: ', '0')
     if '' != ask
         Enum(str2nr(ask))
     en
@@ -112,7 +120,7 @@ enddef
 
 # VIM SYNTAX FILE
 def F35()
-    let pat = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
+    var pat = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
     if filereadable(pat)
         exe 'tabnew ' .. pat
     en
@@ -120,14 +128,14 @@ enddef
 
 # MENU CHEAT SHEET
 def F41()
-    let f = VimDir() .. 'keys.html'
+    var f = VimDir() .. 'keys.html'
     if filereadable(f)
         job_start('firefox --new-window ' .. f)
     en
 enddef
 
 def MnuCallback(wid = 0, result = 0): number
-    let id = 0
+    var id = 0
     if result > 0
         id = MnuGetCmd(result)
     en
@@ -236,7 +244,7 @@ def MnuCallback(wid = 0, result = 0): number
     MnuWid = 0
     retu 1
 enddef
-let MnuOpt["callback"] = funcref('MnuCallback')
+MnuOpt["callback"] = funcref('MnuCallback')
 
 def MnuLoad()
     Mnu0 = bufadd(VimDir() .. 'menu.txt')

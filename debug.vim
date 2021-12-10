@@ -1,5 +1,5 @@
 def g:Trace(msg = '')
-    let h = 0
+    var h = 0
     if !bufexists('TRACE')
         h = bufadd('TRACE')
         bufload(h)
@@ -13,7 +13,7 @@ enddef
 
 def g:OpenTrace()
     if bufexists('TRACE')
-        let h = bufnr('TRACE')
+        var h = bufnr('TRACE')
         if 0 == win_gotoid(h)
             tabnew
             exe 'b' .. h

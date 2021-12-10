@@ -1,7 +1,7 @@
 # MAP F3 KEY TO CLOSE TOP AND BOTTOM WINDOW AND DELETE BUFFERS
 # ASSOCIATED WITH THEM
 def G0(hT = 0, hB = 0)
-    let f = "no <silent><buffer><F3> :sil bw! %d %d<CR>"
+    var f = "no <silent><buffer><F3> :sil bw! %d %d<CR>"
     win_execute(win_getid(1), printf(f, hT, hB))
     win_execute(win_getid(2), printf(f, hT, hB))
 enddef
@@ -33,9 +33,9 @@ enddef
 #     (B)RANCHES
 #     (R)EMOTES
 
-let A = 'edoc rekam'
-let B = 'head master'
-let R = 'hub origin vso'
+var A = 'edoc rekam'
+var B = 'head master'
+var R = 'hub origin vso'
 
 # SPLIT BRANCH STRING INTO PARTS. ADD EACH PART AS REMOTE
 # vso/1.1 -> ['vso', '1.1']
@@ -60,7 +60,7 @@ enddef
 # Sr - TrimRemoteName
 # TRIM THE LEADING REMOTE TEXT FROM THE SPECIFIED BRANCH NAME
 def Sr(b = ''): string
-    let p = get(split(b, '/'), 0)
+    var p = get(split(b, '/'), 0)
     if IsR(p)
         retu Sr(strcharpart(b, strchars(p) + 1))
     en
@@ -155,14 +155,14 @@ enddef
 
 # COMMAND, TITLE, MESSAGE
 def GWin(c = '', t = '', m = '')
-    let h = OpenWin(t, 0)
+    var h = OpenWin(t, 0)
     Say(h, [m, c])
     SayEx(h, c)
 enddef
 
 # LAUNCH GITK USING FILE UNDER CURSOR
 def GitK()
-    let p = T1()
+    var p = T1()
     if filereadable(p)
         job_start(['gitk', '--', p])
     elsei strchars(p) > 0

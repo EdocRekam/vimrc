@@ -10,8 +10,8 @@ enddef
 
 # CREATE A SYNTAX REGION STARTING/ENDING ON A COLUMN OR LINE
 def T2(grp = '', x = 0, y = 0, t = 'c', extra = 'contained display oneline')
-    let f = 'sy region %s start="%s" end="%s" %s'
-    let z = x + y
+    var f = 'sy region %s start="%s" end="%s" %s'
+    var z = x + y
     exe printf(f, grp, '\%' .. x .. t, '\%' .. z .. t, extra)
 enddef
 
@@ -45,7 +45,7 @@ au VimEnter * ++once : cal T6()
 
 # RETURN X OR THE LENGTH OF VAL; WHICHEVER IS GREATER
 def T7(x = 0, val = ''): number
-    let y = strchars(val)
+    var y = strchars(val)
     return y > x ? y : x
 enddef
 
@@ -59,7 +59,7 @@ def T9(): string
     retu expand('<cword>')
 enddef
 
-let _T10 = 'H'
+var _T10 = 'H'
 def T10()
     _T10 = _T10 == 'H' ? 'K' : 'H'
     exe 'winc ' .. _T10
@@ -85,7 +85,7 @@ command! -nargs=1 Find :cal <SID>T11('<args>')
 
 # RENAME WORD UNDER CURSOR ALL FILE OCCURRENCES WITH INPUT
 def T12(): void
-    let v = input('Value: ')
+    var v = input('Value: ')
     if '' != v
         exe '%s/' .. T9() .. '/' .. v .. '/g'
     en
@@ -113,9 +113,9 @@ enddef
 
 # RUN SYSTEM COMMAND STORE RESULT IN LIST
 def S(c: any): list<string>
-    let d = ['']
-    let f = funcref(SCB, [d])
-    let j = job_start(c, #{out_cb: f, err_cb: f})
+    var d = ['']
+    var F = funcref(SCB, [d])
+    var j = job_start(c, {out_cb: F, err_cb: F})
     while 'run' == j->job_status()
         sleep 25m
     endw
@@ -127,8 +127,8 @@ enddef
 
 # WRITE MSG TO END OF BUFFER
 def Say(h: number, msg: any)
-    let c = get(get(getbufinfo(h), 0), 'linecount')
-    let l = strchars(get(getbufline(h, '$'), 0))
+    var c = get(get(getbufinfo(h), 0), 'linecount')
+    var l = strchars(get(getbufline(h, '$'), 0))
     appendbufline(h, l > 1 ? c : c - 1, msg)
 enddef
 
@@ -138,8 +138,8 @@ def SayCb(h: number, c: channel, msg = '')
 enddef
 
 def SayEx(h = 0, cmd = '')
-    let f = funcref(SayCb, [h])
-    job_start(cmd, #{out_cb: f, err_cb: f})
+    var F = funcref(SayCb, [h])
+    job_start(cmd, {out_cb: F, err_cb: F})
 enddef
 
 # EXPAND TAB TO SPACE
@@ -168,7 +168,7 @@ enddef
 
 # SET TAB TITLE
 def F12()
-    let i = input('TITLE: ', '')
+    var i = input('TITLE: ', '')
     if '' != i
         settabvar(tabpagenr(), 'title', i)
     en
@@ -182,14 +182,14 @@ enddef
 
 # REMOVE DUPLICATES FROM CURRENT SELECTION
 def F22()
-    let src = T8()
-    let dst: list<string>
+    var src = T8()
+    var dst: list<string>
     for l in src
         if index(dst, l, 0, 0) < 0
             add(dst, l)
         en
     endfo
-    let x = len(src) - len(dst)
+    var x = len(src) - len(dst)
     wh x > 0
         add(dst, '')
         x -= 1

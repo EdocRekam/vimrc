@@ -4,7 +4,7 @@
 # b  SHOULD WE CLEAR FIRST 0|1
 def GLRef(h = 0, hB = 0, obj = '', b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
-    let n = reltime()
+    var n = reltime()
 
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if b
@@ -14,23 +14,23 @@ def GLRef(h = 0, hB = 0, obj = '', b = 1)
 
     # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
     # ARE FASTER THAN REGEX
-    let K = obj
+    var K = obj
 
     # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
-    let L0 = 7
-    let L1 = 7
-    let L2 = 50
-    let L3 = 10
-    let L4 = 7
+    var L0 = 7
+    var L1 = 7
+    var L2 = 50
+    var L3 = 10
+    var L4 = 7
 
-    let rs: list<list<string>>
-    let log = S(['git', 'log', '-n50', '--pretty=%t | %h | %s | %as | %an', obj])
-    let nlog = len(log)
+    var rs: list<list<string>>
+    var log = S(['git', 'log', '-n50', '--pretty=%t | %h | %s | %as | %an', obj])
+    var nlog = len(log)
     for i in log
-        let r = split(i, ' | ')
+        var r = split(i, ' | ')
 
         # FIX SUBJECT LENGTH+FORMAT
-        let s = r[2]->strcharpart(0, 85)->tr("\t", " ")
+        var s = r[2]->strcharpart(0, 85)->tr("\t", " ")
 
         # UPDATE COLUMN LENGTHS
         L0 = T7(L0, r[0])
@@ -47,11 +47,11 @@ def GLRef(h = 0, hB = 0, obj = '', b = 1)
         add(rs, [ r[0], r[1], s, r[3], r[4]])
     endfo
 
-    let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3)
-    let sep = repeat('-', L0 + L1 + L2 + L3 + L4 + 8)
+    var f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3)
+    var sep = repeat('-', L0 + L1 + L2 + L3 + L4 + 8)
 
     # l REPRESENTS ALL THE LINES SENT TO THE BUFFER
-    let l = [ printf(f, 'TREE', 'COMMIT', obj, 'DATE', 'AUTHOR'), sep]
+    var l = [ printf(f, 'TREE', 'COMMIT', obj, 'DATE', 'AUTHOR'), sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], i[4]))
     endfo
@@ -59,11 +59,11 @@ def GLRef(h = 0, hB = 0, obj = '', b = 1)
     # BRANCHES
     extend(l, ['', printf(f, 'TREE', 'COMMIT', 'TAG', 'DATE', 'AUTHOR'), sep])
 
-    let br = S('git rev-parse --short --tags HEAD')
-    let nbr = len(br)
+    var br = S('git rev-parse --short --tags HEAD')
+    var nbr = len(br)
     for i in br
-        let line = get(S(['git', 'log', '-n1', '--pretty=%t | %h | %D | %as | %an', i]), 0)
-        let r = split(line, ' | ')
+        var line = get(S(['git', 'log', '-n1', '--pretty=%t | %h | %D | %as | %an', i]), 0)
+        var r = split(line, ' | ')
 
         add(l, printf(f, r[0], r[1], r[2], r[3], r[4]))
     endfo
@@ -97,19 +97,19 @@ def GLRef(h = 0, hB = 0, obj = '', b = 1)
 enddef
 
 def GLog(obj = '')
-    let n = reltimestr(reltime())
+    var n = reltimestr(reltime())
 
     # BOTTOM -------------------------------------------------------------
     exe 'tabnew Log - ' .. n
     settabvar(tabpagenr(), 'title', obj)
-    let hB = bufnr()
+    var hB = bufnr()
     Say(hB, 'Ready...')
     T3(hB)
     setbufvar(hB, '&colorcolumn', '')
 
     # TOP ----------------------------------------------------------------
     exe 'split ' .. obj .. ':' .. n
-    let hT = bufnr()
+    var hT = bufnr()
     setbufvar(hT, '&colorcolumn', '')
     :2resize 20
     GLRef(hT, hB, obj, 0)
@@ -130,13 +130,13 @@ enddef
 
 def GitLog()
     G8()
-    let o = T1()
+    var o = T1()
     GLog(strchars(o) > 5 ? o : 'HEAD')
 enddef
 nn <F7> :sil cal <SID>GitLog()<CR>
 
 def GLNav(hT = 0, hB = 0, o = '')
-    let L = gettabvar(tabpagenr(), 'L')
+    var L = gettabvar(tabpagenr(), 'L')
     if col('.') > L[0] + L[1] + 4
         GLog(get(split(getline('.')), 1))
     else

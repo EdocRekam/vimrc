@@ -2,10 +2,10 @@
 set gfn=Inconsolata\ 14
 
 def g:ZoomIn()
-    let old = getfontname()
-    let i = match(old, '[0-9][0-9]')
-    let family = strcharpart(old, -1, i)
-    let size = str2nr(strcharpart(old, i, 2)) + 1
+    var old = getfontname()
+    var i = match(old, '[0-9][0-9]')
+    var family = strcharpart(old, -1, i)
+    var size = str2nr(strcharpart(old, i, 2)) + 1
     if size > FONT_MAX
         size = FONT_MIN
     en
@@ -13,10 +13,10 @@ def g:ZoomIn()
 enddef
 
 def g:ZoomOut()
-    let old = getfontname()
-    let i = match(old, '[0-9][0-9]')
-    let family = strcharpart(old, -1, i)
-    let size = str2nr(strcharpart(old, i, 2)) - 1
+    var old = getfontname()
+    var i = match(old, '[0-9][0-9]')
+    var family = strcharpart(old, -1, i)
+    var size = str2nr(strcharpart(old, i, 2)) - 1
     if size < FONT_MIN
         size = FONT_MAX
     en

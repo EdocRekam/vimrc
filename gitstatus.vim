@@ -1,7 +1,7 @@
 
 def GSRef(hT = 0, hB = 0, b = 1)
     # GET THE CURRENT TIME FOR SPEED METRIC
-    let n = reltime()
+    var n = reltime()
 
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if b
@@ -9,7 +9,7 @@ def GSRef(hT = 0, hB = 0, b = 1)
         sy clear M LOG
     en
 
-    let l = S('git status')
+    var l = S('git status')
 
     T2('M', len(l) + 2, 5, 'l', 'contains=@NoSpell,P,MC,MK')
     extend(l, ['',
@@ -20,7 +20,7 @@ def GSRef(hT = 0, hB = 0, b = 1)
     '<F5>   BRANCH   |  <F6>     GUI      |  <F7>    LOG/GITK  |  <F8>  REFRESH',
     '', 'Remotes: ' .. R, repeat('-', 79)])
 
-    let log = S('git log --date=short -n5')
+    var log = S('git log --date=short -n5')
     T2('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,LBL,L,P')
     for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
@@ -37,9 +37,9 @@ enddef
 
 def GSex(hT = 0, hB = 0, cmd = '')
     Say(hB, cmd)
-    let f = funcref(SayCb, [hB])
-    let e = funcref(GSeXit, [hT, hB])
-    job_start(cmd, #{out_cb: f, err_cb: f, exit_cb: e})
+    var F = funcref(SayCb, [hB])
+    var E = funcref(GSeXit, [hT, hB])
+    job_start(cmd, {out_cb: F, err_cb: F, exit_cb: E})
 enddef
 
 def GSAdd(hT = 0, hB = 0)
@@ -48,30 +48,30 @@ enddef
 
 # SCRIPT VARIABLE `ct` DEFINED IN `gitcommit.vim`
 def GCAmd(hT = 0, hB = 0)
-    let log = S(['git', 'log', '-n1', '--format=%s%n%n%b'])
+    var log = S(['git', 'log', '-n1', '--format=%s%n%n%b'])
     GSex(hT, hB, 'git reset --soft HEAD^')
     writefile(log, ct)
 enddef
 
 def GSFet(hT = 0, hB = 0)
-    let o = T9()
+    var o = T9()
     GSex(hT, hB, IsR(o) ? 'git fetch ' .. o .. ' ' .. Head : 'git fetch')
 enddef
 
 def GSPsh(hT = 0, hB = 0)
-    let o = T9()
+    var o = T9()
     GSex(hT, hB, IsR(o) ? 'git push -u ' .. o .. ' ' .. Head : 'git push')
 enddef
 
 def GSRes(hT = 0, hB = 0)
-    let o = T1()
+    var o = T1()
     if filereadable(o)
         GSex(hT, hB, 'git restore ' .. o)
     en
 enddef
 
 def GSUns(hT = 0, hB = 0)
-    let o = T1()
+    var o = T1()
     if filereadable(o)
         GSex(hT, hB, 'git restore --staged ' .. o)
     en
@@ -79,7 +79,7 @@ enddef
 
 # OPEN .gitignore IN TAB
 def GSIg(hT = 0, hB = 0)
-    let o = T1()
+    var o = T1()
     tabnew .gitignore
     if filereadable(o)
         append('$', o)
@@ -89,16 +89,16 @@ enddef
 
 # INSPECT THE FILE UNDER CURSOR (BEFORE|AFTER)
 def GSIns(hT = 0, hB = 0)
-    let o = T1()
+    var o = T1()
     if filereadable(o)
         # RIGHT = AFTER
         exe 'tabnew ' .. o
-        let hR = bufnr()
+        var hR = bufnr()
         settabvar(tabpagenr(), 'title', 'B:A')
 
         # LEFT = BEFORE
         exe 'vsplit B:' .. o
-        let hL = bufnr()
+        var hL = bufnr()
         T3(hL)
         GS1(hL, 'HEAD', o)
         windo :1
@@ -114,7 +114,7 @@ def GitStatus()
     G8()
 
     # OPEN EXISTING WINDOW
-    let hT = bufnr('Git Status')
+    var hT = bufnr('Git Status')
     if -1 != hT
         win_gotoid(get(hT->win_findbuf(), 0))
         GSRef(hT, 0, 1)
@@ -122,7 +122,7 @@ def GitStatus()
         # BOTTOM ---------------------------------------------------------
         tabnew Git Status - Messages
         settabvar(tabpagenr(), 'title', 'STATUS')
-        let hB = bufnr()
+        var hB = bufnr()
         Say(hB, 'Ready...')
         T3(hB)
         setbufvar(hB, '&colorcolumn', '')

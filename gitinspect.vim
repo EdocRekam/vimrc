@@ -3,8 +3,8 @@
 # LIST WHAT FILES WERE MODIFIED
 # DIFF BEFORE/AFTER
 def GInsCols(): list<number>
-    let l: list<number> = gettabvar(tabpagenr(), 'lens')
-    let c: list<number> = [l[0] + 3,
+    var l: list<number> = gettabvar(tabpagenr(), 'lens')
+    var c: list<number> = [l[0] + 3,
          l[0] + l[1] + 5,
          l[0] + l[1] + l[2] + 7,
          l[0] + l[1] + l[2] + l[3] + 9]
@@ -20,9 +20,9 @@ def GInsCols(): list<number>
 enddef
 
 def GInsHitTest(): number
-    let cs = GInsCols()
-    let c = col('.')
-    let r = 1
+    var cs = GInsCols()
+    var c = col('.')
+    var r = 1
     if c < cs[9] && c >= cs[8]
         r = 10
     elsei c < cs[8] && c >= cs[7]
@@ -47,15 +47,15 @@ def GInsHitTest(): number
 enddef
 
 def GINav(hT = 0, hB = 0, obj = '')
-    let cs = GInsCols()
+    var cs = GInsCols()
 
-    let lin = getline('.')
-    let pat = trim(strcharpart(lin, 0, cs[0] - 1))
-    let bef = trim(strcharpart(lin, cs[0] - 1, cs[1] - cs[0] - 1))
-    let aft = trim(strcharpart(lin, cs[1] - 1, cs[2] - cs[1] - 1))
-    let hed = trim(strcharpart(lin, cs[2] - 1, cs[3] - cs[2] - 1))
+    var lin = getline('.')
+    var pat = trim(strcharpart(lin, 0, cs[0] - 1))
+    var bef = trim(strcharpart(lin, cs[0] - 1, cs[1] - cs[0] - 1))
+    var aft = trim(strcharpart(lin, cs[1] - 1, cs[2] - cs[1] - 1))
+    var hed = trim(strcharpart(lin, cs[2] - 1, cs[3] - cs[2] - 1))
 
-    let c = GInsHitTest()
+    var c = GInsHitTest()
 
     # FILE
     if c == 1 && filereadable(pat)
@@ -112,7 +112,7 @@ enddef
 def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
 
     # GET THE CURRENT TIME FOR SPEED METRIC
-    let n = reltime()
+    var n = reltime()
 
     # CLEAR BUFFER AND EXISTING SYNTAX (b == 1)
     if bl
@@ -121,10 +121,10 @@ def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
     en
 
     # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
-    let L0 = 24 | let L1 = 6 | let L2 = 6 | let L3 = 6 | let L4 = 13
-    let L5 = 13
+    var L0 = 24 | var L1 = 6 | var L2 = 6 | var L3 = 6 | var L4 = 13
+    var L5 = 13
 
-    let rs: list<list<string>>
+    var rs: list<list<string>>
     for i in S(['git', 'diff', '--numstat', obj .. '~1', obj])
 
         # SAMPLE OUTPUT
@@ -138,31 +138,31 @@ def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
         # 3       1       install
         # 1       1       menu.vim
         # 5       0       session.vim
-        let bc = split(i)
+        var bc = split(i)
 
         # NUM LINES DELETED FROM FILE
-        let b = str2nr(bc[1])
+        var b = str2nr(bc[1])
 
         # FILE PATH
-        let c = bc[2]
+        var c = bc[2]
 
         # COMMIT OF PATH AFTER MODIFICATION
-        let aft = ''
+        var aft = ''
 
         # COMMIT OF PATH BEFORE MODIFICATION
-        let bef = ''
+        var bef = ''
 
         # LOOK AT THE OBJECT - FILE LAST THREE CHANGES
         #   ONE PAST ENTRY MEANS FILE WAS ADDED IN THIS `obj` COMMIT
         #   TWO PAST ENTRY MEANS ?
         #   THREE PAST ENTRY MEANS ?
-        let past = S(['git', 'log', '-n3', '--pretty=%h | %an', obj, '--', c])
+        var past = S(['git', 'log', '-n3', '--pretty=%h | %an', obj, '--', c])
         if len(past) == 1
             bef = 'ADDED'
             aft = obj
         else
             bef = get(split(past[1], ' | '), 0)
-            let txt = S(['git', 'show', obj .. ':' c])
+            var txt = S(['git', 'show', obj .. ':' c])
             aft = 0 == stridx(txt[0], 'tree') ? obj : 'DELETED'
         en
 
@@ -172,7 +172,7 @@ def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
         endfo
 
         # IF FILE EXISTS MEANS THAT ITS STILL IN LATEST HEAD
-        let hed = filereadable(c) ? Head : 'DELETED'
+        var hed = filereadable(c) ? Head : 'DELETED'
 
         # UPDATE COLUMN LENGTHS
         L0 = T7(L0, c)
@@ -184,11 +184,11 @@ def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
         add(rs, [c, bef, aft, hed])
     endfo
 
-    let f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3, L4)
-    let hl = L0 + L1 + L2 + L3 + 36
-    let sep = repeat('-', hl)
+    var f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3, L4)
+    var hl = L0 + L1 + L2 + L3 + 36
+    var sep = repeat('-', hl)
 
-    let l = [ printf(f, 'FILE', 'BEFORE', 'AFTER', 'HEAD', 'COMPARE', 'SIDE BY SIDE'), sep]
+    var l = [ printf(f, 'FILE', 'BEFORE', 'AFTER', 'HEAD', 'COMPARE', 'SIDE BY SIDE'), sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], 'B:A  B:H  A:H', 'B-A  B-H  A-H'))
     endfo
@@ -206,7 +206,7 @@ def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
     #     T  TOP LINES
     #     M  MENU
     #     R  REMOTES
-    let rc = len(l)
+    var rc = len(l)
     T2('T', 3, rc - 2, 'l', 'contains=F,BAH')
     T2('M', rc + 3, 2, 'l', 'contains=@NoSpell,P,MC,MK')
 
@@ -216,7 +216,7 @@ def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
     ''])
 
     # LOG ENTRY
-    let log = S(['git', 'log', '--date=short', '-n1', obj])
+    var log = S(['git', 'log', '--date=short', '-n1', obj])
     log[5] = ''
     extend(l, log)
 
@@ -235,18 +235,18 @@ def GitInspect(obj = '')
     G8()
 
     # BOTTOM -------------------------------------------------------------
-    let tT = 'I:' .. obj
-    let tB = tT .. ' - Messages'
+    var tT = 'I:' .. obj
+    var tB = tT .. ' - Messages'
     exe 'tabnew ' .. tB
     settabvar(tabpagenr(), 'title', tT)
-    let hB = bufnr()
+    var hB = bufnr()
     Say(hB, 'Ready...')
     T3(hB)
     setbufvar(hB, '&colorcolumn', '')
 
     # TOP ----------------------------------------------------------------
     exe 'split ' .. tT
-    let hT = bufnr()
+    var hT = bufnr()
     setbufvar(hT, '&colorcolumn', '')
     :ownsyntax gitinspect
     :2resize 20

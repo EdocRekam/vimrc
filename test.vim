@@ -6,9 +6,9 @@ enddef
 
 # RUN SYSTEM COMMAND STORE RESULT IN LIST
 def S(c = ''): list<string>
-    let d = ['']
-    let f = funcref(SCB, [d])
-    let j = job_start(c, #{out_cb: f, err_cb: f})
+    var d = ['']
+    var F = funcref(SCB, [d])
+    var j = job_start(c, {out_cb: F, err_cb: F})
     while 'run' == j->job_status()
         sleep 100m
     endw
@@ -20,7 +20,7 @@ enddef
 
 defcompile
 
-let x = S('git log -n6')
+var x = S('git log -n6')
 for m in x
      Trace(m)
 endfor

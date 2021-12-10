@@ -1,5 +1,5 @@
 def DotnetAsyncWin(cmd = '', title = '', msg = '')
-    let h = OpenWin(title, 0)
+    var h = OpenWin(title, 0)
     Say(h, msg)
     SayEx(h, cmd)
     setbufvar(h, '&colorcolumn', '0')
@@ -34,7 +34,7 @@ enddef
 
 # RUN ALL DOTNET UNIT TESTS
 def F29(filter = '')
-    let cmd: string
+    var cmd: string
     if filter == ''
         cmd = 'dotnet test'
     else
@@ -60,7 +60,7 @@ def g:CsFoldText(): string
 enddef
 
 def g:CsIndent(n = 0): any
-    let l = getline(n)
+    var l = getline(n)
     if char2nr('n') == strgetchar(l, 0)
         retu '>1'
     en

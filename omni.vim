@@ -15,7 +15,7 @@ endfunction
 " au! BufWritePre *.cs,*.csproj,*.sln call SanitizeCSharp()
 
 " Set type lookup function to preview window instead of echoing it
-" let g:OmniSharp_typeLookupInPreview = 1
+" var g:OmniSharp_typeLookupInPreview = 1
 
 " Don't autoselect first omnicomplete option, show options even if there is only
 " one (so the preview documentation is accessible). Remove 'preview', 'popup'
@@ -30,7 +30,7 @@ set completeopt=longest,menuone,preview,popuphidden
 set completepopup=highlight:Pmenu,border:off
 
 " Tell ALE to use OmniSharp for linting C# files, and no other linters.
-" let g:ale_linters = { 'cs': ['OmniSharp'] }
+" var g:ale_linters = { 'cs': ['OmniSharp'] }
 
 " augroup omnisharp_commands
     " autocmd!

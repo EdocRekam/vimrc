@@ -69,13 +69,13 @@ colorscheme Dark+
 syntax on
 
 # THINGS I CANNOT LOCALIZE
-let Head = 'HEAD'
+var Head = 'HEAD'
 def g:GetStatus(): string
-    let c = strchars(getreg('*'))
-    let sel = c > 1 ? '  SEL:' .. c : ''
-    let enc = strchars(&fenc) ? '  ' .. toupper(&fenc) : '  PLAIN'
-    let bom = &bomb ? '  with BOM' : ''
-    let le = &ff == 'unix' ? '  LF' : '  CRLF'
+    var c = strchars(getreg('*'))
+    var sel = c > 1 ? '  SEL:' .. c : ''
+    var enc = strchars(&fenc) ? '  ' .. toupper(&fenc) : '  PLAIN'
+    var bom = &bomb ? '  with BOM' : ''
+    var le = &ff == 'unix' ? '  LF' : '  CRLF'
     retu Head .. ' %M%<%f%=' .. sel .. '  Col %c' .. enc .. bom .. le .. '  %Y'
 enddef
 set statusline=%!g:GetStatus()

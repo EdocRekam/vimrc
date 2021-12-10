@@ -1,5 +1,5 @@
 # COMMIT TEMPLATE
-let ct = '.git/GITGUI_MSG'
+var ct = '.git/GITGUI_MSG'
 
 # EXIT JOB CALLBACK - DELETE COMMIT TEMPLATE IS EXIT CODE IS 0
 def GC1(j: job, c = 0)
@@ -28,27 +28,27 @@ def GC3(hT = 0, hB = 0)
     stopi
     setbufvar(hT, '&modifiable', 0)
 
-    let c = 'git commit --cleanup=strip -F ' .. ct
+    var c = 'git commit --cleanup=strip -F ' .. ct
     Say(hB, c)
-    let f = funcref(SayCb, [hB])
-    job_start(c, #{out_cb: f, err_cb: f, exit_cb: GC1})
+    var F = funcref(SayCb, [hB])
+    job_start(c, {out_cb: F, err_cb: F, exit_cb: GC1})
 enddef
 
 def GitCommit()
     # NOW
-    let n = reltime()
+    var n = reltime()
 
     # BOTTOM -------------------------------------------------------------
     exe 'tabnew Commit - ' .. reltimestr(n)
     settabvar(tabpagenr(), 'title', 'COMMIT')
-    let hB = bufnr()
+    var hB = bufnr()
     T3(hB)
     setbufvar(hB, '&colorcolumn', '')
     Say(hB, 'Waiting for save ...')
 
     # TOP ----------------------------------------------------------------
     exe 'split ' .. ct
-    let hT = bufnr()
+    var hT = bufnr()
     setbufvar(hT, '&syntax', 'gitcommit')
     :2resize 20
 

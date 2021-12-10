@@ -1,6 +1,6 @@
 def GotoDef()
     # CFILE
-    let f = T1()
+    var f = T1()
     if filereadable(f)
         exe 'tabnew ' .. f
     el
