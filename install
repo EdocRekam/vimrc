@@ -29,6 +29,8 @@ mkfolder()
     fi
 }
 
+
+UNAME=$(uname)
 CWD=$(dirname "$(realpath -s $0)")
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
@@ -37,7 +39,7 @@ read -p "Press [Enter] key to install files into HOME directory at . . ."
 
 printf "Building .vimrc . . .\n"
 cat "${CWD}/vimrc.vim" > "${HOME}/.vimrc"
-if [ "${OSTYPE}" == "linux" ]; then
+if [ "${UNAME}" == "Linux" ]; then
     cat "${CWD}/vimrc-linux.vim" >> "${HOME}/.vimrc"
 else
     cat "${CWD}/vimrc-win32.vim" >> "${HOME}/.vimrc"
@@ -47,7 +49,7 @@ cat "${CWD}/nerdtree.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/keymap.vim" >> "${HOME}/.vimrc"
 
 cat "${CWD}/trivial.vim" >> "${HOME}/.vimrc"
-if [ "${OSTYPE}" == "linux" ]; then
+if [ "${UNAME}" == "linux" ]; then
     cat "${CWD}/trivial-linux.vim" >> "${HOME}/.vimrc"
 else
     cat "${CWD}/trivial-win32.vim" >> "${HOME}/.vimrc"
@@ -80,14 +82,14 @@ sed -i 's/^[ \t]*//;s/[ \t]*$//' "${HOME}/.vimrc"
 
 printf "Building .gvimrc . . .\n"
 cat "${CWD}/gvimrc.vim" > "${HOME}/.gvimrc"
-if [ "${OSTYPE}" == "linux" ]; then
+if [ "${UNAME}" == "Linux" ]; then
     cat "${CWD}/gvimrc-linux.vim" >> "${HOME}/.gvimrc"
 else
     cat "${CWD}/gvimrc-win32.vim" >> "${HOME}/.gvimrc"
 fi
 
 
-if [ "${OSTYPE}" == "linux" ]; then
+if [ "${UNAME}" == "Linux" ]; then
     VIMDIR=.vim
 else
     VIMDIR=vimfiles
