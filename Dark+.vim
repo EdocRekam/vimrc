@@ -4,7 +4,7 @@ hi clear
 if exists("syntax_on")
 	syntax reset
 end
-var g:colors_name="Dark+"
+g:colors_name="Dark+"
 
 " BACKGROUND / FOREGROUND
 hi Conceal          gui=NONE      guibg=#1e1e1e guifg=#d4d4d4 cterm=NONE ctermbg=0  ctermfg=7
