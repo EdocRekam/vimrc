@@ -73,7 +73,7 @@ var Head = 'HEAD'
 def g:GetStatus(): string
     var c = strchars(getreg('*'))
     var sel = c > 1 ? '  SEL:' .. c : ''
-    var enc = strchars(&fenc) ? '  ' .. toupper(&fenc) : '  PLAIN'
+    var enc = strchars(&fenc) > 0 ? '  ' .. toupper(&fenc) : '  PLAIN'
     var bom = &bomb ? '  with BOM' : ''
     var le = &ff == 'unix' ? '  LF' : '  CRLF'
     retu Head .. ' %M%<%f%=' .. sel .. '  Col %c' .. enc .. bom .. le .. '  %Y'
