@@ -1,7 +1,7 @@
 vim9script
 
 # DO NOT SOURCE $VIMRUNTIME/menu.vim
-set guioptions +=M
+set guioptions+=M
 
 # NO VI COMPATIBILITY
 set nocp
