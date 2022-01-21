@@ -1,4 +1,4 @@
 # TRIVIAL WINDOWS SPECIFIC FUNCTIONS
 def VimDir(): string
-    retu $HOME .. '/vimfiles/'
+    retu $HOME .. '/.vim/'
 enddef

@@ -50,7 +50,7 @@ cat "${CWD}/nerdtree.vim" >> "${HOME}/.vimrc"
 cat "${CWD}/keymap.vim" >> "${HOME}/.vimrc"
 
 cat "${CWD}/trivial.vim" >> "${HOME}/.vimrc"
-if [ "${UNAME}" == "linux" ]; then
+if [ "${UNAME}" == "GNU/Linux" ]; then
     cat "${CWD}/trivial-linux.vim" >> "${HOME}/.vimrc"
 else
     cat "${CWD}/trivial-win32.vim" >> "${HOME}/.vimrc"
@@ -83,17 +83,17 @@ sed -i 's/^[ \t]*//;s/[ \t]*$//' "${HOME}/.vimrc"
 
 printf "Building .gvimrc . . .\n"
 cat "${CWD}/gvimrc.vim" > "${HOME}/.gvimrc"
-if [ "${UNAME}" == "Linux" ]; then
+if [ "${UNAME}" == "GNU/Linux" ]; then
     cat "${CWD}/gvimrc-linux.vim" >> "${HOME}/.gvimrc"
 else
     cat "${CWD}/gvimrc-win32.vim" >> "${HOME}/.gvimrc"
 fi
 
 
-if [ "${UNAME}" == "Linux" ]; then
+if [ "${UNAME}" == "GNU/Linux" ]; then
     VIMDIR=.vim
 else
-    VIMDIR=vimfiles
+    VIMDIR=.vim
 fi
 
 # POPUP
