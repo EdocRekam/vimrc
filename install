@@ -97,6 +97,7 @@ else
 fi
 
 # POPUP
+mkdir -p "${HOME}/${VIMDIR}"
 cat "${CWD}/menu.txt" > "${HOME}/${VIMDIR}/menu.txt"
 cat "${CWD}/keys.html" > "${HOME}/${VIMDIR}/keys.html"
 
