@@ -30,16 +30,17 @@ mkfolder()
 }
 
 
-UNAME=$(uname)
+UNAME=$(uname -o)
 CWD=$(dirname "$(realpath -s $0)")
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 clear
-read -p "Press [Enter] key to install files into HOME directory at . . ."
+printf "Press [Enter] key to install files into HOME\n"
+read -p "    ${HOME}"
 
 printf "Building .vimrc . . .\n"
 cat "${CWD}/vimrc.vim" > "${HOME}/.vimrc"
-if [ "${UNAME}" == "Linux" ]; then
+if [ "${UNAME}" == "GNU/Linux" ]; then
     cat "${CWD}/vimrc-linux.vim" >> "${HOME}/.vimrc"
 else
     cat "${CWD}/vimrc-win32.vim" >> "${HOME}/.vimrc"
