@@ -29,5 +29,5 @@ sy region String start="'" end="'"
 sy region Comment start="/\*" end="\*/" contains=@Spell
 sy match  Comment "//.*$" contains=@Spell
 
-var b:current_syntax = 'cs'
+let b:current_syntax = 'cs'
 
