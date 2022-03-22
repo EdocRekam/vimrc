@@ -1,7 +1,7 @@
 def Align(value: string)
     if '' == value
-        retu
-    en
+        return
+    endif
 
     var nr = line("'<")
     var colAlign = 0
@@ -9,8 +9,8 @@ def Align(value: string)
         var col = stridx(line, value)
         if col > colAlign
             colAlign = col + 1
-        en
-    endfo
+        endif
+    endfor
     var cnt = 0
     for line in getline(nr, "'>")
         var col = stridx(line, value)
@@ -22,7 +22,7 @@ def Align(value: string)
         setline(nr, newline)
         nr += 1
         cnt += 1
-    endfo
+    endfor
     norm gv
 enddef
 
@@ -34,7 +34,7 @@ def Enum(base = 0)
         setline(nr, newline)
         nr += 1
         cnt += 1
-    endfo
+    endfor
     norm gv
 enddef
 
@@ -45,11 +45,11 @@ def Widest(rows: list<list<string>>, col = 0, min = 0, max = 85): number
         if len > c
             c = len
             if c > max
-                retu max
-            en
-        en
-    endfo
-    retu c
+                return max
+            endif
+        endif
+    endfor
+    return c
 enddef
 
 def OpenWin(t = '', blank = 1): number
@@ -65,7 +65,7 @@ def OpenWin(t = '', blank = 1): number
         win_gotoid(get(ids, 0))
         if blank
             sil norm ggvGD
-        en
-    en
-    retu h
+        endif
+    endif
+    return h
 enddef

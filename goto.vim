@@ -3,10 +3,10 @@ def GotoDef()
     var f = T1()
     if filereadable(f)
         exe 'tabnew ' .. f
-    el
+    else
         # FIND WORD IN FILES
         T11(T9())
-    en
+    endif
     # else
     # OmniSharpGotoDefinition()
 enddef

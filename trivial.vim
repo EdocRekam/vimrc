@@ -5,7 +5,7 @@ enddef
 
 # EXPAND CURSOR UNDER STRING TO FILE. SYNTAX SUGAR
 def T1(): string
-    retu expand('<cfile>')
+    return expand('<cfile>')
 enddef
 
 # CREATE A SYNTAX REGION STARTING/ENDING ON A COLUMN OR LINE
@@ -39,7 +39,7 @@ T0('S-F5', 'T5')
 def T6()
     if filereadable('session.vim')
         so session.vim
-    en
+    endif
 enddef
 au VimEnter * ++once : cal T6()
 
@@ -51,12 +51,12 @@ enddef
 
 # RETURN THE CURRENT SELECTION AS ARRAY
 def T8(): list<string>
-    retu getline("'<", "'>")
+    return getline("'<", "'>")
 enddef
 
 # RETURN WORD UNDER CURSOR - SYNTAX SUGAR
 def T9(): string
-    retu expand('<cword>')
+    return expand('<cword>')
 enddef
 
 var _T10 = 'H'
@@ -69,14 +69,14 @@ T0('S-F12', 'T10')
 # FIND v IN FILES
 def T11(v: string)
     if 0 == strchars(v)
-        retu
-    en
+        return
+    endif
     :try
         if 34 == strgetchar(v, 0)
             exe 'lv /\C' .. trim(v, '"') .. '/gj **'
-        el
+        else
             exe 'lv /\c' .. v .. '/gj **'
-        en
+        endif
         lopen 35
     :catch
     :endtry
@@ -88,7 +88,7 @@ def T12(): void
     var v = input('Value: ')
     if '' != v
         exe '%s/' .. T9() .. '/' .. v .. '/g'
-    en
+    endif
 enddef
 T0('F2', 'T12')
 
@@ -112,24 +112,24 @@ def SCB(d: list<string>, c: channel, msg = '')
 enddef
 
 # RUN SYSTEM COMMAND STORE RESULT IN LIST
-def S(c: any): list<string>
-    var d = ['']
-    var F = funcref(SCB, [d])
-    var j = job_start(c, {out_cb: F, err_cb: F})
+def S(cmd: any): list<string>
+    var data = ['']
+    var F = funcref(SCB, [data])
+    var j = job_start(cmd, {out_cb: F, err_cb: F})
     while 'run' == j->job_status()
         sleep 25m
-    endw
-    if d->len() > 1
-        d->remove(0)
-    en
-    retu d
+    endwhile
+    if data->len() > 1
+        data->remove(0)
+    endif
+    return data
 enddef
 
 # WRITE MSG TO END OF BUFFER
-def Say(h: number, msg: any)
-    var c = get(get(getbufinfo(h), 0), 'linecount')
-    var l = strchars(get(getbufline(h, '$'), 0))
-    appendbufline(h, l > 1 ? c : c - 1, msg)
+def Say(hBuf: number, msg: any)
+    var c = get(get(getbufinfo(hBuf), 0), 'linecount')
+    var l = strchars(get(getbufline(hBuf, '$'), 0))
+    appendbufline(hBuf, l > 1 ? c : c - 1, msg)
 enddef
 
 # CALLBACK FOR JOB THAT ECHOS TEXT
@@ -137,8 +137,8 @@ def SayCb(h: number, c: channel, msg = '')
     Say(h, msg)
 enddef
 
-def SayEx(h = 0, cmd = '')
-    var F = funcref(SayCb, [h])
+def SayEx(handle = 0, cmd = '')
+    var F = funcref(SayCb, [handle])
     job_start(cmd, {out_cb: F, err_cb: F})
 enddef
 
@@ -171,7 +171,7 @@ def F12()
     var i = input('TITLE: ', '')
     if '' != i
         settabvar(tabpagenr(), 'title', i)
-    en
+    endif
 enddef
 
 # CONVERT TO UTF-8 NO BOM
@@ -187,13 +187,13 @@ def F22()
     for l in src
         if index(dst, l, 0, 0) < 0
             add(dst, l)
-        en
-    endfo
+        endif
+    endfor
     var x = len(src) - len(dst)
-    wh x > 0
+    while x > 0
         add(dst, '')
         x -= 1
-    endw
+    endwhile
     setline("'<", dst)
     norm gv
 enddef
@@ -210,7 +210,9 @@ enddef
 
 # SORT SELECTION ASCENDING (IGNORE CASE)
 def F25()
-    setline("'<", T8()->sort(1))
+    var val = T8()
+    sort(val, "1")
+    setline("'<", val)
 enddef
 
 # SORT SELECTION DESCENDING
@@ -220,6 +222,6 @@ enddef
 
 # SORT SELECTION DESCENDING (IGNORE CASE)
 def F27()
-    setline("'<", T8()->sort(1)->reverse())
+    setline("'<", T8()->sort("1")->reverse())
 enddef
 

@@ -20,8 +20,8 @@ def MnuFilterBuf(buf = 0)
             idx += 1
         else
             deletebufline(buf, idx)
-        en
-    endfo
+        endif
+    endfor
 enddef
 
 def MnuResetBuf()
@@ -37,7 +37,7 @@ def MnuBackspace(wid = 0)
         MnuResetBuf()
         setbufline(Mnu1, 1, t)
         MnuFilterBuf(Mnu1)
-    en
+    endif
 enddef
 
 def MnuPrintableChar(wid = 0, k = '')
@@ -53,24 +53,24 @@ def MnuFilter(wid = 0, k = ''): number
         popup_close(wid, -1)
 
     # PASS THESE ON TO SYSTEM
-    elsei k == "\<Down>" || k == "\<Up>"
+    elseif k == "\<Down>" || k == "\<Up>"
         if (popup_filter_menu(wid, k))
             rc = 1
         else
             rc = 0
-        en
+        endif
 
     # BACKUP
-    elsei k == "\<BS>"
+    elseif k == "\<BS>"
         MnuBackspace(wid)
 
     # IGNORED
-    elsei k == ':'
+    elseif k == ':'
         popup_close(wid, -1)
         rc = 0
 
     # PASS THROUGH
-    elsei k == "\<F2>" || k == "\<F3>" || k == "\<F4>"
+    elseif k == "\<F2>" || k == "\<F3>" || k == "\<F4>"
      \ || k == "\<F5>" || k == "\<F6>" || k == "\<F7>"
      \ || k == "\<F8>" || k == "\<F9>" || k == "\<F10>"
      \ || k == "\<F11>" || k == "\<F12>"
@@ -78,7 +78,7 @@ def MnuFilter(wid = 0, k = ''): number
         feedkeys(k)
 
     # PRINTABLE CHAR
-    elsei 0 == match(k, '\p')
+    elseif 0 == match(k, '\p')
         MnuPrintableChar(wid, k)
 
     # NONPRINTABLE
@@ -87,35 +87,35 @@ def MnuFilter(wid = 0, k = ''): number
             rc = 1
         else
             rc = 0
-        en
-    en
+        endif
+    endif
 
-    retu rc
+    return rc
 enddef
 MnuOpt["filter"] = funcref('MnuFilter')
 
 def MnuGetCmd(id = 0): number
     var l = get(getbufline(Mnu1, id), 0)
-    retu str2nr(strcharpart(l, 39, 4))
+    return str2nr(strcharpart(l, 39, 4))
 enddef
 
 def MnuEnum()
     var ask = input('START: ', '0')
     if '' != ask
         Enum(str2nr(ask))
-    en
+    endif
 enddef
 
 def MnuZoom(val = 0)
     if !has('gui')
-        retu
-    en
+        return
+    endif
 
     if val == 1
         g:ZoomOut()
     else
         g:ZoomIn()
-    en
+    endif
 enddef
 
 # VIM SYNTAX FILE
@@ -123,7 +123,7 @@ def F35()
     var pat = printf('%s/syntax/%s.vim', $VIMRUNTIME, &filetype)
     if filereadable(pat)
         exe 'tabnew ' .. pat
-    en
+    endif
 enddef
 
 # MENU CHEAT SHEET
@@ -131,14 +131,14 @@ def F41()
     var f = VimDir() .. 'keys.html'
     if filereadable(f)
         job_start('firefox --new-window ' .. f)
-    en
+    endif
 enddef
 
 def MnuCallback(wid = 0, result = 0): number
     var id = 0
     if result > 0
         id = MnuGetCmd(result)
-    en
+    endif
 
     if 1 == id
         Align(input('ALIGN ON: ', '='))
@@ -148,22 +148,22 @@ def MnuCallback(wid = 0, result = 0): number
     elseif 3 == id
         # DOTNET RESTORE
         F3()
-    elsei 4 == id
+    elseif 4 == id
         # CONVERT SELECTION TO LOWER
         norm gvugv
-    elsei 5 == id
+    elseif 5 == id
         # CONVERT SELECTION TO UPPER
         norm gvUgv
-    elsei 6 == id
+    elseif 6 == id
         # EXPAND TAB TO SPACE
         F6()
-    elsei 7 == id
+    elseif 7 == id
         # CONVERT LINE ENDINGS TO CRLF
         F7()
-    elsei 8 == id
+    elseif 8 == id
         # CONVERT LINE ENDINGS TO LF
         F8()
-    elsei 9 == id
+    elseif 9 == id
         MnuEnum()
     elseif 10 == id
         MnuZoom(1)
@@ -177,13 +177,13 @@ def MnuCallback(wid = 0, result = 0): number
         F13()
     elseif 14 == id
         GWin('git diff', 'DIFF', '')
-    elsei 16 == id
+    elseif 16 == id
         GitStatus()
-    elsei 17 == id
+    elseif 17 == id
         GitK()
     elseif 18 == id
         job_start('git gui')
-    elsei 19 == id
+    elseif 19 == id
         GLog(Head)
     elseif 21 == id
         # USE CSHARP SETTINGS
@@ -213,14 +213,14 @@ def MnuCallback(wid = 0, result = 0): number
         F29()
     elseif 30 == id
         F29(T9())
-    elsei 32 == id
+    elseif 32 == id
         :so $VIMRUNTIME/syntax/hitest.vim
     elseif 35 == id
         # OPEN VIM SYNTAX FILE
         F35()
-    elsei 36 == id
+    elseif 36 == id
         :options
-    elsei 37 == id
+    elseif 37 == id
         set guifont=*
     elseif 38 == id
         exe ':OmniSharpStartServer'
@@ -233,16 +233,16 @@ def MnuCallback(wid = 0, result = 0): number
     elseif 41 == id
         # MENU CHEAT SHEET
         F41()
-    elsei 42 == id
+    elseif 42 == id
         setl wrap!
-    elsei 44 == id
+    elseif 44 == id
         tabnew ~/.vimrc
-    elsei 45 == id
+    elseif 45 == id
         GitBranch()
-    en
+    endif
 
     MnuWid = 0
-    retu 1
+    return 1
 enddef
 MnuOpt["callback"] = funcref('MnuCallback')
 
@@ -260,12 +260,12 @@ def MnuOpen()
     if 0 == Mnu0
         MnuLoad()
         MnuResetBuf()
-    en
+    endif
 
     if 0 == MnuWid
         MnuWid = popup_create(Mnu1, MnuOpt)
         win_execute(MnuWid, ':2')
-    en
+    endif
 enddef
 no <silent><F1> <ESC>:sil cal <SID>MnuOpen()<CR>
 

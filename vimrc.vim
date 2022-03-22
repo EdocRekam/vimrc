@@ -76,12 +76,12 @@ def g:GetStatus(): string
     var enc = strchars(&fenc) > 0 ? '  ' .. toupper(&fenc) : '  PLAIN'
     var bom = &bomb ? '  with BOM' : ''
     var le = &ff == 'unix' ? '  LF' : '  CRLF'
-    retu Head .. ' %M%<%f%=' .. sel .. '  Col %c' .. enc .. bom .. le .. '  %Y'
+    return Head .. ' %M%<%f%=' .. sel .. '  Col %c' .. enc .. bom .. le .. '  %Y'
 enddef
 set statusline=%!g:GetStatus()
 
 # CUSTOM TAB LABEL VIA `title` TAB VARIABLE
 def g:TabLabel(h: number): string
-    retu gettabvar(h, 'title', '')
+    return gettabvar(h, 'title', '')
 enddef
 set guitablabel=%!TabLabel(v:lnum)

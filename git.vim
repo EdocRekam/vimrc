@@ -42,19 +42,19 @@ var R = 'hub origin vso'
 def Ab(val = '')
     for p in split(val, '[/]')
         B = T4(B, p)
-    endfo
+    endfor
 enddef
 
 # REMOTES
 def GRemotes()
     for r in S('git remote')
         R = T4(R, r)
-    endfo
+    endfor
 enddef
 
 # IS REMOTE
 def IsR(r = ''): bool
-    retu -1 != stridx(R, r)
+    return -1 != stridx(R, r)
 enddef
 
 # Sr - TrimRemoteName
@@ -62,9 +62,9 @@ enddef
 def Sr(b = ''): string
     var p = get(split(b, '/'), 0)
     if IsR(p)
-        retu Sr(strcharpart(b, strchars(p) + 1))
-    en
-    retu b
+        return Sr(strcharpart(b, strchars(p) + 1))
+    endif
+    return b
 enddef
 
 # LAUNCH GIT GUI
@@ -150,7 +150,7 @@ def G8(): string
     Head = get(S('git rev-parse --abbrev-ref HEAD'), 0)
     Ab(Head)
     GRemotes()
-    retu Head
+    return Head
 enddef
 
 # COMMAND, TITLE, MESSAGE
@@ -165,9 +165,9 @@ def GitK()
     var p = T1()
     if filereadable(p)
         job_start(['gitk', '--', p])
-    elsei strchars(p) > 0
+    elseif strchars(p) > 0
         job_start(['gitk', p])
-    en
+    endif
 enddef
 T0('S-F7', 'GitK')
 

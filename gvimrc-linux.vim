@@ -8,7 +8,7 @@ def g:ZoomIn()
     var size = str2nr(strcharpart(old, i, 2)) + 1
     if size > FONT_MAX
         size = FONT_MIN
-    en
+    endif
     &guifont = printf("%s %d", family, size)
 enddef
 
@@ -19,7 +19,7 @@ def g:ZoomOut()
     var size = str2nr(strcharpart(old, i, 2)) - 1
     if size < FONT_MIN
         size = FONT_MAX
-    en
+    endif
     &guifont = printf("%s %d", family, size)
 enddef
 

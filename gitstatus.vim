@@ -7,7 +7,7 @@ def GSRef(hT = 0, hB = 0, b = 1)
     if b
         deletebufline(hT, 1, '$')
         sy clear M LOG
-    en
+    endif
 
     var l = S('git status')
 
@@ -24,7 +24,7 @@ def GSRef(hT = 0, hB = 0, b = 1)
     T2('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,LBL,L,P')
     for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
-    endfo
+    endfor
 
     extend(l, ['', '', 'Time:' .. reltimestr(reltime(n, reltime()))])
     Say(hT, l)
@@ -67,14 +67,14 @@ def GSRes(hT = 0, hB = 0)
     var o = T1()
     if filereadable(o)
         GSex(hT, hB, 'git restore ' .. o)
-    en
+    endif
 enddef
 
 def GSUns(hT = 0, hB = 0)
     var o = T1()
     if filereadable(o)
         GSex(hT, hB, 'git restore --staged ' .. o)
-    en
+    endif
 enddef
 
 # OPEN .gitignore IN TAB
@@ -83,7 +83,7 @@ def GSIg(hT = 0, hB = 0)
     tabnew .gitignore
     if filereadable(o)
         append('$', o)
-    en
+    endif
     norm G
 enddef
 
@@ -106,7 +106,7 @@ def GSIns(hT = 0, hB = 0)
 
         # LOCAL KEY BINDS
         G0(hL, hR)
-    en
+    endif
 enddef
 
 def GitStatus()
@@ -159,6 +159,6 @@ def GitStatus()
         G1(hT, hB, 'PageUp', 'GSPsh')
 
         nn <silent><buffer><END> :cal <SID>GitCommit()<CR>
-    en
+    endif
 enddef
 T0('F8', 'GitStatus')

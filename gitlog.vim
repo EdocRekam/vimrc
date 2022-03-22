@@ -10,7 +10,7 @@ def GLRef(h = 0, hB = 0, obj = '', b = 1)
     if b
         deletebufline(h, 1, '$')
         sy clear TC S D A K T M
-    en
+    endif
 
     # UNIQUE LIST OF KEYWORDS AND AUTHORS FOR FAST SYNTAX, E.G. LITERALS
     # ARE FASTER THAN REGEX
@@ -42,10 +42,10 @@ def GLRef(h = 0, hB = 0, obj = '', b = 1)
         # SYNTAX: AUTHOR NAMES
         for at in split(r[4])
             A = T4(A, at)
-        endfo
+        endfor
 
         add(rs, [ r[0], r[1], s, r[3], r[4]])
-    endfo
+    endfor
 
     var f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3)
     var sep = repeat('-', L0 + L1 + L2 + L3 + L4 + 8)
@@ -54,7 +54,7 @@ def GLRef(h = 0, hB = 0, obj = '', b = 1)
     var l = [ printf(f, 'TREE', 'COMMIT', obj, 'DATE', 'AUTHOR'), sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], i[4]))
-    endfo
+    endfor
 
     # BRANCHES
     extend(l, ['', printf(f, 'TREE', 'COMMIT', 'TAG', 'DATE', 'AUTHOR'), sep])
@@ -66,7 +66,7 @@ def GLRef(h = 0, hB = 0, obj = '', b = 1)
         var r = split(line, ' | ')
 
         add(l, printf(f, r[0], r[1], r[2], r[3], r[4]))
-    endfo
+    endfor
 
     extend(l, ['', '',
     '<F1>  MENU    |  <F2> -----  |  <F3>  CLOSE         |  <F4>  INSPECT',
@@ -141,5 +141,5 @@ def GLNav(hT = 0, hB = 0, o = '')
         GLog(get(split(getline('.')), 1))
     else
         GitInspect(T9())
-    en
+    endif
 enddef

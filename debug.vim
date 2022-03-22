@@ -4,9 +4,9 @@ def g:Trace(msg = '')
         h = bufadd('TRACE')
         bufload(h)
         T3(h)
-    el
+    else
         h = bufnr('TRACE')
-    en
+    endif
 
     appendbufline(h, get(getbufinfo(h), 0).linecount - 1, msg)
 enddef
@@ -17,7 +17,7 @@ def g:OpenTrace()
         if 0 == win_gotoid(h)
             tabnew
             exe 'b' .. h
-        en
-    en
+        endif
+    endif
 enddef
 

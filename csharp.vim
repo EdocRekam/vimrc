@@ -39,7 +39,7 @@ def F29(filter = '')
         cmd = 'dotnet test'
     else
         cmd = printf("dotnet test --filter '%s'", filter)
-    en
+    endif
     DotnetAsyncWin(cmd, 'DOTNET', 'Testing . . .')
     sy case ignore
     sy match Bad "Failed:\s\d\+"
@@ -56,15 +56,15 @@ def F40()
 enddef
 
 def g:CsFoldText(): string
-    retu getline(v:foldstart)
+    return getline(v:foldstart)
 enddef
 
 def g:CsIndent(n = 0): any
     var l = getline(n)
     if char2nr('n') == strgetchar(l, 0)
-        retu '>1'
-    en
-    retu 1
+        return '>1'
+    endif
+    return 1
 enddef
 
 # TURN ON CSHARP CODE FOLDING

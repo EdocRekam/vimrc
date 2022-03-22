@@ -10,7 +10,7 @@ def GBRef(h = 0, b = 1)
     if b
         deletebufline(h, 1, '$')
         sy clear C LOG M S T
-    en
+    endif
 
     # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
     var L0 = 7
@@ -26,7 +26,7 @@ def GBRef(h = 0, b = 1)
         # HANDLE BAD REF
         if len(p) != 5
             :continue
-        en
+        endif
 
         # SHORTEN REF NAME
         var ref = substitute(p[1], 'refs/remotes/', '', '')
@@ -40,13 +40,13 @@ def GBRef(h = 0, b = 1)
         for br in p1
             if !IsR(br)
                 Ab(br)
-            en
-        endfo
+            endif
+        endfor
 
         # SYNTAX: AUTHOR NAMES
         for at in split(p[4])
             A = T4(A, at)
-        endfo
+        endfor
 
         # UPDATE COLUMN LENGTHS
         L0 = T7(L0, p[0])
@@ -54,7 +54,7 @@ def GBRef(h = 0, b = 1)
         L2 = T7(L2, s)
         L4 = T7(L4, p[4])
         add(rs, [ p[0], ref, s, p[3], p[4]])
-    endfo
+    endfor
 
     var f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3)
     var hl = L0 + L1 + L2 + L3 + L4 + 8
@@ -62,7 +62,7 @@ def GBRef(h = 0, b = 1)
     var l = [ printf(f, 'COMMIT', 'BRANCH', 'SUBJECT', 'DATE', 'AUTHOR'), sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], i[4]))
-    endfo
+    endfor
 
     # DYNAMIC SYNTAX GROUPS
     #    THESE SYNTAX GROUPS ARE CALCULATED ON THE FLY. PERFORMANCE IS
@@ -101,7 +101,7 @@ def GBRef(h = 0, b = 1)
     T2('LOG', len(l) + 1, len(log), 'l', 'contains=A,D,L,P')
     for i in log
         add(l, substitute(i, '^\s\s\s\s$', '', ''))
-    endfo
+    endfor
     extend(l, ['', '', 'Time:' .. reltimestr(reltime(now, reltime()))])
 
     # FINALLY PRINT EVERYTHING TO THE BUFFER
@@ -116,11 +116,11 @@ def GBExeExit(hT: number, hB: number, j: job, c = 0)
     GBRef(hT, 1)
 enddef
 
-def GBExe(hT = 0, hB = 0, cmd = '')
-    Say(hB, cmd)
+def GBExe(hTop = 0, hBottom = 0, cmd = '')
+    Say(hBottom, cmd)
     win_execute(win_getid(2), 'norm G')
-    var F = funcref(SayCb, [hB])
-    var E = funcref(GBExeExit, [hT, hB])
+    var F = funcref(SayCb, [hBottom])
+    var E = funcref(GBExeExit, [hTop, hBottom])
     job_start(cmd, {out_cb: F, err_cb: F, exit_cb: E})
 enddef
 
@@ -140,9 +140,9 @@ enddef
 def GBNav(hT = 0, hB = 0)
     if col('.') < 10
         GitLog()
-    el
+    else
         GBExe(hT, hB, 'git checkout ' .. Sr(T1()))
-    en
+    endif
 enddef
 
 def GBNew(hT = 0, hB = 0)

@@ -16,7 +16,7 @@ def GInsCols(): list<number>
     add(c, c[3] + 25)
     add(c, c[3] + 30)
 
-    retu c
+    return c
 enddef
 
 def GInsHitTest(): number
@@ -25,25 +25,25 @@ def GInsHitTest(): number
     var r = 1
     if c < cs[9] && c >= cs[8]
         r = 10
-    elsei c < cs[8] && c >= cs[7]
+    elseif c < cs[8] && c >= cs[7]
         r = 9
-    elsei c < cs[7] && c >= cs[6]
+    elseif c < cs[7] && c >= cs[6]
         r = 8
-    elsei c < cs[6] && c >= cs[5]
+    elseif c < cs[6] && c >= cs[5]
         r = 7
-    elsei c < cs[5] && c >= cs[4]
+    elseif c < cs[5] && c >= cs[4]
         r = 6
-    elsei c < cs[4] && c >= cs[3]
+    elseif c < cs[4] && c >= cs[3]
         r = 5
-    elsei c < cs[3] && c >= cs[2]
+    elseif c < cs[3] && c >= cs[2]
         r = 4
-    elsei c < cs[2] && c >= cs[1]
+    elseif c < cs[2] && c >= cs[1]
         r = 3
-    elsei c < cs[1] && c >= cs[0]
+    elseif c < cs[1] && c >= cs[0]
         r = 2
-    en
+    endif
 
-    retu r
+    return r
 enddef
 
 def GINav(hT = 0, hB = 0, obj = '')
@@ -62,45 +62,45 @@ def GINav(hT = 0, hB = 0, obj = '')
         exe 'tabnew ' .. pat
 
     # BEFORE
-    elsei c == 2
+    elseif c == 2
         GitShow(bef, pat)
 
     # AFTER
-    elsei c == 3
+    elseif c == 3
         GitShow(aft, pat)
 
     # HEAD
-    elsei c == 4
+    elseif c == 4
         GitShow(hed, pat)
 
     # BEFORE:AFTER
-    elsei c == 5 && bef != 'DELETED' && aft != 'DELETED'
+    elseif c == 5 && bef != 'DELETED' && aft != 'DELETED'
         GitShow2(bef, pat, aft, pat)
         :windo diffthis
 
     # BEFORE:HEAD
-    elsei c == 6 && bef != 'DELETED' && hed != 'DELETED'
+    elseif c == 6 && bef != 'DELETED' && hed != 'DELETED'
         GitShow2(bef, pat, hed, pat)
         :windo diffthis
 
     # AFTER:HEAD
-    elsei c == 7 && aft != 'DELETED' && hed != 'DELETED'
+    elseif c == 7 && aft != 'DELETED' && hed != 'DELETED'
         GitShow2(aft, pat, hed, pat)
         :windo diffthis
 
     # BEFORE-AFTER
-    elsei c == 8 && bef != 'DELETED' && aft != 'DELETED'
+    elseif c == 8 && bef != 'DELETED' && aft != 'DELETED'
         GitShow2(bef, pat, aft, pat)
 
     # BEFORE-HEAD
-    elsei c == 9 && bef != 'DELETED' && hed != 'DELETED'
+    elseif c == 9 && bef != 'DELETED' && hed != 'DELETED'
         GitShow2(bef, pat, hed, pat)
 
     # AFTER-HEAD
-    elsei c == 10 && aft != 'DELETED' && hed != 'DELETED'
+    elseif c == 10 && aft != 'DELETED' && hed != 'DELETED'
         GitShow2(aft, pat, hed, pat)
 
-    en
+    endif
 enddef
 
 # REFRESH TOP WINDOW CONTENTS
@@ -118,7 +118,7 @@ def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
     if bl
         deletebufline(hT, 1, '$')
         sy clear A F BAH M T R
-    en
+    endif
 
     # LONGEST STRINGS IN EACH COLUMN / START WITH MINIMUM LENGTHS
     var L0 = 24 | var L1 = 6 | var L2 = 6 | var L3 = 6 | var L4 = 13
@@ -164,12 +164,12 @@ def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
             bef = get(split(past[1], ' | '), 0)
             var txt = S(['git', 'show', obj .. ':' c])
             aft = 0 == stridx(txt[0], 'tree') ? obj : 'DELETED'
-        en
+        endif
 
         # DIG OUT AUTHORS FROM PAST (IF POSSIBLE)
         for at in split(get(split(get(past, 1), ' | '), 1))
             A = T4(A, at)
-        endfo
+        endfor
 
         # IF FILE EXISTS MEANS THAT ITS STILL IN LATEST HEAD
         var hed = filereadable(c) ? Head : 'DELETED'
@@ -182,7 +182,7 @@ def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
         settabvar(tabpagenr(), 'lens', [L0, L1, L2, L3, L4, L5])
 
         add(rs, [c, bef, aft, hed])
-    endfo
+    endfor
 
     var f = printf('%%-%ds  %%-%ds  %%-%ds  %%-%ds  %%-%ds  %%s', L0, L1, L2, L3, L4)
     var hl = L0 + L1 + L2 + L3 + 36
@@ -191,7 +191,7 @@ def GIRef(hT = 0, hB = 0, obj = '', bl = 1)
     var l = [ printf(f, 'FILE', 'BEFORE', 'AFTER', 'HEAD', 'COMPARE', 'SIDE BY SIDE'), sep]
     for i in rs
         add(l, printf(f, i[0], i[1], i[2], i[3], 'B:A  B:H  A:H', 'B-A  B-H  A-H'))
-    endfo
+    endfor
 
     # DYNAMIC SYNTAX GROUPS
     #    THESE SYNTAX GROUPS ARE CALCULATED ON THE FLY. PERFORMANCE IS

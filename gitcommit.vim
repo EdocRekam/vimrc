@@ -5,7 +5,7 @@ var ct = '.git/GITGUI_MSG'
 def GC1(j: job, c = 0)
     if 0 == c && filereadable(ct)
         delete(ct)
-    en
+    endif
 enddef
 
 # F3 QUIT - THE USER SAVED COMMIT MESSAGE IF THE TOP WINDOW IS
@@ -16,7 +16,7 @@ def GC2(hT = 0, hB = 0)
         exe 'au! BufWritePost <buffer=' .. hT .. '>'
         win_execute(win_getid(1), 'g/^#.*$/d')
         :up
-    en
+    endif
     exe 'bw! ' .. hT .. ' ' .. hB
 enddef
 
@@ -56,7 +56,7 @@ def GitCommit()
     # TWO BLANK LINKS
     if 0 == filereadable(ct)
         Say(hT, ['', ''])
-    en
+    endif
 
     Say(hT, [
     '# Please enter the commit message for your changes. Lines starting',
@@ -65,7 +65,7 @@ def GitCommit()
 
     for i in S('git status')
         Say(hT, printf('#%s%s', '' == i ? '' : ' ', i))
-    endfo
+    endfor
     Say(hT, ['#', '# PRESS <F3> TO ABORT OR CLOSE COMMIT WINDOW'])
 
     # POSITION

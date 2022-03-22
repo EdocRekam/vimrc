@@ -6,9 +6,9 @@ def GS0(h: number, j: job, c = 0)
 enddef
 
 # GIT SHOW OBJECT:PATH
-def GS1(h = 0, o = '', p = '')
-    var F = funcref(SayCb, [h])
-    var E = funcref(GS0, [h])
+def GS1(handle = 0, o = '', p = '')
+    var F = funcref(SayCb, [handle])
+    var E = funcref(GS0, [handle])
     job_start(['git', 'show', o .. ':' .. p],  {out_cb: F, err_cb: F, exit_cb: E})
 enddef
 
@@ -27,7 +27,7 @@ def GitShow(o = '', p = '', title = ''): number
     # LOCAL KEY BINDS
     exe printf("nn <silent><buffer><F3> :exe 'sil bw! %d'<CR> ", h)
 
-    retu h
+    return h
 enddef
 
 # TWO GIT SHOWS SIDE BY SIDE
